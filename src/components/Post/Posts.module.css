@@ -1,0 +1,101 @@
+.postsContainer {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+}
+
+/* .heading {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+} */
+
+.postList {
+  display: flex;
+  flex-direction: column;
+  gap:25px;
+}
+
+.postCard {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  background: #fff;
+  /* border: 1px solid #ddd; */
+  /* border-radius: 8px; */
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+  overflow: hidden;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.postCard:hover {
+  transform: translateY(-1px);
+}
+
+.postContent {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.postTitle {
+  font-size: 22px;
+  margin: 0;
+  color: #222;
+}
+
+.postDescription {
+  font-size: 14px;
+  color: #666;
+}
+
+.postAuthor {
+  font-size: 12px;
+  color: #999;
+}
+
+.postActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.count ,
+.postTimestamp {
+  font-size: 12px;
+  color: #999;
+}
+
+.liked,
+.comment {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+
+
+.postImage {
+  width: 320px;
+  height: 200px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-left: 1px solid #ddd;
+  border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+  .postCard {
+    flex-direction: column;
+  }
+
+  .postImage {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #ddd;
+  }
+}

@@ -1,0 +1,157 @@
+/* Base styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
+  position: relative; /* Ensure the header is the reference for the sidebar */
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000000;
+  margin: 0;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.link {
+  color: #000;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.link:hover {
+  color: #99834d;
+}
+
+.getStarted {
+  background-color: #000000;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.getStarted:hover {
+  background-color: #99834d;
+}
+
+/* Hamburger menu styles */
+.hamburger {
+  display: none;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: #000;
+  cursor: pointer;
+}
+
+/* Sidebar styles */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -100%; /* Initially hide the sidebar */
+  width: 250px;
+  height: 100%;
+  background-color: #ffffff;
+  border-right: 1px solid #ddd;
+  transition: left 0.3s ease;
+  padding: 2rem;
+  z-index: 9999; /* Ensure it's on top */
+}
+
+.sidebarOpen {
+  left: 0; /* Slide the sidebar in */
+  color: white;
+}
+
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sidebar .link
+{
+color: black;
+}
+.sidebar .getStarted {
+  font-size: 1.2rem;
+  color: #ffffff;
+}
+
+/* Media Queries for responsive design */
+@media (max-width: 1024px) {
+  .header {
+    padding: 1rem 1.5rem;
+  }
+
+  .logo {
+    font-size: 1.3rem; /* Smaller logo on tablets */
+  }
+
+  .nav {
+    gap: 0.75rem; /* Reduce the gap between links */
+  }
+
+  .link {
+    font-size: 0.9rem; /* Smaller font size on tablets */
+  }
+
+  .getStarted {
+    padding: 0.5rem 0.8rem; /* Slightly smaller button on tablets */
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .logo {
+    font-size: 1.2rem; /* Smaller logo on smaller screens */
+  }
+
+  .nav {
+    display: none; /* Hide the default nav */
+  }
+
+  .hamburger {
+    display: block; /* Show hamburger on mobile */
+  }
+
+  .sidebar {
+    padding: 1.5rem;
+  }
+
+  .link {
+    font-size: 1.2rem;
+  }
+
+  .getStarted {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 1rem; /* Smallest logo on very small screens */
+  }
+
+  .link {
+    font-size: 1rem;
+  }
+
+  .getStarted {
+    font-size: 1rem;
+  }
+}

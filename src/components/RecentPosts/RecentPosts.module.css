@@ -1,0 +1,87 @@
+.recentPostsContainer {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.heading {
+  font-size: 18px;
+  color: #000000;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+.postsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.postItem {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.postItem:last-child {
+  border-bottom: none;
+}
+
+.postImage {
+  width: 70px;
+  height: 50px;
+  object-fit: cover;
+  flex-shrink: 0;
+  margin-right: 6px;
+  /* border-radius: 50%; */
+}
+
+.postDetails {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.postTitle {
+  font-size: 14px;
+  color: #000000;
+  font-weight: bold;
+  margin: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.postTitle:hover {
+  color: #301250;
+}
+
+.postDate {
+  font-size: 12px;
+  color: #999;
+  margin-top: -1px;
+  /* margin-left: 85px; */
+}
+
+@media (max-width: 768px) {
+  .postDetails {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .postImage {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  .postTitle {
+    margin-top: 2px;
+  }
+
+  .postDate {
+    margin-top: 0;
+  }
+}
