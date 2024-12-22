@@ -38,7 +38,7 @@ const Posts = () => {
       {/* <h2 className={styles.heading}>Posts</h2> */}
       <div className={styles.postList}>
         {dummyPosts.map((post) => (
-          <div key={post.id} className={styles.postCard}>
+          <div key={post.id} className={styles.postCard} >
             <div className={styles.postContent}>
               <h3 className={styles.postTitle}>{post.title}</h3>
               <p className={styles.postDescription}>{post.content}</p>
