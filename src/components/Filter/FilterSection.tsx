@@ -1,8 +1,14 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./FilterSection.module.css";
+import { Category } from "@/app/lib/definations";
 
-export default function FilterSection(){
+type FilterProps = {
+  categories: Category[];
+};
+
+
+export default function FilterSection({categories}:FilterProps){
   const filterListRef = useRef<HTMLDivElement | null>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
@@ -35,16 +41,8 @@ export default function FilterSection(){
   };
 
   const filterNames = [
-    "All",
-    "Popular",
-    "Recent",
-    "Technology",
-    "Business",
-    "Health",
-    "Science",
-    "Sports",
-    "Education",
-    "Travel",
+    {id:0,name:"All"},
+    ...categories
   ];
 
   return (
@@ -74,11 +72,11 @@ export default function FilterSection(){
           <button
             key={index}
             className={`${styles.filterText} ${
-              selectedFilter === filter ? styles.selectedFilter : ""
+              selectedFilter === filter.name ? styles.selectedFilter : ""
             }`}
-            onClick={() => setSelectedFilter(filter)}
+            onClick={() => setSelectedFilter(filter.name)}
           >
-            {filter}
+            {filter.name}
           </button>
         ))}
       </div>
