@@ -40,7 +40,7 @@ async function listCategories() {
 
 export async function GET() {
   try {
-    // const posts = await listPosts();
+    const posts = await listPosts();
     const categories = await listCategories();
     return new Response(JSON.stringify(categories), {
       headers: { "Content-Type": "application/json" },
