@@ -5,7 +5,7 @@ import styles from "./Navbar.module.css";
 import Link from "next/link";
 import Image from "next/image";
 
-const Navbar = () => {
+export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -87,4 +87,3 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;

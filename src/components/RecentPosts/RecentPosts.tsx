@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './RecentPosts.module.css';
 
-const RecentPosts = () => {
+export default function RecentPosts() {
   // Dummy data for recent posts
   const recentPosts = [
     {
@@ -57,4 +57,3 @@ const RecentPosts = () => {
   );
 };
 
-export default RecentPosts;

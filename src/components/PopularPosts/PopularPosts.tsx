@@ -13,7 +13,7 @@ interface Post {
   timestamp: string;
 }
 
-const PopularPosts: React.FC = () => {
+export default function PopularPosts() {
   // Define the type for popularPosts
   const popularPosts: Post[] = [
     {
@@ -95,4 +95,3 @@ const PopularPosts: React.FC = () => {
   );
 };
 
-export default PopularPosts;

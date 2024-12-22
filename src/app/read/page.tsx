@@ -4,14 +4,6 @@ import React from 'react';
 import styles from './BlogRead.module.css';
 import Image from 'next/image';
 
-interface BlogReadProps {
-    title: string;
-    content: string;
-    image?: string;
-    author: string;
-    date: string;
-    tags?: string[];
-}
 
 const testBlog = {
     title: "Understanding the Basics of React.js",
@@ -34,7 +26,7 @@ const testBlog = {
     tags: ["React", "JavaScript", "Web Development", "UI/UX"],
 };
 
-const BlogRead: React.FC<BlogReadProps> = () => {
+export default function BlogRead() {
     return (
         <div className={styles.container}>
             {/* Blog Title */}
@@ -75,4 +67,3 @@ const BlogRead: React.FC<BlogReadProps> = () => {
     );
 };
 
-export default BlogRead;

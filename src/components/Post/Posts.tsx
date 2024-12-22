@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Posts.module.css";
 
-const Posts = () => {
+export default function Posts(){
   // Dummy data for posts
   const dummyPosts = [
     {
@@ -66,4 +66,3 @@ const Posts = () => {
   );
 };
 
-export default Posts;

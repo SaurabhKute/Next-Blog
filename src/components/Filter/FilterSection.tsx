@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./FilterSection.module.css";
 
-const FilterSection = () => {
+export default function FilterSection(){
   const filterListRef = useRef<HTMLDivElement | null>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
@@ -107,4 +107,3 @@ const FilterSection = () => {
   );
 };
 
-export default FilterSection;

@@ -11,7 +11,7 @@ const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Edi
   ssr: false,
 });
 
-const WriteBlog: React.FC = () => {
+export default function WriteBlog() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [title, setTitle] = useState<string>('');
@@ -183,4 +183,3 @@ const WriteBlog: React.FC = () => {
   );
 };
 
-export default WriteBlog;
