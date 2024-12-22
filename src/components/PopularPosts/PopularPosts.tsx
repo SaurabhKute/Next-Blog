@@ -3,9 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import styles from './PopularPosts.module.css';
 
-const PopularPosts = () => {
-  // Dummy data for popular posts
-  const popularPosts:any = [
+// Define the type for a single post
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  author: string;
+  image: string;
+  timestamp: string;
+}
+
+const PopularPosts: React.FC = () => {
+  // Define the type for popularPosts
+  const popularPosts: Post[] = [
     {
       id: 1,
       title: "The Art of Web Development ",
@@ -35,7 +45,7 @@ const PopularPosts = () => {
     },
   ];
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   useEffect(() => {
     if (popularPosts.length > 1) {
@@ -48,41 +58,39 @@ const PopularPosts = () => {
 
   return (
     <>
-    <h3 className={styles.heading}>Popular Posts</h3>
+      <h3 className={styles.heading}>Popular Posts</h3>
 
-    <div
-      className={styles.popularPostsContainer}
-      style={{
-        backgroundImage: popularPosts.length > 0
-          ? `url(${popularPosts[currentIndex].image})`
-          : 'url(/images/bg.jpg)', // Fallback background image
-      }}
-    >
-   
-      
-      {popularPosts.length > 0 ? (
-        <div className={styles.popularPostsCarousel}>
-          {popularPosts.map((post:any, index:number) => (
-            <div
-              key={post.id}
-              className={`${styles.carouselItem} ${currentIndex === index ? styles.active : ''}`}
-            >
-              <img
-                src={post.image}
-                alt={post.title}
-                className={styles.carouselImage}
-              />
-              <h4 className={styles.postTitle}>{post.title}</h4>
-              <span className={styles.postDate}>{post.timestamp}</span>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className={styles.defaultTextContainer}>
-          <h2 className={styles.defaultText}>Explore our latest blog posts</h2>
-        </div>
-      )}
-    </div>
+      <div
+        className={styles.popularPostsContainer}
+        style={{
+          backgroundImage: popularPosts.length > 0
+            ? `url(${popularPosts[currentIndex].image})`
+            : 'url(/images/bg.jpg)', // Fallback background image
+        }}
+      >
+        {popularPosts.length > 0 ? (
+          <div className={styles.popularPostsCarousel}>
+            {popularPosts.map((post, index) => (
+              <div
+                key={post.id}
+                className={`${styles.carouselItem} ${currentIndex === index ? styles.active : ''}`}
+              >
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className={styles.carouselImage}
+                />
+                <h4 className={styles.postTitle}>{post.title}</h4>
+                <span className={styles.postDate}>{post.timestamp}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.defaultTextContainer}>
+            <h2 className={styles.defaultText}>Explore our latest blog posts</h2>
+          </div>
+        )}
+      </div>
     </>
   );
 };
