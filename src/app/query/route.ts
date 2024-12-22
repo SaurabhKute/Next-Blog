@@ -1,27 +1,51 @@
-// import { db } from "@vercel/postgres";
+import { db } from "@vercel/postgres";
 
-// const client = await db.connect();
+const client = await db.connect();
 
-// async function listInvoices() {
-// 	const data = await client.sql`
-//     SELECT invoices.amount, customers.name
-//     FROM invoices
-//     JOIN customers ON invoices.customer_id = customers.id
-//     WHERE invoices.amount = 666;
-//   `;
+async function listPosts() {
+  const data = await client.sql`
+    SELECT 
+      posts.id,
+      posts.title,
+      posts.content,
+      posts.image,
+      posts.author,
+      posts.tags,
+      posts.category,
+      posts.created_at,
+      posts.updated_at,
+      users.id AS user_id,
+      users.name AS user_name,
+      users.email AS user_email
+    FROM posts
+    JOIN users ON posts.user_id = users.id
+    ORDER BY posts.created_at DESC; -- Fetch posts in descending order of creation
+  `;
 
-// 	return data.rows;
-// }
+  return data.rows;
+}
+
+async function listCategories() {
+  const data = await client.sql`
+    SELECT 
+      categories.id,
+      categories.name
+    FROM categories
+  `;
+
+  return data.rows;
+}
+
+
 
 export async function GET() {
-    return Response.json({
-      message:
-        'Uncomment this file and remove this line. You can delete this file when you are finished.',
+  try {
+    // const posts = await listPosts();
+    const categories = await listCategories();
+    return new Response(JSON.stringify(categories), {
+      headers: { "Content-Type": "application/json" },
     });
-    // try {
-    // 	return Response.json(await listInvoices());
-    // } catch (error) {
-    // 	return Response.json({ error }, { status: 500 });
-    // }
+  } catch (error) {
+    return Response.json({ error }, { status: 500 });
   }
-  
+}
