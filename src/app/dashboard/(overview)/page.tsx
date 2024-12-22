@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import styles from "./Dashboard.module.css";
 import Posts from "@/components/Post/Posts";
 import FilterSection from "@/components/Filter/FilterSection";
