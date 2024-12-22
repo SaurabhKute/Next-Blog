@@ -1,14 +1,23 @@
-"use client"
+"use client";
+
 import React, { useState } from "react";
 import styles from "./Navbar.module.css";
 import Link from "next/link";
+import Image from "next/image";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen((prevState) => !prevState);
   };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prevState) => !prevState);
+  };
+
+  const isLoggedIn = false; // Replace with your actual login check logic
 
   return (
     <header className={styles.header}>
@@ -17,26 +26,61 @@ const Navbar = () => {
         &#9776;
       </button>
       <nav className={`${styles.nav} ${isMenuOpen ? styles.open : ""}`}>
-        <Link href="/write" className={styles.link}>
+        <Link href="/write-blog" className={styles.link}>
           Write
         </Link>
-        <Link href="/sign-in" className={styles.link}>
-          Sign in
-        </Link>
-        <button className={styles.getStarted}>Get started</button>
+        {isLoggedIn ? (
+          <div >
+            <Image
+              src="/icons/user.svg" 
+              alt="User Avatar"
+              // className={styles.avatar}
+              width={25}
+              height={25}
+              onClick={toggleDropdown}
+            />
+            {isDropdownOpen && (
+              <div className={styles.dropdown}>
+                <Link href="/profile" className={styles.dropdownItem}>
+                  Profile
+                </Link>
+                <Link href="/manage-posts" className={styles.dropdownItem}>
+                  Manage Posts
+                </Link>
+                <Link href="/statistics" className={styles.dropdownItem}>
+                 Statistics
+                </Link>
+                <button className={styles.logoutbtn } onClick={() => alert("Logging out...")}>
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <Link href="/sign-in" className={styles.link}>
+              Sign in
+            </Link>
+            <button className={styles.getStarted}>Get started</button>
+          </>
+        )}
       </nav>
       <div
         className={`${styles.sidebar} ${isMenuOpen ? styles.sidebarOpen : ""}`}
-        onClick={toggleMenu} // Close the sidebar when clicked outside
+        onClick={toggleMenu}
       >
         <nav className={styles.sidebarNav}>
-          <Link href="/write" className={styles.link}>
+          <Link href="/write-blog" className={styles.link}>
             Write
           </Link>
-          <Link href="/sign-in" className={styles.link}>
-            Sign in
-          </Link>
-          <button className={styles.getStarted}>Get started</button>
+          {!isLoggedIn && (
+            <>
+              <Link href="/sign-in" className={styles.link}>
+                Sign in
+              </Link>
+              <button className={styles.getStarted}>Get started</button>
+            </>
+          )}
         </nav>
       </div>
     </header>

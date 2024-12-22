@@ -6,7 +6,7 @@ const RecentPosts = () => {
   const recentPosts = [
     {
       id: 1,
-      title: "The Art of Web Development The Art of Web Development The Art of Web Development",
+      title: "The Art of Web Development",
       content:
         "Explore the essential principles of creating amazing web applications.",
       author: "John Doe",

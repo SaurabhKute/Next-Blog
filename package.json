@@ -9,17 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
+    "next": "15.1.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.1.2"
+    "react-draft-wysiwyg": "^1.15.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@types/draft-js": "^0.11.18",
+    "@types/draftjs-to-html": "^0.8.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-draft-wysiwyg": "^1.13.8",
     "eslint": "^9",
     "eslint-config-next": "15.1.2",
-    "@eslint/eslintrc": "^3"
+    "typescript": "^5"
   }
 }
