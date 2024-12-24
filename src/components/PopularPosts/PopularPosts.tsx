@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './PopularPosts.module.css';
 import { Post } from '@/app/lib/definations';
+import Image from 'next/image';
 
 
 type PopularPostsProps = {
@@ -59,7 +60,7 @@ export default function PopularPosts({ popularPosts }: PopularPostsProps) {
         className={styles.popularPostsContainer}
         style={{
           backgroundImage: popularPosts.length > 0
-            ? `url(${popularPosts[currentIndex].image})`
+            ? `url(${popularPosts[currentIndex]?.image})`
             : 'url(/images/bg.jpg)', // Fallback background image
         }}
       >
@@ -70,10 +71,13 @@ export default function PopularPosts({ popularPosts }: PopularPostsProps) {
                 key={post.id}
                 className={`${styles.carouselItem} ${currentIndex === index ? styles.active : ''}`}
               >
-                <img
-                  src={post.image}
+                <Image
+                  src={post?.image}
                   alt={post.title}
                   className={styles.carouselImage}
+                  height={100}
+                  width={100}
+                  layout="responsive"
                 />
                 <h4 className={styles.postTitle}>{post.title}</h4>
                 <span className={styles.postDate}>{new Date(post.updated_at).toLocaleString()}</span>

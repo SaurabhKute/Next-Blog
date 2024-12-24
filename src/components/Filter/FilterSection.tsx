@@ -3,12 +3,17 @@ import React, { useRef, useState, useEffect } from "react";
 import styles from "./FilterSection.module.css";
 import { Category } from "@/app/lib/definations";
 
+
 type FilterProps = {
   categories: Category[];
+  onFilterChange:(category:string)=> void;
 };
 
 
-export default function FilterSection({categories}:FilterProps){
+export default function FilterSection({
+  categories,onFilterChange
+}: FilterProps) {
+{
   const filterListRef = useRef<HTMLDivElement | null>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
@@ -41,8 +46,8 @@ export default function FilterSection({categories}:FilterProps){
   };
 
   const filterNames = [
-    {id:0,name:"All"},
-    ...categories
+    { id: 0, name: "All" },
+    ...(categories || []),
   ];
 
   return (
@@ -74,7 +79,7 @@ export default function FilterSection({categories}:FilterProps){
             className={`${styles.filterText} ${
               selectedFilter === filter.name ? styles.selectedFilter : ""
             }`}
-            onClick={() => setSelectedFilter(filter.name)}
+            onClick={() => {onFilterChange(filter.name);setSelectedFilter(filter.name)}}
           >
             {filter.name}
           </button>
@@ -104,4 +109,4 @@ export default function FilterSection({categories}:FilterProps){
     </div>
   );
 };
-
+};

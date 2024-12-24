@@ -1,21 +1,26 @@
 import { sql } from '@vercel/postgres';
 import { Category, Post } from './definations';
 
-export async function fetchPosts() {
-    try {
-      // await new Promise((resolve) => setTimeout(resolve, 3000));
-  
-      const data = await sql<Post>`SELECT * FROM posts`;
-  
-      // console.log('Data fetch completed after 3 seconds.');
-      console.log(data, "@data");
-  
-      return data.rows;
-    } catch (error) {
-      console.error('Database Error:', error);
-      throw new Error('Failed to fetch posts.');
+export async function fetchPosts(category?:string) {
+  try {
+    let query;
+
+    if (category && category !== "All") {
+      // Query to fetch posts by category
+      query = sql<Post>`SELECT * FROM posts WHERE category = ${category}`;
+    } else {
+      // Query to fetch all posts
+      query = sql<Post>`SELECT * FROM posts`;
     }
+
+    const data = await query;
+
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch posts.');
   }
+}
 
   export async function fetchCategories() {
     try {
@@ -25,7 +30,7 @@ export async function fetchPosts() {
       const data = await sql<Category>`SELECT * FROM categories`;
   
       // console.log('Data fetch completed after 3 seconds.');
-      console.log(data, "@data");
+      // console.log(data, "@data");
   
       return data.rows;
     } catch (error) {
@@ -48,9 +53,9 @@ export async function fetchPosts() {
     }
   }
   
-  export async function fetchPostById(postId:number) {
+  export async function fetchPostById(postId:string) {
     try {
-      const data = await sql`
+      const data = await sql<Post>`
         SELECT * 
         FROM posts
         WHERE id = ${postId}

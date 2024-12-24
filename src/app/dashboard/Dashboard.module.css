@@ -45,6 +45,9 @@
 .sidebar li:last-child {
   border-bottom: none;
 }
+.loading{
+  text-align: center;
+}
 
 @media (max-width: 768px) {
   .mainContent {

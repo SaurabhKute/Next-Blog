@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './RecentPosts.module.css';
 import { Post } from '@/app/lib/definations';
+import Image from 'next/image';
 
 
 
@@ -48,10 +49,12 @@ export default function RecentPosts({recentPosts}:RecentPostsProps) {
       {recentPosts.map((post) => (
         <li key={post.id} className={styles.postItem}>
           <div className={styles.postDetails}>
-            <img
+            <Image
               src={post.image}
               alt={post.title}
-              className={styles.postImage}
+              // className={styles.postImage}
+              height={50}
+              width={70}
             />
             <h5 className={styles.postTitle}>{post.title}</h5>
           </div>
