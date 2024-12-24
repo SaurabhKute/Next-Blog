@@ -4,28 +4,21 @@ import React, { useEffect, useState } from "react";
 import styles from "../BlogRead.module.css";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { Post } from "@/app/lib/definations";
 
-// type Blog = {
-//   title: string;
-//   content: string;
-//   image?: string;
-//   author: string;
-//   date: string;
-//   tags: string[];
-// };
 
 export default function BlogRead() {
   const pathname = usePathname();
   const id = pathname?.split("/read/").pop();
 
-  const [blog, setBlog] = useState<any>(null);
+  const [blog, setBlog] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (id) {
       const fetchBlog = async () => {
         try {
-          // console.log(id, "@@@@@@@");
+    
           const response = await fetch(`/api/read?postId=${id}`);
           if (!response.ok) {
             throw new Error("Failed to fetch filtered posts");

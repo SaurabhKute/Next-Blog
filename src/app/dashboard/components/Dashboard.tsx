@@ -2,13 +2,12 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from "../Dashboard.module.css";
 import Posts from "@/components/Post/Posts";
 import FilterSection from "@/components/Filter/FilterSection";
 import PopularPosts from "@/components/PopularPosts/PopularPosts";
 import RecentPosts from "@/components/RecentPosts/RecentPosts";
-import { fetchPosts } from "@/app/lib/data";
 import { Category, Post } from "@/app/lib/definations";
+import styles from "../Dashboard.module.css";
 
 type DashboardProps = {
   initialPosts: Post[];

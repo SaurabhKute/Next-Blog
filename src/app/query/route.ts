@@ -37,15 +37,15 @@ const client = await db.connect();
 // }
 
 
-async function fetchPostsByCategory(category:"Technology") {
-  const data = await client.sql`
-    SELECT 
-    * FROM posts
-    WHERE category = ${category}
-  `;
+// async function fetchPostsByCategory(category:"Technology") {
+//   const data = await client.sql`
+//     SELECT 
+//     * FROM posts
+//     WHERE category = ${category}
+//   `;
 
-  return data.rows;
-}
+//   return data.rows;
+// }
 
 async function fetchPostsById(postId:string) {
   const data = await client.sql`
