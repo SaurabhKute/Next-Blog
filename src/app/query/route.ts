@@ -25,12 +25,33 @@ const client = await db.connect();
 //   return data.rows;
 // }
 
-async function listCategories() {
+// async function listCategories() {
+//   const data = await client.sql`
+//     SELECT 
+//       categories.id,
+//       categories.name
+//     FROM categories
+//   `;
+
+//   return data.rows;
+// }
+
+
+// async function fetchPostsByCategory(category:"Technology") {
+//   const data = await client.sql`
+//     SELECT 
+//     * FROM posts
+//     WHERE category = ${category}
+//   `;
+
+//   return data.rows;
+// }
+
+async function fetchPostsById(postId:string) {
   const data = await client.sql`
     SELECT 
-      categories.id,
-      categories.name
-    FROM categories
+    * FROM posts
+    WHERE id = ${postId}
   `;
 
   return data.rows;
@@ -41,8 +62,9 @@ async function listCategories() {
 export async function GET() {
   try {
     // const posts = await listPosts();
-    const categories = await listCategories();
-    return new Response(JSON.stringify(categories), {
+    // const posts = await fetchPostsByCategory("Technology");
+    const posts = await fetchPostsById('58d8ba48-fbca-4556-b823-ead54d9c13c4');
+    return new Response(JSON.stringify(posts), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
