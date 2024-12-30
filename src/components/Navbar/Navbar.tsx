@@ -26,7 +26,7 @@ export default function Navbar() {
         &#9776;
       </button>
       <nav className={`${styles.nav} ${isMenuOpen ? styles.open : ""}`}>
-        <Link href="/write-blog" className={styles.link}>
+        <Link href="/new-blog" className={styles.link}>
           Write
         </Link>
         {isLoggedIn ? (
@@ -58,7 +58,7 @@ export default function Navbar() {
           </div>
         ) : (
           <>
-            <Link href="/sign-in" className={styles.link}>
+            <Link href="/login" className={styles.link}>
               Sign in
             </Link>
             <button className={styles.getStarted}>Get started</button>
@@ -70,12 +70,12 @@ export default function Navbar() {
         onClick={toggleMenu}
       >
         <nav className={styles.sidebarNav}>
-          <Link href="/write-blog" className={styles.link}>
+          <Link href="/new-blog" className={styles.link}>
             Write
           </Link>
           {!isLoggedIn && (
             <>
-              <Link href="/sign-in" className={styles.link}>
+              <Link href="/login" className={styles.link}>
                 Sign in
               </Link>
               <button className={styles.getStarted}>Get started</button>
