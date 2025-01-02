@@ -3,7 +3,6 @@ import { fetchPosts } from "@/app/lib/data";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  // console.log(url,"@#$%%");
   const category = url.searchParams.get("category") || "All";
 
   try {

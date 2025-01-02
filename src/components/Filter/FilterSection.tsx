@@ -1,7 +1,8 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./FilterSection.module.css";
-import { Category } from "@/app/lib/definations";
+import { Category } from "@/types/types";
+
 
 
 type FilterProps = {

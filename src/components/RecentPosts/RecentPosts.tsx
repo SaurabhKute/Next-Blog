@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './RecentPosts.module.css';
-import { Post } from '@/app/lib/definations';
 import Image from 'next/image';
+import { Post } from '@/types/types';
 
 
 
@@ -46,7 +46,9 @@ export default function RecentPosts({recentPosts}:RecentPostsProps) {
     <h3 className={styles.heading}>Recent Posts</h3>
   
     <ul className={styles.postsList}>
-      {recentPosts.map((post) => (
+
+      {recentPosts && recentPosts.length > 0 ? <>
+        {recentPosts.map((post) => (
         <li key={post.id} className={styles.postItem}>
           <div className={styles.postDetails}>
             <Image
@@ -60,7 +62,10 @@ export default function RecentPosts({recentPosts}:RecentPostsProps) {
           </div>
           <span className={styles.postDate}>{new Date(post.updated_at).toLocaleString()}</span>
         </li>
-      ))}
+      ))}</>:<>
+      <p>No Posts Available</p>
+      </>}
+     
     </ul>
   </div>
   

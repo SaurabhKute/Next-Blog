@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./Posts.module.css";
-import { Post } from "@/app/lib/definations";
 import Image from "next/image";
 import { useRouter } from "next/navigation"
+import { Post } from "@/types/types";
 
 type PostsProps = {
   posts: Post[];
@@ -20,12 +20,12 @@ export default function Posts({ posts }: PostsProps) {
       {posts && posts.length > 0 ? (
         <div className={styles.postList}>
           {posts.map((post: Post) => (
-            <div key={post.id} className={styles.postCard} onClick={()=> handleRedirectClick(post.id)}>
+            <div key={post.id} className={styles.postCard}>
               {/* Content Section */}
               <div className={styles.postContent}>
                 {/* <Link href={`/read/${post.id}`} passHref className={styles.link}> */}
                   {/* <a> */}
-                    <h3 className={styles.postTitle}>{post.title}</h3>
+                    <h3 className={styles.postTitle} onClick={()=> handleRedirectClick(post.id)}>{post.title}</h3>
                     <div className={styles.postDescription}>
                       <span
                         dangerouslySetInnerHTML={{
@@ -48,6 +48,15 @@ export default function Posts({ posts }: PostsProps) {
                     height={25}
                   />
                   <span className={styles.count}>4</span>
+
+                  {/* <Image
+                    src="/icons/not-liked.svg"
+                    alt="Liked Icon"
+                    className={styles.liked}
+                    width={25}
+                    height={25}
+                  /> */}
+
                   <Image
                     src="/icons/comment.svg"
                     alt="Comment Icon"

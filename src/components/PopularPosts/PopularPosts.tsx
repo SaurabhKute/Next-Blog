@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from './PopularPosts.module.css';
-import { Post } from '@/app/lib/definations';
 import Image from 'next/image';
+import { Post } from '@/types/types';
 
 
 type PopularPostsProps = {
