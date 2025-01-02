@@ -1,4 +1,3 @@
-// /app/components/Dashboard.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -6,8 +5,9 @@ import Posts from "@/components/Post/Posts";
 import FilterSection from "@/components/Filter/FilterSection";
 import PopularPosts from "@/components/PopularPosts/PopularPosts";
 import RecentPosts from "@/components/RecentPosts/RecentPosts";
-import { Category, Post } from "@/app/lib/definations";
+
 import styles from "../Dashboard.module.css";
+import { Category, Post } from "@/types/types";
 
 type DashboardProps = {
   initialPosts: Post[];
@@ -20,9 +20,10 @@ export default function Dashboard({
 }: DashboardProps) {
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [categories] = useState<Category[]>(initialCategories);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleFilterChange = async (category: string) => {
-    // console.log(category, "FilterName"); 
+    setLoading(true); // Start loading
 
     try {
       const response = await fetch(`/api/posts?category=${category}`);
@@ -34,6 +35,8 @@ export default function Dashboard({
       setPosts(filteredPosts);
     } catch (error) {
       console.error("Error fetching filtered posts:", error);
+    } finally {
+      setLoading(false); // Stop loading after fetch completion
     }
   };
 
@@ -45,8 +48,17 @@ export default function Dashboard({
             categories={categories}
             onFilterChange={handleFilterChange}
           />
-          <Posts posts={posts} />
+
+          {loading ? (
+  <div className={styles.postLoader}>
+    <div className={styles.spinner}></div>
+    <p>Loading Posts...</p>
+  </div>
+) : (
+  <Posts posts={posts} />
+)}
         </div>
+
         <aside className={styles.sidebar}>
           <PopularPosts popularPosts={posts} />
           <RecentPosts recentPosts={posts} />

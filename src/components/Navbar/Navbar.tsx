@@ -11,6 +11,8 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { data: session } = useSession(); // Get session data
 
+  // console.log(session, "@session");
+
   const toggleMenu = () => setIsMenuOpen((prevState) => !prevState);
   const toggleDropdown = () => setIsDropdownOpen((prevState) => !prevState);
 
@@ -38,8 +40,8 @@ export default function Navbar() {
               src={session?.user?.image || "/icons/user.svg"}
               alt={session?.user?.name || "User Avatar"}
               className={styles.userAvatar}
-              width={20}
-              height={20}
+              width={25}
+              height={25}
               onClick={toggleDropdown}
             />
             {isDropdownOpen && (
@@ -57,7 +59,7 @@ export default function Navbar() {
                   className={styles.logoutButton}
                   onClick={handleLogout}
                 >
-                  Logout
+                 Logout {` (${session?.user?.name})`} 
                 </button>
               </div>
             )}
@@ -93,7 +95,7 @@ export default function Navbar() {
                 className={styles.sidebarLogoutButton}
                 onClick={handleLogout}
               >
-                Logout
+                Logout {` (${session?.user?.name})`} 
               </button>
             </div>
           ) : (

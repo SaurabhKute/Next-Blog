@@ -3,6 +3,8 @@ import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { sql } from "@vercel/postgres"
 import bcrypt from 'bcryptjs'
+// import { OAuth2Client } from "google-auth-library"
+
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
     providers: [
@@ -57,12 +59,33 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         signIn: '/auth/login',
     },
     callbacks: {
-        async signIn({ user, account, profile }) {
+        async signIn({ user, account }) {
+
+// console.log(user,"@user");
+// console.log(account,"@account");
+//             console.log(profile,"@profile");
            
             if (account?.provider === 'google') {
                 // console.log('User signed in with Google:', user);
               
                 try {
+
+                    // const googleIdToken = account?.id_token;
+
+                    // const { OAuth2Client } = require('google-auth-library');
+                    // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+
+                    // const ticket = await client.verifyIdToken({
+                    //     idToken: googleIdToken!,
+                    //     audience: process.env.GOOGLE_CLIENT_ID,  // Ensure the audience is correct
+                    // });
+
+                    // const payload = ticket.getPayload();
+                    // if (!payload) {
+                    //     throw new Error("Invalid ID token");
+                    // }
+
                     const result = await sql`SELECT * FROM users WHERE email = ${user.email}`;
                     const existingUser = result.rows[0];
 
@@ -81,12 +104,27 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             return true; 
         },
         async session({ session, token }) {
+          
+
             if (token) {
+                // console.log(token,"@token");
                 session.user.id = token.sub as string; 
                 session.user.email = token.email as string;
-                session.user.image = token.image as string;
+                session.user.image = token.picture as string;
+
+                const expiresAt = token?.exp;
+                if (expiresAt && expiresAt <= Date.now() / 1000) { // Convert to seconds
+                  signOut();
+                }
             }
             return session;
         },
+        // async jwt({ token, account }) {
+        //     if (account?.access_token) {
+        //       token.expires_at = account.expires_at;  // Assuming this value comes from the account
+        //     }
+        //     return token;
+        //   },
+
     }
 })

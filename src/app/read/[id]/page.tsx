@@ -26,9 +26,14 @@ export default function BlogRead() {
           }
           const data = await response.json();
           setBlog(data);
-        } catch (error: any) {
-          console.error("Error fetching blog:", error);
-          setError(error.message || "Failed to fetch blog.");
+        } catch (error:unknown) {
+          if (error instanceof Error) {
+            console.error("Error fetching blog:", error);
+            setError(error.message || "Failed to fetch blog.");
+          } else {
+            console.error("Unknown error:", error);
+            setError("Failed to fetch blog.");
+          }
         } finally {
           setLoading(false);
         }
