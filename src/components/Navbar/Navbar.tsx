@@ -1,46 +1,49 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from "./Navbar.module.css";
 import Link from "next/link";
 import Image from "next/image";
+import { useSession, signOut } from "next-auth/react"; // Import next-auth hooks
+import styles from "./Navbar.module.css";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { data: session } = useSession(); // Get session data
 
-  const toggleMenu = () => {
-    setIsMenuOpen((prevState) => !prevState);
+  const toggleMenu = () => setIsMenuOpen((prevState) => !prevState);
+  const toggleDropdown = () => setIsDropdownOpen((prevState) => !prevState);
+
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: "/auth/login" }); // Redirect to homepage after logout
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prevState) => !prevState);
-  };
-
-  const isLoggedIn = false; // Replace with your actual login check logic
+  const isLoggedIn = Boolean(session); // Check if the user is logged in
 
   return (
-    <header className={styles.header}>
-      <h1 className={styles.logo}>The Daily Scribble</h1>
-      <button className={styles.hamburger} onClick={toggleMenu}>
+    <header className={styles.navbar}>
+      <Link className={styles.siteLogo} href="/">
+        The Daily Scribble
+      </Link>
+      <button className={styles.menuToggle} onClick={toggleMenu}>
         &#9776;
       </button>
-      <nav className={`${styles.nav} ${isMenuOpen ? styles.open : ""}`}>
-        <Link href="/new-blog" className={styles.link}>
+      <nav className={`${styles.navLinks} ${isMenuOpen ? styles.navOpen : ""}`}>
+        <Link  href={isLoggedIn ? "/new-blog" : "/auth/login"} className={styles.navLink}>
           Write
         </Link>
         {isLoggedIn ? (
-          <div >
+          <div className={styles.profileWrapper}>
             <Image
-              src="/icons/user.svg" 
-              alt="User Avatar"
-              // className={styles.avatar}
-              width={25}
-              height={25}
+              src={session?.user?.image || "/icons/user.svg"}
+              alt={session?.user?.name || "User Avatar"}
+              className={styles.userAvatar}
+              width={20}
+              height={20}
               onClick={toggleDropdown}
             />
             {isDropdownOpen && (
-              <div className={styles.dropdown}>
+              <div className={styles.dropdownMenu}>
                 <Link href="/profile" className={styles.dropdownItem}>
                   Profile
                 </Link>
@@ -48,42 +51,61 @@ export default function Navbar() {
                   Manage Posts
                 </Link>
                 <Link href="/statistics" className={styles.dropdownItem}>
-                 Statistics
+                  Statistics
                 </Link>
-                <button className={styles.logoutbtn } onClick={() => alert("Logging out...")}>
+                <button
+                  className={styles.logoutButton}
+                  onClick={handleLogout}
+                >
                   Logout
                 </button>
               </div>
             )}
           </div>
         ) : (
-          <>
-            <Link href="/login" className={styles.link}>
+          <div className={styles.authWrapper}>
+            <Link href="/auth/login" className={styles.navLink}>
               Sign in
             </Link>
-            <button className={styles.getStarted}>Get started</button>
-          </>
+            <button className={styles.startButton}>Get started</button>
+          </div>
         )}
       </nav>
       <div
         className={`${styles.sidebar} ${isMenuOpen ? styles.sidebarOpen : ""}`}
-        onClick={toggleMenu}
       >
         <nav className={styles.sidebarNav}>
-          <Link href="/new-blog" className={styles.link}>
+          <Link href="/new-blog" className={styles.sidebarLink}>
             Write
           </Link>
-          {!isLoggedIn && (
-            <>
-              <Link href="/login" className={styles.link}>
+          {isLoggedIn ? (
+            <div className={styles.sidebarProfile}>
+              <Link href="/profile" className={styles.sidebarLink}>
+                Profile
+              </Link>
+              <Link href="/manage-posts" className={styles.sidebarLink}>
+                Manage Posts
+              </Link>
+              <Link href="/statistics" className={styles.sidebarLink}>
+                Statistics
+              </Link>
+              <button
+                className={styles.sidebarLogoutButton}
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className={styles.sidebarAuth}>
+              <Link href="/auth/login" className={styles.sidebarLink}>
                 Sign in
               </Link>
-              <button className={styles.getStarted}>Get started</button>
-            </>
+              <button className={styles.sidebarStartButton}>Get started</button>
+            </div>
           )}
         </nav>
       </div>
     </header>
   );
-};
-
+}

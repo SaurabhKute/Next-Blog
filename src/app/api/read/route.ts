@@ -3,12 +3,11 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  
-  // Use an empty string as a fallback if postId is not found
+
   const postId = new URLSearchParams(url.search).get('postId') || '';
 
   try {
-    // Ensure postId is a valid string
+
     const posts = await fetchPostById(postId);
     // console.log(posts, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     return NextResponse.json(posts);

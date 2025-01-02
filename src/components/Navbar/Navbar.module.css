@@ -1,4 +1,4 @@
-.header {
+.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -8,32 +8,39 @@
   position: relative;
 }
 
-.logo {
+.siteLogo {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #000000;
+  color: #000;
   margin: 0;
+  text-decoration: none;
 }
 
-.nav {
+.navLinks {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.link {
+.navLink {
   color: #000;
   text-decoration: none;
   font-size: 1rem;
   transition: color 0.3s;
 }
 
-.link:hover {
-  color: #99834d;
+.authWrapper{
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
-.getStarted {
-  background-color: #000000;
+.navLink:hover {
+  color: rgb(22, 6, 80);
+}
+
+.startButton {
+  background-color: #000;
   color: #fff;
   padding: 0.5rem 1rem;
   border: none;
@@ -43,11 +50,12 @@
   transition: background-color 0.3s;
 }
 
-.getStarted:hover {
-  background-color: #99834d;
+.startButton:hover {
+  background-color: #080909;
 }
 
-.hamburger {
+/* Hamburger icon for mobile */
+.menuToggle {
   display: none;
   font-size: 2rem;
   background: none;
@@ -56,33 +64,22 @@
   cursor: pointer;
 }
 
-.avatarContainer {
+/* User avatar */
+.profileWrapper {
   position: relative;
   cursor: pointer;
 }
 
-.avatar {
+.userAvatar {
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 20px;
+  height: 20px;
   object-fit: cover;
-  border: 2px solid #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
-.dropdown {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  min-width: 150px;
-  padding: 8px 0;
-}
-.dropdown {
+/* Dropdown menu */
+.dropdownMenu {
   position: absolute;
   top: 50px;
   right: 0;
@@ -97,7 +94,7 @@
 }
 
 .dropdownItem,
-.logoutbtn {
+.logoutButton {
   display: block;
   width: 100%;
   text-align: left;
@@ -112,13 +109,12 @@
 }
 
 .dropdownItem:hover,
-.logoutbtn:hover {
+.logoutButton:hover {
   background-color: #f5f5f5;
   color: #99834d;
-  outline: none;
 }
 
-.logoutbtn {
+.logoutButton {
   border-top: 1px solid #ddd;
 }
 
@@ -127,12 +123,12 @@
   border-top-right-radius: 8px;
 }
 
-.logoutbtn:last-child {
+.logoutButton:last-child {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 }
 
-
+/* Sidebar Styles */
 .sidebar {
   position: fixed;
   top: 0;
@@ -142,13 +138,12 @@
   background-color: #ffffff;
   border-right: 1px solid #ddd;
   transition: left 0.3s ease;
-  padding: 2rem;
+  padding: 2rem 1rem;
   z-index: 9999;
 }
 
 .sidebarOpen {
   left: 0;
-  color: white;
 }
 
 .sidebarNav {
@@ -156,51 +151,85 @@
   flex-direction: column;
   gap: 1rem;
 }
-
-.sidebar .link {
-  color: black;
+.sidebarLink,
+.sidebarLogoutButton
+{
+  display: block;
+  width: 100%;
+  /* margin-left: 8px; */
+  /* text-align: left;  */
+  padding: 2px px;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  background-color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.sidebar .getStarted {
+.sidebarLink:hover,
+.sidebarLogoutButton:hover {
+  background-color: #f5f5f5;
+  color: #99834d;
+}
+
+.sidebarProfile {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sidebar .navLink {
+  color: black;
+  font-size: 1.2rem;
+}
+
+.sidebar .startButton {
   font-size: 1.2rem;
   color: #ffffff;
 }
 
+.sidebar h2 {
+  font-size: 1.5rem;
+  color: #000;
+  margin-bottom: 1rem;
+}
 
-
+/* Mobile and Tablet Responsive Styles */
 @media (max-width: 1024px) {
-  .header {
+  .navbar {
     padding: 1rem 1.5rem;
   }
 
-  .logo {
+  .siteLogo {
     font-size: 1.3rem;
   }
 
-  .nav {
+  .navLinks {
     gap: 0.75rem;
   }
 
-  .link {
+  .navLink {
     font-size: 0.9rem;
   }
 
-  .getStarted {
+  .startButton {
     padding: 0.5rem 0.8rem;
     font-size: 0.9rem;
   }
 }
 
 @media (max-width: 768px) {
-  .logo {
+  .siteLogo {
     font-size: 1.2rem;
   }
 
-  .nav {
+  .navLinks {
     display: none;
   }
 
-  .hamburger {
+  .menuToggle {
     display: block;
   }
 
@@ -208,25 +237,37 @@
     padding: 1.5rem;
   }
 
-  .link {
-    font-size: 1.2rem;
+  .navLink {
+    font-size: 1rem;
   }
 
-  .getStarted {
-    font-size: 1.1rem;
+  .startButton {
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 480px) {
-  .logo {
+
+
+  .siteLogo {
+    font-size: 1rem;
+    /* margin-bottom: 1rem; */
+  }
+
+  .menuToggle {
+    align-self: flex-end;
+
+  }
+
+  .sidebarNav .navLink {
     font-size: 1rem;
   }
 
-  .link {
+  .startButton {
     font-size: 1rem;
   }
 
-  .getStarted {
-    font-size: 1rem;
+  .sidebar h2 {
+    font-size: 1.2rem;
   }
 }

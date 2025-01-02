@@ -4,8 +4,9 @@ import React, { useEffect, useState } from "react";
 import styles from "../BlogRead.module.css";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Post } from "@/app/lib/definations";
-
+import { Post } from "@/types/types";
+import Loading from "../loading";
+import NotFound from "../not-found";
 
 export default function BlogRead() {
   const pathname = usePathname();
@@ -13,21 +14,21 @@ export default function BlogRead() {
 
   const [blog, setBlog] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
       const fetchBlog = async () => {
         try {
-    
           const response = await fetch(`/api/read?postId=${id}`);
           if (!response.ok) {
-            throw new Error("Failed to fetch filtered posts");
+            throw new Error("Blog not found");
           }
           const data = await response.json();
-          console.log(data,"@data");
           setBlog(data);
-        } catch (error) {
+        } catch (error: any) {
           console.error("Error fetching blog:", error);
+          setError(error.message || "Failed to fetch blog.");
         } finally {
           setLoading(false);
         }
@@ -38,11 +39,17 @@ export default function BlogRead() {
   }, [id]);
 
   if (loading) {
-    return <div className={styles.loading}>Loading...</div>;
+    return <Loading/>; // You can replace this with a spinner if you have one.
   }
 
-  if (!blog) {
-    return <div className={styles.error}>Blog not found!</div>;
+  if (error || !blog) {
+    return (
+      <NotFound/>
+      // <div className={styles.error}>
+      //   <h1>Blog not found!</h1>
+      //   <p>{error}</p>
+      // </div>
+    );
   }
 
   return (
@@ -77,6 +84,5 @@ export default function BlogRead() {
         </div>
       )}
     </div>
-    // <p>{blog.author}</p>
   );
 }

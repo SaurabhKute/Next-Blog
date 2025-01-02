@@ -58,3 +58,37 @@
     margin-bottom: 15px;
   }
 }
+
+
+/* Dashboard.module.css */
+
+/* Spinner Animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: #301250;
+  font-weight: bold;
+  text-align: center;
+  height: 80vh;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3; /* Light grey background */
+  border-top: 4px solid #301250; /* Purple color */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+}

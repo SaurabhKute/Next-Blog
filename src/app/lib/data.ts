@@ -1,5 +1,6 @@
+import { Category, Post } from '@/types/types';
 import { sql } from '@vercel/postgres';
-import { Category, Post } from './definations';
+
 
 export async function fetchPosts(category?:string) {
   try {
