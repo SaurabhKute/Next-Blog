@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0.8rem 1rem;
   border-bottom: 1px solid #ddd;
   background-color: #fff;
   position: relative;
@@ -133,7 +133,7 @@
   position: fixed;
   top: 0;
   left: -100%;
-  width: 250px;
+  width: 200px;
   height: 100%;
   background-color: #ffffff;
   border-right: 1px solid #ddd;
@@ -194,6 +194,44 @@
   font-size: 1.5rem;
   color: #000;
   margin-bottom: 1rem;
+}
+
+
+/* Sidebar authentication section */
+.sidebarAuth {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* Align all items vertically in the middle */
+  flex-wrap: nowrap;     /* Prevent wrapping of items */
+}
+
+/* Styling for the Links */
+.sidebarLink {
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 8px;
+  transition: color 0.3s;
+}
+
+.sidebarLink:hover {
+  color: #000;  /* Change color on hover */
+}
+
+/* Styling for the button */
+.sidebarStartButton {
+  padding: 6px 12px;   /* Smaller padding to make the button smaller */
+  font-size: 12px;      /* Smaller font size for the button */
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sidebarStartButton:hover {
+  background-color: #444;  /* Button hover effect */
 }
 
 /* Mobile and Tablet Responsive Styles */
