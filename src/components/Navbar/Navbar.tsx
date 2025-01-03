@@ -31,9 +31,9 @@ export default function Navbar() {
         &#9776;
       </button>
       <nav className={`${styles.navLinks} ${isMenuOpen ? styles.navOpen : ""}`}>
-        <Link  href={isLoggedIn ? "/new-blog" : "/auth/login"} className={styles.navLink}>
+        {/* <Link  href={isLoggedIn ? "/new-blog" : "/auth/login"} className={styles.navLink}>
           Write
-        </Link>
+        </Link> */}
         {isLoggedIn ? (
           <div className={styles.profileWrapper}>
             <Image
@@ -66,6 +66,9 @@ export default function Navbar() {
           </div>
         ) : (
           <div className={styles.authWrapper}>
+             <Link href="/auth/login" className={styles.navLink}>
+            Write
+            </Link>
             <Link href="/auth/login" className={styles.navLink}>
               Sign in
             </Link>
@@ -77,9 +80,7 @@ export default function Navbar() {
         className={`${styles.sidebar} ${isMenuOpen ? styles.sidebarOpen : ""}`}
       >
         <nav className={styles.sidebarNav}>
-          <Link href="/new-blog" className={styles.sidebarLink}>
-            Write
-          </Link>
+         
           {isLoggedIn ? (
             <div className={styles.sidebarProfile}>
               <Link href="/profile" className={styles.sidebarLink}>
@@ -100,6 +101,9 @@ export default function Navbar() {
             </div>
           ) : (
             <div className={styles.sidebarAuth}>
+               <Link href="/auth/login" className={styles.sidebarLink}>
+            Write
+          </Link>
               <Link href="/auth/login" className={styles.sidebarLink}>
                 Sign in
               </Link>
