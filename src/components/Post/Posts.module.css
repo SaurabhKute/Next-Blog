@@ -1,19 +1,13 @@
 .postsContainer {
-  padding: 20px;
+  padding: 5px;
   font-family: Arial, sans-serif;
   background-color: #ffffff;
 }
 
-/* .heading {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-} */
-
 .postList {
   display: flex;
   flex-direction: column;
-  gap:25px;
+  gap: 25px;
 }
 
 .postCard {
@@ -21,12 +15,8 @@
   flex-wrap: wrap;
   align-items: center;
   background: #fff;
-  /* border: 1px solid #ddd; */
-  /* border-radius: 8px; */
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
   overflow: hidden;
   transition: transform 0.2s;
-  /* cursor: pointer; */
 }
 
 .postCard:hover {
@@ -64,7 +54,7 @@
   align-items: center;
 }
 
-.count ,
+.count,
 .postTimestamp {
   font-size: 12px;
   color: #999;
@@ -78,35 +68,87 @@
   cursor: pointer;
 }
 
-.link{
-   text-decoration: none; 
-   color: inherit;
+.link {
+  text-decoration: none;
+  color: inherit;
 }
 
-
-
 .postImage {
+  margin-top: 10px;
   width: 320px;
-  height: 200px;
+  height: 180px;
   object-fit: cover;
   flex-shrink: 0;
   border-left: 1px solid #ddd;
   border-radius: 2px;
 }
 
-.noPost{
- margin: 100px;
+.noPost {
+  margin: 100px;
   text-align: center;
 }
 
+/* Media Queries */
 @media (max-width: 768px) {
   .postCard {
-    flex-direction: column;
+    flex-direction: row; /* Align image and content side by side */
+    gap: 15px; 
+    align-items: normal;
   }
 
   .postImage {
-    width: 100%;
+    width: 150px; /* Resize image for small screens */
+    height: 100px;
     border-left: none;
     border-top: 1px solid #ddd;
+  }
+
+  .postContent {
+    padding: 10px;
+  }
+
+  .postTitle {
+    font-size: 20px;
+  }
+
+  .postDescription {
+    font-size: 13px;
+  }
+
+  .postAuthor,
+  .count,
+  .postTimestamp {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .postCard {
+    flex-direction: row; /* Keep content and image side by side */
+    align-items: normal;
+    margin-top: 10px;
+  }
+
+  .postImage {
+    width: 80px;
+    height: 60px;
+  }
+
+  .postContent {
+    padding: 8px;
+  }
+
+  .postTitle {
+    font-size: 18px;
+  }
+
+  .postDescription {
+    font-size: 12px;
+  }
+
+  .postAuthor,
+  .count,
+  .postTimestamp {
+    font-size: 10px;
   }
 }

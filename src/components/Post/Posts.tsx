@@ -29,7 +29,7 @@ export default function Posts({ posts }: PostsProps) {
                     <div className={styles.postDescription}>
                       <span
                         dangerouslySetInnerHTML={{
-                          __html: post.content && `${post.content.slice(0, 100)}...`,
+                          __html: post.content && `${post.content.slice(0, 80)}...`,
                         }}
                       ></span>
                     </div>
