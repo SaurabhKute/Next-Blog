@@ -78,13 +78,35 @@
   color: #555;
 }
 
+.buttons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .edit {
   padding: 10px;
   background: transparent;
   border: 1px solid gray;
   border-radius: 50px;
   cursor: pointer;
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  font-size: 14px;
+  color: gray; 
+  transition: background-color 0.3s ease, color 0.3s ease; 
 }
+
+.edit:hover {
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);}
+
+.editIcon {
+  width: 16px; 
+  height: 16px;
+  stroke: currentColor; 
+}
+
 
 .statDivider {
   margin: 0 1rem;
@@ -229,6 +251,151 @@
 .dots:hover {
   transform: scale(1.2); /* Enlarge slightly on hover */
 }
+
+.modalBody {
+  max-width: 90%; 
+  font-family: Arial, sans-serif;
+  font-size: 14px; /* Smaller text */
+  color: #333;
+  overflow-y: auto; /* Allows scrolling if content overflows */
+  max-height: 90vh; /* Ensures modal fits within the viewport */
+  margin: 0 auto; /* Centers modal horizontally */
+}
+
+.modalHeader {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+.profileSection {
+  margin-bottom: 16px;
+}
+
+.profileImageSection {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.profileImg {
+  width: 70px; /* Smaller image */
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+  margin-bottom: 8px;
+}
+
+.imageButtons {
+  display: flex;
+  gap: 8px; /* Spacing between buttons */
+  /* margin-bottom: 8px; */
+}
+
+.imageButton {
+  /* padding: 6px 10px; */
+  font-size: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.imageButton.updateBtn {
+  background:transparent;
+  color: #45a049;
+}
+
+.imageButton.updateBtn:hover {
+  transition: background-color 0.2s ease;
+}
+
+.imageButton.removeBtn {
+  background:transparent;
+  color: #d32f2f;
+}
+
+.imageButton.removeBtn:hover {
+  transition: background-color 0.2s ease;
+}
+
+
+.inputFields label {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.inputFields input,
+.inputFields textarea {
+  font-size: 13px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.inputFields input:focus,
+.inputFields textarea:focus {
+  outline: none;
+  border-color: #4caf50;
+}
+
+.textarea {
+  resize: none;
+  height: 80px; /* Adjust height as needed */
+}
+
+.charCount {
+  font-size: 12px;
+  color: #999;
+  text-align: right;
+  margin-top: 4px;
+}
+
+.btnGroup {
+  display: flex;
+  justify-content: end;
+
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.cancelBtn,
+.saveBtn {
+  padding: 8px 16px;
+  font-size: 13px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cancelBtn {
+  background-color: #ddd;
+  color: #333;
+}
+
+.cancelBtn:hover {
+  background-color: #bbb;
+}
+
+.saveBtn {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.saveBtn:hover {
+  background-color: #45a049;
+}
+
 
 
 

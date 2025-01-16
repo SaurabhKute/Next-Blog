@@ -61,6 +61,21 @@ export default function ProfilePage() {
               </div>
               <div className={styles.buttons}>
                 <button className={styles.edit} onClick={handleOpenModal}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16" /* Icon size */
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={styles.editIcon}
+                  >
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                  </svg>
                   Edit Profile
                 </button>
               </div>
@@ -73,8 +88,9 @@ export default function ProfilePage() {
           {["Profile", "Posts", "Saved"].map((step) => (
             <div
               key={step}
-              className={`${styles.stepperItem} ${activeStep === step ? styles.activeStep : ""
-                }`}
+              className={`${styles.stepperItem} ${
+                activeStep === step ? styles.activeStep : ""
+              }`}
               onClick={() => setActiveStep(step)}
             >
               {step}
@@ -128,22 +144,72 @@ export default function ProfilePage() {
         </div>
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <div>
-          <h2>Modal Title</h2>
-          <p>
-            This is some example content to demonstrate the scroll behavior when the
-            content exceeds the modal's height. Add more text to test scrolling.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            euismod, nunc eu laoreet efficitur, risus lorem posuere ligula, nec
-            volutpat felis eros id lectus.
-          </p>
-          <button onClick={handleCloseModal}>Close Modal</button>
+        <div className={styles.modalBody}>
+          {/* Modal Header */}
+          <div className={styles.modalHeader}>
+            <h3>Profile Information</h3>
+          </div>
+
+          {/* Profile Section */}
+          <div className={styles.profileSection}>
+            <div className={styles.profileImageSection}>
+              <img
+                src={session?.user?.image || ""}
+                alt="Profile Pic"
+                className={styles.profileImg}
+              />
+              <div className={styles.imageButtons}>
+                <button className={`${styles.imageButton} ${styles.updateBtn}`}>
+                  Update
+                </button>
+                <button className={`${styles.imageButton} ${styles.removeBtn}`}>
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Input Fields */}
+          <div className={styles.inputFields}>
+            <label>
+              Name*
+              <input
+                type="text"
+                placeholder="Enter your name"
+                className={styles.input}
+                value={session?.user?.name || ""}
+              />
+              <span className={styles.charCount}>12/50</span>
+            </label>
+            <label>
+              Email
+              <input
+                type="text"
+                placeholder="Add..."
+                className={styles.input}
+                value={session?.user?.email || ""}
+              />
+              <span className={styles.charCount}>2/4</span>
+            </label>
+            <label>
+              Short Bio
+              <textarea
+                placeholder="Write a short bio"
+                className={styles.textarea}
+              ></textarea>
+              <span className={styles.charCount}>68/160</span>
+            </label>
+          </div>
+
+          {/* Button Group */}
+          <div className={styles.btnGroup}>
+            <button className={styles.cancelBtn} onClick={handleCloseModal}>
+              Cancel
+            </button>
+            <button className={styles.saveBtn}>Save</button>
+          </div>
         </div>
       </Modal>
-
-
     </>
   );
 }
