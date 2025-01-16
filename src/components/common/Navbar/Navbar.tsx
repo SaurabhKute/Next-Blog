@@ -40,8 +40,8 @@ export default function Navbar() {
               src={session?.user?.image || "/icons/user.svg"}
               alt={session?.user?.name || "User Avatar"}
               className={styles.userAvatar}
-              width={25}
-              height={25}
+              width={35}
+              height={35}
               onClick={toggleDropdown}
             />
             {isDropdownOpen && (
