@@ -1,0 +1,28 @@
+.postsContainer {
+    overflow-y: auto;
+    height: 70vh;
+    min-height: 70vh;
+  
+    /* Custom Scrollbar Styling */
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #fdfbfb #f1f1f1; /* For Firefox */
+  }
+  
+  .postsContainer::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+  }
+  
+  .postsContainer::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Background of the scrollbar track */
+  }
+  
+  .postsContainer::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded edges for the thumb */
+    border: 2px solid #f1f1f1; /* Adds a border to match the track */
+  }
+  
+  .postsContainer::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Darker color when hovered */
+  }
+  

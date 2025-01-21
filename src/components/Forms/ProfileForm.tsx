@@ -4,21 +4,35 @@ import React, { useState } from "react";
 import styles from "./Profile.module.css";
 import { useSession } from "next-auth/react";
 import Modal from "../common/Modal/Modal";
+import toast from "react-hot-toast";
+import MyPosts from "../MyPosts/MyPosts";
 
 export default function ProfilePage() {
   const { data: session } = useSession(); // Get session data
-  const [activeStep, setActiveStep] = useState("Profile");
+
+  const [activeStep, setActiveStep] = useState("My Posts");
   const [isModalOpen, setModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: session?.user?.name || "",
+    email: session?.user?.email || "",
+    bio: "",
+  });
+
+  const handleChange = (e:any) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
 
   const renderContent = () => {
     switch (activeStep) {
-      case "Profile":
-        return <div>Profile content goes here...</div>;
-      case "Posts":
-        return <div>Posts content goes here...</div>;
+      case "My Posts":
+        return <MyPosts/>;
       case "Saved":
         return <div>Saved content goes here...</div>;
       default:
@@ -26,6 +40,11 @@ export default function ProfilePage() {
     }
   };
 
+  const handleSaveProfile = () => {
+    toast.success("Form Data Submitted");
+    console.log("Form Data Submitted:", formData);
+    handleCloseModal();
+  };
   return (
     <>
       <div className={styles.profileHeaderContainer}>
@@ -85,7 +104,7 @@ export default function ProfilePage() {
       </div>
       <div className={styles.pageContainer}>
         <div className={styles.stepperNav}>
-          {["Profile", "Posts", "Saved"].map((step) => (
+          {["My Posts", "Saved"].map((step) => (
             <div
               key={step}
               className={`${styles.stepperItem} ${
@@ -172,12 +191,13 @@ export default function ProfilePage() {
           {/* Input Fields */}
           <div className={styles.inputFields}>
             <label>
-              Name*
+              Name
               <input
                 type="text"
                 placeholder="Enter your name"
                 className={styles.input}
-                value={session?.user?.name || ""}
+                value={formData.name}
+                onChange={handleChange}
               />
               <span className={styles.charCount}>12/50</span>
             </label>
@@ -187,7 +207,8 @@ export default function ProfilePage() {
                 type="text"
                 placeholder="Add..."
                 className={styles.input}
-                value={session?.user?.email || ""}
+                value={formData.email}
+                onChange={handleChange}
               />
               <span className={styles.charCount}>2/4</span>
             </label>
@@ -196,6 +217,8 @@ export default function ProfilePage() {
               <textarea
                 placeholder="Write a short bio"
                 className={styles.textarea}
+                value={formData.bio}
+                onChange={handleChange}
               ></textarea>
               <span className={styles.charCount}>68/160</span>
             </label>
@@ -206,7 +229,9 @@ export default function ProfilePage() {
             <button className={styles.cancelBtn} onClick={handleCloseModal}>
               Cancel
             </button>
-            <button className={styles.saveBtn}>Save</button>
+            <button className={styles.saveBtn} onClick={handleSaveProfile}>
+              Save
+            </button>
           </div>
         </div>
       </Modal>

@@ -118,6 +118,7 @@
   flex-direction: column;
   border: 1px solid #fdfbfb;
   border-radius: 5px;
+  overflow-y: auto;
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
 
