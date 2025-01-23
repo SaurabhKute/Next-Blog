@@ -1,28 +1,102 @@
 .postsContainer {
-    overflow-y: auto;
-    height: 70vh;
-    min-height: 70vh;
-  
-    /* Custom Scrollbar Styling */
-    scrollbar-width: thin; /* For Firefox */
-    scrollbar-color: #fdfbfb #f1f1f1; /* For Firefox */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px; 
+}
+
+.post {
+  display: flex;
+  justify-content: space-between;
+  /* margin:  0 40px; */
+  align-items: center; 
+  padding: 16px;
+  width: 100%;
+  max-width: 900px;
+  border-bottom: 1px solid #d6d6d6;
+  background-color: #fff;
+  border-radius: 2px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+
+.textContent {
+  flex: 1;
+  margin-right: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centers the text content */
+}
+
+.postTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.postSubtitle {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.postDate {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.imageWrapper {
+  flex-shrink: 0;
+  width: 180px;
+  height: 100px;
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  align-items: normal;
+  justify-content: center;
+}
+
+.blogImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Scroll Bar */
+
+@media (max-width: 768px) {
+  .post {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .postsContainer::-webkit-scrollbar {
-    width: 8px; /* Width of the scrollbar */
+
+  .textContent {
+    margin-right: 0;
+    margin-bottom: 16px;
   }
-  
-  .postsContainer::-webkit-scrollbar-track {
-    background: #f1f1f1; /* Background of the scrollbar track */
+
+  .imageWrapper {
+    width: 100%;
+    height: 200px;
   }
-  
-  .postsContainer::-webkit-scrollbar-thumb {
-    background-color: #888; /* Color of the scrollbar thumb */
-    border-radius: 10px; /* Rounded edges for the thumb */
-    border: 2px solid #f1f1f1; /* Adds a border to match the track */
+}
+
+@media (max-width: 480px) {
+  .postTitle {
+    font-size: 1.2rem;
   }
-  
-  .postsContainer::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Darker color when hovered */
+
+  .postSubtitle {
+    font-size: 0.9rem;
   }
-  
+
+  .postDate {
+    font-size: 0.8rem;
+  }
+
+  .imageWrapper {
+    height: 150px;
+  }
+}

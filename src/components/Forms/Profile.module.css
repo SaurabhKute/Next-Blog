@@ -113,10 +113,18 @@
   color: #ccc;
 }
 
+.aboutSection{
+  height: 470px; /* Set a fixed height (adjust as needed) */
+  overflow-y: auto;
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #fdfbfb #f1f1f1; /* For Firefox */
+}
+
 .pageContainer {
   display: flex;
   flex-direction: column;
   border: 1px solid #fdfbfb;
+  /* border: 1px solid black; */
   border-radius: 5px;
   overflow-y: auto;
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
@@ -149,8 +157,8 @@
 .content {
   display: flex;
   gap: 20px;
-  margin-left: 50px;
-  margin-right: 50px;
+  margin-left: 25px;
+  margin-right: 25px;
   min-height: 500px;
   /* border: 1px solid gray; */
 }
@@ -397,6 +405,26 @@
   background-color: #45a049;
 }
 
+/* Scrollbar Styling for Webkit Browsers */
+
+.aboutSection::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.aboutSection::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the scrollbar track */
+}
+
+.aboutSection::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded edges for the thumb */
+  border: 2px solid #f1f1f1; /* Adds a border to match the track */
+}
+
+.aboutSection::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Darker color when hovered */
+}
+
 
 
 
@@ -428,6 +456,7 @@
 }
 
 @media (max-width: 480px) {
+
   .content {
     gap: 10px;
   }

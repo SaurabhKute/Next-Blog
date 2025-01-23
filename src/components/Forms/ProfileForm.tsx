@@ -10,7 +10,7 @@ import MyPosts from "../MyPosts/MyPosts";
 export default function ProfilePage() {
   const { data: session } = useSession(); // Get session data
 
-  const [activeStep, setActiveStep] = useState("My Posts");
+  const [activeStep, setActiveStep] = useState("Posts");
   const [isModalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: session?.user?.name || "",
@@ -31,7 +31,7 @@ export default function ProfilePage() {
 
   const renderContent = () => {
     switch (activeStep) {
-      case "My Posts":
+      case "Posts":
         return <MyPosts/>;
       case "Saved":
         return <div>Saved content goes here...</div>;
@@ -104,7 +104,7 @@ export default function ProfilePage() {
       </div>
       <div className={styles.pageContainer}>
         <div className={styles.stepperNav}>
-          {["My Posts", "Saved"].map((step) => (
+          {["Posts", "Saved"].map((step) => (
             <div
               key={step}
               className={`${styles.stepperItem} ${
@@ -129,7 +129,7 @@ export default function ProfilePage() {
                     href="https://medium.com/@saurabhkute321"
                     className={styles.hyperlink}
                   >
-                    https://medium.com/@saurabhkute321
+                    https://@saurabhkute321
                   </a>
                 </span>
               </div>
