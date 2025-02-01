@@ -6,12 +6,21 @@ import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import styles from './WriteBlog.module.css';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), {
   ssr: false,
 });
 
 export default function WriteBlog() {
+
+    const { data: session } = useSession();
+    const router = useRouter();
+
+    // console.log(session,"@session");
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [title, setTitle] = useState<string>('');
@@ -43,17 +52,71 @@ export default function WriteBlog() {
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
-  const handlePublish = () => {
-    const content = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    console.log({
-      title,
-      content,
-      image,
-      tags,
-      category,
-    });
-    alert('Blog published successfully!');
+  const uploadImageToCloudinary = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", `${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}`); // Get this from Cloudinary settings
+  
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+  
+    const data = await res.json();
+    return data.secure_url; 
   };
+
+  const handlePublish = async () => {
+    if (!image) {
+      toast.error("Please upload an image!")
+      alert("Please upload an image!");
+      return;
+    }
+  
+    try {
+      // Upload image to Cloudinary and get the URL
+      const imageUrl = await uploadImageToCloudinary(image);
+  
+      // console.log("Uploaded Image URL:", imageUrl); 
+  
+      const content = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+  
+      const blogData = {
+        title,
+        content,
+        image: imageUrl, // Ensure Cloudinary URL is sent
+        author: session?.user?.name,
+        tags: JSON.stringify(tags),
+        category,
+        user_id: session?.user?.id,
+      };
+  
+      // console.log("Sending Blog Data:", blogData);  
+  
+      const response = await fetch("/api/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(blogData),
+      });
+
+      const data = await response.json();
+  
+      if (response.ok) {
+        router.push(`/read/${data.id}`);
+        alert("Blog published successfully!");
+      } else {
+        alert("Failed to publish blog");
+      }
+    } catch (error) {
+      console.error("Error publishing blog:", error);
+      alert("An error occurred. Try again.");
+    }
+  };
+  
+  
 
   return (
     <div className={styles.container}>

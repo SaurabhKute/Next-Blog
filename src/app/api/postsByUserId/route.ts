@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   try {
     // console.log("Inside try block")
     const posts = await fetchPostsByUserId(userId); // Use the function here
-    console.log(posts,"###");
+    // console.log(posts,"###");
     return NextResponse.json(posts);
   } catch (error) {
     console.error("Error fetching posts by user ID:", error);

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { fetchPosts } from "@/app/lib/data";
+import { sql } from "@vercel/postgres";
+import { formatDate } from "@/utils/dateFormatter";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -10,6 +12,47 @@ export async function GET(request: Request) {
     return NextResponse.json(posts);
   } catch (error) {
     console.error("Error fetching posts:", error);
-    return NextResponse.json({ error: "Failed to fetch posts" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch posts" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const { title, content, image, author, tags, category, user_id } =
+      await request.json();
+
+    // console.log("Received Image:", image);
+    // console.log("User ID:", user_id);
+
+    if (!image) {
+      return NextResponse.json({ error: "Image is required" }, { status: 400 });
+    }
+
+    const createdAt = formatDate(new Date());
+    const updatedAt = createdAt;
+
+    const result = await sql`
+    INSERT INTO posts (title, content, image, author, tags, category, user_id, created_at, updated_at) 
+    VALUES (${title}, ${content}, ${image}, ${author}, ${JSON.stringify(
+      tags
+    )}, ${category}, ${user_id}, ${createdAt}, ${updatedAt})
+    RETURNING id;
+  `;
+
+    const insertedPost = result.rows[0];
+
+    return NextResponse.json(
+      { message: "Blog published successfully!", id: insertedPost?.id },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error publishing blog:", error);
+    return NextResponse.json(
+      { error: "Failed to publish blog" },
+      { status: 500 }
+    );
   }
 }

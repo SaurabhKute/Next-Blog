@@ -60,58 +60,38 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
     callbacks: {
         async signIn({ user, account }) {
-
-// console.log(user,"@user");
-// console.log(account,"@account");
-//             console.log(profile,"@profile");
-           
             if (account?.provider === 'google') {
-                // console.log('User signed in with Google:', user);
-              
                 try {
-
-                    // const googleIdToken = account?.id_token;
-
-                    // const { OAuth2Client } = require('google-auth-library');
-                    // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-
-                    // const ticket = await client.verifyIdToken({
-                    //     idToken: googleIdToken!,
-                    //     audience: process.env.GOOGLE_CLIENT_ID,  // Ensure the audience is correct
-                    // });
-
-                    // const payload = ticket.getPayload();
-                    // if (!payload) {
-                    //     throw new Error("Invalid ID token");
-                    // }
-
                     const result = await sql`SELECT * FROM users WHERE email = ${user.email}`;
-                    const existingUser = result.rows[0];
-
-                   
+                    let existingUser = result.rows[0];
+        
                     if (!existingUser) {
-                        await sql`
+                        const insertResult = await sql`
                             INSERT INTO users (name, email, image)
                             VALUES (${user.name}, ${user.email}, ${user.image})
+                            RETURNING id
                         `;
+                        existingUser = insertResult.rows[0];  // Retrieve the new user's ID
                     }
+        
+                    user.id = existingUser.id; // Attach ID to the user object
                 } catch (error) {
                     console.error('Error while handling Google login:', error);
-                    return false; 
+                    return false;
                 }
             }
-            return true; 
+            return true;
         },
+        
         async session({ session, token }) {
           
 
             if (token) {
-                // console.log(token,"@token");
-                session.user.id = token.sub as string; 
-                session.user.email = token.email as string;
-                session.user.image = token.picture as string;
-
+                if (token) {
+                    session.user.id = token.sub as string ?? token.id as string; 
+                    session.user.email = token.email as string;
+                    session.user.image = token.picture as string;
+                }
                 const expiresAt = token?.exp;
                 if (expiresAt && expiresAt <= Date.now() / 1000) { // Convert to seconds
                   signOut();

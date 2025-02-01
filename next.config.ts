@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['dummyjson.com','lh3.googleusercontent.com'],
+    domains: ['dummyjson.com','lh3.googleusercontent.com', 'res.cloudinary.com'],
   },
   async redirects() {
     return [
