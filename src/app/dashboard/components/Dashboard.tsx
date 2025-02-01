@@ -50,13 +50,13 @@ export default function Dashboard({
           />
 
           {loading ? (
-  <div className={styles.postLoader}>
-    <div className={styles.spinner}></div>
-    <p>Loading Posts...</p>
-  </div>
-) : (
-  <Posts posts={posts} />
-)}
+            <div className={styles.postLoader}>
+              <div className={styles.spinner}></div>
+              <p>Loading Posts...</p>
+            </div>
+          ) : (
+            <Posts posts={posts} />
+          )}
         </div>
 
         <aside className={styles.sidebar}>

@@ -9,8 +9,9 @@ export default async function Page() {
   const posts = await fetchPosts();
   const categories = await fetchCategories();
 
+
   return (
-    // Pass data as props to the Dashboard client component
+
     <Dashboard initialPosts={posts} initialCategories={categories} />
   );
 }
