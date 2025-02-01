@@ -3,6 +3,7 @@ import styles from "./Posts.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation"
 import { Post } from "@/types/types";
+import { formatDate } from "@/utils/dateFormatter";
 
 type PostsProps = {
   posts: Post[];
@@ -38,7 +39,7 @@ export default function Posts({ posts }: PostsProps) {
                 {/* </Link> */}
                 <div className={styles.postActions}>
                   <span className={styles.postTimestamp}>
-                    {new Date(post.updated_at).toLocaleString()}
+                   {formatDate(post?.updated_at)}
                   </span>
                   <Image
                     src="/icons/liked.svg"

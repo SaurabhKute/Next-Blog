@@ -6,6 +6,20 @@ import Image from "next/image";
 import { useSession, signOut } from "next-auth/react"; // Import next-auth hooks
 import styles from "./Navbar.module.css";
 
+interface NavLinkProps {
+  href: string;
+  label: string;
+  onClick?: () => void;
+  icon?: React.ReactNode;
+}
+
+interface DropdownItemProps {
+  href: string;
+  label: string;
+  onClick?: () => void;
+}
+
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -24,20 +38,22 @@ export default function Navbar() {
     await signOut({ callbackUrl: "/auth/login" });
   };
 
-  const NavLink = ({ href, label, onClick, icon }:any) => (
+  const NavLink: React.FC<NavLinkProps> = ({ href, label, onClick, icon }) => (
     <Link href={href} className={styles.navLink} onClick={onClick}>
       {icon}
       {label}
     </Link>
   );
 
-  const DropdownItem = ({ href, label, onClick }:any) => (
+
+  const DropdownItem: React.FC<DropdownItemProps> = ({ href, label, onClick }) => (
     <Link href={href} className={styles.dropdownItem} onClick={onClick}>
       {label}
     </Link>
   );
 
-  const UserAvatar = () => (
+
+  const UserAvatar: React.FC = () => (
     <Image
       src={session?.user?.image || "/icons/user.svg"}
       alt={session?.user?.name || "User Avatar"}
@@ -47,6 +63,7 @@ export default function Navbar() {
       onClick={toggleDropdown}
     />
   );
+
 
   return (
     <header className={styles.navbar}>

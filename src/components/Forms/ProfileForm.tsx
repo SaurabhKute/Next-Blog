@@ -6,23 +6,28 @@ import { useSession } from "next-auth/react";
 import Modal from "../common/Modal/Modal";
 import toast from "react-hot-toast";
 import MyPosts from "../MyPosts/MyPosts";
+import Image from "next/image"; // Import Image component
+
+interface FormData {
+  [key: string]: string;
+}
 
 export default function ProfilePage() {
   const { data: session } = useSession(); // Get session data
 
   const [activeStep, setActiveStep] = useState("Posts");
   const [isModalOpen, setModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: session?.user?.name || "",
     email: session?.user?.email || "",
     bio: "",
   });
 
-  const handleChange = (e:any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value, // Dynamically updating formData based on the name
     }));
   };
 
@@ -32,7 +37,7 @@ export default function ProfilePage() {
   const renderContent = () => {
     switch (activeStep) {
       case "Posts":
-        return <MyPosts/>;
+        return <MyPosts />;
       case "Saved":
         return <div>Saved content goes here...</div>;
       default:
@@ -42,7 +47,7 @@ export default function ProfilePage() {
 
   const handleSaveProfile = () => {
     toast.success("Form Data Submitted");
-    console.log("Form Data Submitted:", formData);
+    // console.log("Form Data Submitted:", formData);
     handleCloseModal();
   };
   return (
@@ -51,10 +56,12 @@ export default function ProfilePage() {
         <header className={styles.profileHeader}>
           <div className={styles.background}></div>
           <div className={styles.profileDetails}>
-            <img
+            <Image
               src={session?.user?.image || ""}
               alt="Profile Picture"
               className={styles.profilePic}
+              height={100} // Set appropriate height
+              width={100}  // Set appropriate width
             />
             <div className={styles.infoSection}>
               <h1 className={styles.name}>{session?.user?.name}</h1>
@@ -137,24 +144,38 @@ export default function ProfilePage() {
                 <h4>Following</h4>
                 <div className={styles.following}>
                   <div className={styles.left}>
-                    <img src="/icons/user.svg" alt="User Icon" />
+                    <Image
+                      src="/icons/user.svg"
+                      alt="User Icon"
+                      height={24} // Adjust as needed
+                      width={24}  // Adjust as needed
+                    />
                     <p>Alex Paul</p>
                   </div>
-                  <img
+                  <Image
                     src="/icons/three-dots.svg"
                     alt="Menu Icon"
                     className={styles.dots}
+                    height={24} // Adjust as needed
+                    width={24}  // Adjust as needed
                   />
                 </div>
                 <div className={styles.following}>
                   <div className={styles.left}>
-                    <img src="/icons/user.svg" alt="User Icon" />
+                    <Image
+                      src="/icons/user.svg"
+                      alt="User Icon"
+                      height={24}
+                      width={24}
+                    />
                     <p>Alex Paul</p>
                   </div>
-                  <img
+                  <Image
                     src="/icons/three-dots.svg"
                     alt="Menu Icon"
                     className={styles.dots}
+                    height={24}
+                    width={24}
                   />
                 </div>
               </div>
@@ -172,10 +193,12 @@ export default function ProfilePage() {
           {/* Profile Section */}
           <div className={styles.profileSection}>
             <div className={styles.profileImageSection}>
-              <img
+              <Image
                 src={session?.user?.image || ""}
                 alt="Profile Pic"
                 className={styles.profileImg}
+                height={100} // Set appropriate height
+                width={100}  // Set appropriate width
               />
               <div className={styles.imageButtons}>
                 <button className={`${styles.imageButton} ${styles.updateBtn}`}>
