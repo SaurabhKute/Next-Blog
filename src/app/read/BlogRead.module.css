@@ -1,12 +1,10 @@
+/* Default styles (Desktop First Approach) */
 .container {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
   background-color: #ffffff;
-  /* border: 1px solid #ddd; */
-  /* border-radius: 8px; */
-  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
 }
 
 .title {
@@ -17,7 +15,6 @@
   text-align: center;
 }
 
-
 .meta {
   display: flex;
   align-items: center;
@@ -25,7 +22,6 @@
   font-size: 14px;
   color: #888;
   gap: 10px;
-  /* Add some spacing between elements */
 }
 
 .metaLeft {
@@ -38,22 +34,19 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  /* Small gap between author and date */
 }
 
-.userAvatar{
+.userAvatar {
   border-radius: 50px;
 }
 
 .author {
-  font-weight: bold;
-  color: #000000;
+  font-weight: lighter;
+  color: #333;
   font-size: 16px;
-  
 }
 
 .date {
-  /* font-style: italic; */
   color: #666;
   font-size: 12px;
 }
@@ -72,24 +65,55 @@
 .leftIcons,
 .rightIcons {
   display: flex;
-  gap: 16px; /* Spacing between icons */
+  gap: 16px;
 }
 
 .icon {
   width: 28px;
-  height: 28px; 
-  fill: none; 
+  height: 28px;
+  fill: none;
   stroke: #000000;
-  stroke-width: 0.5; 
-  cursor: pointer; 
+  stroke-width: 0.5;
+  cursor: pointer;
   transition: transform 0.2s ease-in-out, fill 0.2s ease-in-out;
 }
 
 .icon:hover {
-  /* fill: #555; */
-  transform: scale(1.1); /* Slightly enlarge on hover */
+  transform: scale(1.1);
 }
 
+.tooltipMenu {
+  position: absolute;
+  top: 160px;
+  right: 110px;
+  margin-top: 5px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 5px 10px;
+  width: 50px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.menuItem {
+  padding: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  width: 100%;
+  border-radius: 4px;
+  color: #666;
+}
+
+.menuItem:hover {
+  background-color: #fbfbfb;
+  color: #222;
+}
 
 .image {
   width: 100%;
@@ -98,7 +122,6 @@
   margin-bottom: 20px;
   border-radius: 8px;
 }
-
 
 .content {
   font-size: 16px;
@@ -141,9 +164,16 @@
   cursor: default;
 }
 
+/* Tablets (768px and below) */
+@media (max-width: 1024px) {
+  .container {
+    max-width: 90%;
+    padding: 15px;
+  }
 
-
-@media (max-width: 768px) {
+  .title {
+    font-size: 28px;
+  }
 
   .meta {
     flex-direction: row;
@@ -156,21 +186,77 @@
     align-items: flex-start;
   }
 
+  .tooltipMenu {
+    top: 180px;
+    right: 20px;
+    /* width: px; */
+  }
+
+  .content {
+    font-size: 15px;
+  }
+}
+
+/* Mobile Devices (600px and below) */
+@media (max-width: 600px) {
   .container {
-    padding: 15px;
+    max-width: 100%;
+    padding: 10px;
   }
 
   .title {
     font-size: 24px;
   }
 
-  .content {
-    font-size: 15px;
+  .meta {
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
   }
 
+  .row {
+    flex-direction: row;
+    height: auto;
+    padding: 10px 0;
+    justify-content: space-between;
+  }
+
+  .leftIcons,
+  .rightIcons {
+    justify-content: center;
+    /* width: 100%; */
+  }
+
+  .tooltipMenu {
+    top: 210px;
+    right: 10px;
+    /* width: 80px; */
+  }
+
+  .content {
+    font-size: 14px;
+  }
+
+  .chip {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
 }
 
-/* Dashboard.module.css */
+/* Extra Large Screens (1200px and above) */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1000px;
+  }
+
+  .title {
+    font-size: 36px;
+  }
+
+  .content {
+    font-size: 18px;
+  }
+}
 
 /* Spinner Animation */
 @keyframes spin {
@@ -195,8 +281,8 @@
 }
 
 .spinner {
-  border: 4px solid #f3f3f3; /* Light grey background */
-  border-top: 4px solid #000000; /* Purple color */
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #000000;
   border-radius: 50%;
   width: 20px;
   height: 20px;

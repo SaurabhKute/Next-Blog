@@ -7,7 +7,7 @@
   flex-direction: column;
   justify-content: center; 
   align-items: center; 
-  height: 100vh;
+  height: 80vh;
   margin: 0;
   padding: 2rem;
   box-sizing: border-box;
@@ -19,21 +19,21 @@
   max-width: 700px; 
   /* background: rgb(211, 211, 211); */
   background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
-  padding: 3rem;
+  padding: 2.8rem;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px); 
 }
 
 .hero h1 {
-  font-size: 2.8rem;
+  font-size: 2.4rem;
   font-weight: bold;
   margin-bottom: 1rem;
   color: #000000;
 }
 
 .hero p {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   margin-bottom: 2rem;
   color: #666;
 }
