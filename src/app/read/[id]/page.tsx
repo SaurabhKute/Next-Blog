@@ -54,7 +54,7 @@ export default function BlogRead() {
   }, [id]);
 
   if (loading) {
-    return <Loading />; 
+    return <Loading />;
   }
 
   if (error || !blog) {
@@ -71,17 +71,52 @@ export default function BlogRead() {
 
     setMenuVisible(false);
     toast.success("Post Updated!")
-    
+
   };
 
-  const handleDelete = () => {
-
+  const handleDelete = async (postId: number) => {
     setMenuVisible(false);
-    toast.success("Post Deleted!")
-    router.push('/dashboard');
-    
-    // alert("Delete post");
+
+    if (!session || !session.user?.id) {
+      alert("You must be logged in to delete a post.");
+      return;
+    }
+
+    if (!confirm("Are you sure you want to delete this post?")) return;
+
+    try {
+      const response = await fetch(`/api/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId,
+          userId: session.user.id,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete post.");
+      }
+
+      toast.success("Post deleted successfully!");
+      // alert("Post deleted successfully!");
+      router.push("/dashboard");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        console.error("Error deleting post:", error.message);
+        // alert(error.message);
+      } else {
+        toast.error("An unknown error occurred.");
+        console.error("Unknown error:", error);
+        alert("An unknown error occurred.");
+      }
+    }
   };
+
 
   return (
     <div className={styles.container}>
@@ -134,7 +169,7 @@ export default function BlogRead() {
           {menuVisible && (
             <div className={styles.tooltipMenu}>
               <button onClick={handleEdit} className={styles.menuItem}>Edit</button>
-              <button onClick={handleDelete} className={styles.menuItem}>Delete</button>
+              <button onClick={() => handleDelete(blog?.id)} className={styles.menuItem}>Delete</button>
             </div>
           )}
 

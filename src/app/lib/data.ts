@@ -116,28 +116,28 @@ export async function fetchPostById(postId: string) {
 //   }
 // }
 
-// export async function deletePostById(postId, userId) {
-//   try {
-//     // Checking if the post exists and belongs to the user
-//     const post = await sql`
-//       SELECT *
-//       FROM posts
-//       WHERE id = ${postId} AND user_id = ${userId}
-//     `;
+export async function deletePostById(postId:string, userId:number) {
+  try {
+    // Checking if the post exists and belongs to the user
+    const post = await sql`
+      SELECT *
+      FROM posts
+      WHERE id = ${postId} AND user_id = ${userId}
+    `;
 
-//     if (post.rows.length === 0) {
-//       throw new Error('Post not found or user not authorized to delete this post.');
-//     }
+    if (post.rows.length === 0) {
+      throw new Error('Post not found or user not authorized to delete this post.');
+    }
 
-//     // If post exists and belongs to the user, delete the post
-//     await sql`
-//       DELETE FROM posts
-//       WHERE id = ${postId};
-//     `;
+    // If post exists and belongs to the user, delete the post
+    await sql`
+      DELETE FROM posts
+      WHERE id = ${postId};
+    `;
 
-//     return { message: 'Post deleted successfully.' };
-//   } catch (error) {
-//     console.error('Database Error:', error);
-//     throw new Error('Failed to delete post.');
-//   }
-// }
+    return { message: 'Post deleted successfully.' };
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete post.');
+  }
+}
