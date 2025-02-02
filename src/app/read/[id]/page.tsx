@@ -67,12 +67,13 @@ export default function BlogRead() {
     setMenuVisible(!menuVisible);
   };
 
-  const handleEdit = () => {
-
+  const handleEdit = (postId: number) => {
     setMenuVisible(false);
-    toast.success("Post Updated!")
-
+    toast.success("Redirecting to Edit Page...");
+    router.push(`/edit/${postId}`); // Navigate to update page
   };
+
+  // console.log(blog,"@blogs");
 
   const handleDelete = async (postId: number) => {
     setMenuVisible(false);
@@ -157,6 +158,7 @@ export default function BlogRead() {
             <path d="M17 3H7c-1.1 0-2 .9-2 2v14l7-3 7 3V5c0-1.1-.9-2-2-2z"></path>
           </svg>
           {/* Edit Icon */}
+          {session?.user?.id === blog?.user_id && (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -165,10 +167,11 @@ export default function BlogRead() {
           >
             <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.41l-2.34-2.34a1.003 1.003 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
           </svg>
+          )}
 
-          {menuVisible && (
+          {menuVisible  && (
             <div className={styles.tooltipMenu}>
-              <button onClick={handleEdit} className={styles.menuItem}>Edit</button>
+              <button onClick={() => handleEdit(blog?.id)} className={styles.menuItem}>Edit</button>
               <button onClick={() => handleDelete(blog?.id)} className={styles.menuItem}>Delete</button>
             </div>
           )}

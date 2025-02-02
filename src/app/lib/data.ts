@@ -6,10 +6,8 @@ export async function fetchPosts(category?: string) {
     let query;
 
     if (category && category !== "All") {
-      // Query to fetch posts by category
       query = sql<Post>`SELECT * FROM posts WHERE category = ${category}`;
     } else {
-      // Query to fetch all posts
       query = sql<Post>`SELECT * FROM posts`;
     }
 
@@ -74,47 +72,44 @@ export async function fetchPostById(postId: string) {
         FROM posts
         WHERE id = ${postId}
       `;
-    return data.rows[0]; // Assuming post ID is unique and will return a single post.
+    return data.rows[0];
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch post by ID.");
   }
 }
 
-// export async function updatePostById(postId, userId, updatedData) {
-//   try {
-//     // Checking if the post exists and belongs to the user
-//     const post = await sql`
-//       SELECT *
-//       FROM posts
-//       WHERE id = ${postId} AND user_id = ${userId}
-//     `;
+export async function updatePostById(postId:string, userId:string, updatedData:any) {
+  try {
+    const post = await sql`
+      SELECT *
+      FROM posts
+      WHERE id = ${postId} AND user_id = ${userId}
+    `;
 
-//     if (post.rows.length === 0) {
-//       throw new Error('Post not found or user not authorized to update this post.');
-//     }
+    if (post.rows.length === 0) {
+      throw new Error('Post not found or user not authorized to update this post.');
+    }
 
-//     // If post exists and belongs to the user, update the post
-//     const updatedPost = await sql`
-//       UPDATE posts
-//       SET
-//         title = ${updatedData.title},
-//         content = ${updatedData.content},
-//         image = ${updatedData.image},
-//         author = ${updatedData.author},
-//         tags = ${updatedData.tags},
-//         category = ${updatedData.category},
-//         updated_at = NOW()
-//       WHERE id = ${postId}
-//       RETURNING *;
-//     `;
+    const updatedPost = await sql`
+      UPDATE posts
+      SET
+        title = ${updatedData.title},
+        content = ${updatedData.content},
+        image = ${updatedData.image},
+        tags = ${updatedData.tags},
+        category = ${updatedData.category},
+        updated_at = NOW()
+      WHERE id = ${postId}
+      RETURNING *;
+    `;
 
-//     return updatedPost.rows[0];
-//   } catch (error) {
-//     console.error('Database Error:', error);
-//     throw new Error('Failed to update post.');
-//   }
-// }
+    return updatedPost.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to update post.');
+  }
+}
 
 export async function deletePostById(postId:string, userId:number) {
   try {
@@ -129,7 +124,7 @@ export async function deletePostById(postId:string, userId:number) {
       throw new Error('Post not found or user not authorized to delete this post.');
     }
 
-    // If post exists and belongs to the user, delete the post
+
     await sql`
       DELETE FROM posts
       WHERE id = ${postId};

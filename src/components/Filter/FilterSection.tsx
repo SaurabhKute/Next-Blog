@@ -30,11 +30,11 @@ export default function FilterSection({
     };
 
     checkArrowsVisibility();
-    window.addEventListener("resize", checkArrowsVisibility);
+    window?.addEventListener("resize", checkArrowsVisibility);
     filterListRef.current?.addEventListener("scroll", checkArrowsVisibility);
 
     return () => {
-      window.removeEventListener("resize", checkArrowsVisibility);
+      window?.removeEventListener("resize", checkArrowsVisibility);
       filterListRef.current?.removeEventListener("scroll", checkArrowsVisibility);
     };
   }, []);
