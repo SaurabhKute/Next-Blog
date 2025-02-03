@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { useParams, useRouter } from 'next/navigation';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
+// import htmlToDraft from 'html-to-draftjs';
 import toast from 'react-hot-toast';
 import styles from '../../new-blog/WriteBlog.module.css';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -24,7 +24,7 @@ export default function UpdateBlog() {
     // console.log(id,"Params");
     const [postId, setPostId] = useState();
     const [title, setTitle] = useState('');
-    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+    const [editorState, setEditorState] = useState(EditorState.createEmpty() || {});
     const [category, setCategory] = useState('');
     const [tags, setTags] = useState<string[]>([]);
     const [newTag, setNewTag] = useState('');
@@ -36,26 +36,36 @@ export default function UpdateBlog() {
             try {
                 const res = await fetch(`/api/read?postId=${id}`);
                 const data = await res.json();
-
-                // console.log(res,"@@");
-                // console.log(data,"@data");
+    
                 setPostId(data.id);
                 setTitle(data.title);
                 setCategory(data.category);
-                setTags(data.tags);
+    
+                // ✅ Ensure tags is always an array
+                const parsedTags = Array?.isArray(data.tags) 
+                    ? data.tags 
+                    : typeof data.tags === 'string' 
+                    ? JSON.parse(data.tags) 
+                    : [];
+    
+                setTags(parsedTags);
                 setImagePreview(data.image);
-
+    
+                // Dynamically import html-to-draftjs inside useEffect
+                const htmlToDraft = (await import("html-to-draftjs")).default;
                 const blocksFromHtml = htmlToDraft(data.content);
                 const { contentBlocks, entityMap } = blocksFromHtml;
                 const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
                 setEditorState(EditorState.createWithContent(contentState));
             } catch (error) {
-                console.error('Error fetching blog:', error);
+                console.error("Error fetching blog:", error);
             }
         };
-
+    
         fetchBlog();
     }, [id]);
+    
+    
 
     const handleUpdate = async () => {
         try {
@@ -66,16 +76,16 @@ export default function UpdateBlog() {
                 title,
                 content,
                 image: imagePreview,
-                tags: JSON.stringify(tags),
+                tags: JSON.stringify(tags), // ✅ Ensure tags are sent as a string
                 category,
             };
-
+    
             const response = await fetch(`/api/posts/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedBlog),
             });
-
+    
             if (response.ok) {
                 toast.success('Blog updated successfully!');
                 router.push(`/read/${id}`);
@@ -87,6 +97,7 @@ export default function UpdateBlog() {
             toast.error('An error occurred.');
         }
     };
+    
 
     return (
         <div className={styles.container}>
@@ -139,7 +150,7 @@ export default function UpdateBlog() {
                     <button onClick={() => setTags([...tags, newTag])} className={styles.addTagButton}>Add</button>
                 </div>
                 <div className={styles.tagsContainer}>
-                    {tags.map((tag, index) => (
+                    {tags?.map((tag, index) => (
                         <span key={index} className={styles.tag}>
                             {tag}
                             <button onClick={() => setTags(tags.filter(t => t !== tag))} className={styles.removeTagButton}>
