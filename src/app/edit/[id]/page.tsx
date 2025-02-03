@@ -28,7 +28,6 @@ export default function UpdateBlog() {
     const [category, setCategory] = useState('');
     const [tags, setTags] = useState<string[]>([]);
     const [newTag, setNewTag] = useState('');
-    const [image, setImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState('');
 
     useEffect(() => {
@@ -171,7 +170,6 @@ export default function UpdateBlog() {
                     onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
-                            setImage(file);
                             setImagePreview(URL.createObjectURL(file));
                         }
                     }}

@@ -1,6 +1,15 @@
 import { Category, Post } from "@/types/types";
 import { sql } from "@vercel/postgres";
 
+export interface PostUpdate {
+  title: string;
+  content: string;
+  image?: string;
+  tags?: string[];
+  category?: string;
+}
+
+
 export async function fetchPosts(category?: string) {
   try {
     let query;
@@ -79,7 +88,7 @@ export async function fetchPostById(postId: string) {
   }
 }
 
-export async function updatePostById(postId:string, userId:string, updatedData:any) {
+export async function updatePostById(postId:string, userId:string, updatedData:PostUpdate) {
   try {
     const post = await sql`
       SELECT *
@@ -91,13 +100,18 @@ export async function updatePostById(postId:string, userId:string, updatedData:a
       throw new Error('Post not found or user not authorized to update this post.');
     }
 
+    const tagsArray = updatedData.tags && updatedData.tags.length > 0
+    ? `{${updatedData.tags.join(',')}}`
+    : null;
+ 
+
     const updatedPost = await sql`
       UPDATE posts
       SET
         title = ${updatedData.title},
         content = ${updatedData.content},
         image = ${updatedData.image},
-        tags = ${updatedData.tags},
+        tags = ${tagsArray},
         category = ${updatedData.category},
         updated_at = NOW()
       WHERE id = ${postId}
