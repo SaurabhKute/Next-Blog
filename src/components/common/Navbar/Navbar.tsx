@@ -110,8 +110,8 @@ export default function Navbar() {
                   {isDropdownOpen && (
                     <div className={styles.dropdownMenu}>
                       <DropdownItem href="/profile" label="Profile" onClick={closeSidebar} />
-                      <DropdownItem href="/manage-posts" label="Manage Posts" onClick={closeSidebar} />
-                      <DropdownItem href="/statistics" label="Statistics" onClick={closeSidebar} />
+                      {/* <DropdownItem href="/manage-posts" label="Manage Posts" onClick={closeSidebar} /> */}
+                      {/* <DropdownItem href="/statistics" label="Statistics" onClick={closeSidebar} /> */}
                       <button className={styles.logoutButton} onClick={handleLogout}>
                         Logout {` (${session?.user?.name})`}
                       </button>

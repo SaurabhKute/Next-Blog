@@ -88,6 +88,93 @@
   animation: expandLine 1.5s ease-in-out infinite;
 }
 
+.notFound {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.notFound p {
+  font-size: 36px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+.goToDashboard {
+  padding: 10px 26px;
+  font-size: 18px;
+  font-weight: 600;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.goToDashboard:hover {
+  background-color: #444;
+}
+
+.goToDashboard:focus {
+  outline: none;
+}
+
+/* Mobile view */
+@media (max-width: 767px) {
+  .notFound {
+    height: auto;
+    padding: 15px;
+  }
+
+  .notFound p {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+
+  .goToDashboard {
+    font-size: 16px;
+    padding: 10px 25px;
+  }
+}
+
+/* Tablet view */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .notFound p {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .goToDashboard {
+    font-size: 17px;
+    padding: 12px 28px;
+  }
+}
+
+/* Desktop view */
+@media (min-width: 1025px) {
+  .notFound p {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+
+  .goToDashboard {
+    font-size: 18px;
+    padding: 12px 30px;
+  }
+}
+
+
 
 @keyframes expandLine {
   0% {

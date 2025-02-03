@@ -10,19 +10,21 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { Category } from '@/types/types';
+import BreadCrumb from '@/components/common/BreadCrumb/BreadCrumb';
 
 const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), {
   ssr: false,
 });
 
-
+const breadcrumb = {
+  label: 'Write',
+};
 
 export default function WriteBlog() {
-
   const { data: session } = useSession();
   const router = useRouter();
 
-  const isMounted = useRef(false);
+  const isMounted = useRef(true);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [title, setTitle] = useState<string>('');
@@ -31,32 +33,33 @@ export default function WriteBlog() {
   const [category, setCategory] = useState<string>('');
   const [newTag, setNewTag] = useState<string>('');
   const [categories, setCategories] = useState<Category[]>([]);
-
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    isMounted.current = true;
-
     const getCategories = async () => {
       try {
         const res = await fetch('/api/categories');
-        if (!res.ok) throw new Error("Failed to fetch categories");
+        if (!res.ok) {
+          console.error('Failed to fetch categories:', res.statusText);
+          return;
+        }
 
         const data = await res.json();
-        if (isMounted.current) { // ✅ Only update state if mounted
-          setCategories(data);
+
+        if (isMounted.current) {
+          setCategories(data); // Ensure this happens only when the component is mounted
         }
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error('Error fetching categories:', error);
       }
     };
 
     getCategories();
 
     return () => {
-      isMounted.current = false;
+      isMounted.current = false; // Mark the component as unmounted during cleanup
     };
   }, []);
-
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -65,7 +68,7 @@ export default function WriteBlog() {
 
   const handleRemoveImage = () => {
     if (inputRef?.current) {
-      inputRef.current.value = "";
+      inputRef.current.value = '';
     }
     setImage(null);
   };
@@ -83,13 +86,13 @@ export default function WriteBlog() {
 
   const uploadImageToCloudinary = async (file: File) => {
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", `${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}`);
+    formData.append('file', file);
+    formData.append('upload_preset', `${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}`);
 
     const res = await fetch(
       `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
       {
-        method: "POST",
+        method: 'POST',
         body: formData,
       }
     );
@@ -99,64 +102,62 @@ export default function WriteBlog() {
   };
 
   const handlePublish = async () => {
+    setLoading(true);
     if (!image) {
-      toast.error("Please upload an image!")
-      alert("Please upload an image!");
+      toast.error('Please upload an image!');
       return;
     }
 
     try {
-      // Upload image to Cloudinary and get the URL
       const imageUrl = await uploadImageToCloudinary(image);
-
-      // console.log("Uploaded Image URL:", imageUrl); 
 
       const content = draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
       const blogData = {
         title,
         content,
-        image: imageUrl, // Ensure Cloudinary URL is sent
+        image: imageUrl,
         author: session?.user?.name,
         tags: JSON.stringify(tags),
         category,
         user_id: session?.user?.id,
       };
 
-
-      const response = await fetch("/api/posts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(blogData),
       });
+
+      setLoading(false);
 
       if (response.ok) {
         const data = await response.json();
         toast.success(data.message);
-        // alert("Blog published successfully!");
         router.push(`/read/${data.id}`);
       } else {
-        alert("Failed to publish blog");
+        toast.error('Failed to publish blog');
       }
     } catch (error) {
-      console.error("Error publishing blog:", error);
-      alert("An error occurred. Try again.");
+      console.error('Error publishing blog:', error);
+      toast.error('An error occurred. Try again.');
     }
   };
 
-
-
   return (
     <div className={styles.container}>
-      {/* Header */}
+      <BreadCrumb breadcrumb={breadcrumb} />
       <div className={styles.header}>
         <h1 className={styles.heading}>Write a Blog</h1>
-        <button onClick={handlePublish} className={styles.publishButton}>
-          Publish
+        <button
+          onClick={handlePublish}
+          className={styles.publishButton}
+          disabled={loading}
+        >
+          {loading ? 'Publishing' : 'Publish'}
         </button>
       </div>
 
-      {/* Title Input */}
       <div className={styles.formGroup}>
         <label htmlFor="title" className={styles.label}>
           Blog Title:
@@ -171,7 +172,6 @@ export default function WriteBlog() {
         />
       </div>
 
-      {/* WYSIWYG Editor */}
       <div className={styles.formGroup}>
         <label className={styles.label}>Blog Content:</label>
         <Editor
@@ -183,7 +183,6 @@ export default function WriteBlog() {
         />
       </div>
 
-      {/* Category Dropdown */}
       <div className={styles.formGroup}>
         <label htmlFor="category" className={styles.label}>
           Select Category:
@@ -194,13 +193,12 @@ export default function WriteBlog() {
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value="" disabled>Select a category</option>
-          {categories?.map((cat: Category) => (
+          {categories?.map((cat) => (
             <option key={cat.id} value={cat.id}>{cat.name}</option>
           ))}
         </select>
       </div>
 
-      {/* Tags Input */}
       <div className={styles.formGroup}>
         <label htmlFor="tags" className={styles.label}>
           Tags:
@@ -233,7 +231,6 @@ export default function WriteBlog() {
         </div>
       </div>
 
-      {/* Image Upload */}
       <div className={styles.formGroup}>
         <label htmlFor="image" className={styles.label}>
           Upload Image:
@@ -248,7 +245,6 @@ export default function WriteBlog() {
         />
       </div>
 
-      {/* Image Preview */}
       {image && (
         <div className={styles.imagePreview}>
           <p>Preview:</p>
@@ -269,5 +265,4 @@ export default function WriteBlog() {
       )}
     </div>
   );
-};
-
+}
