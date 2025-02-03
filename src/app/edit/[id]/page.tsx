@@ -33,6 +33,7 @@ export default function UpdateBlog() {
     const [newTag, setNewTag] = useState('');
     const [imagePreview, setImagePreview] = useState('');
     const [categories, setCategories] = useState<Category[]>([]);
+    const [loading, setLoading] = useState(false);
 
     // console.log(categories,"@categories");
 
@@ -103,6 +104,7 @@ export default function UpdateBlog() {
 
 
     const handleUpdate = async () => {
+        setLoading(true);
         try {
             const content = draftToHtml(convertToRaw(editorState.getCurrentContent()));
             const updatedBlog = {
@@ -120,6 +122,7 @@ export default function UpdateBlog() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedBlog),
             });
+            setLoading(false);
 
             if (response.ok) {
                 toast.success('Blog updated successfully!');
@@ -138,7 +141,7 @@ export default function UpdateBlog() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1 className={styles.heading}>Edit Blog</h1>
-                <button onClick={handleUpdate} className={styles.publishButton}>Update</button>
+                <button onClick={handleUpdate} className={styles.publishButton}  disabled={loading}> {loading ? "Updating" : "Update"}</button>
             </div>
 
             <div className={styles.formGroup}>
@@ -162,7 +165,7 @@ export default function UpdateBlog() {
 
             <div className={styles.formGroup}>
                 <label className={styles.label}>Category:</label>
-               
+
                 <select
                     className={styles.dropdown}
                     value={category}

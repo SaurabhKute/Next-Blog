@@ -10,6 +10,11 @@ import NotFound from "../not-found";
 import { formatDate } from "@/utils/dateFormatter";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import BreadCrumb from "@/components/common/BreadCrumb/BreadCrumb";
+
+const breadcrumb = {
+  label: 'Read', 
+};
 
 
 export default function BlogRead() {
@@ -23,6 +28,8 @@ export default function BlogRead() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [menuVisible, setMenuVisible] = useState(false);
+
+  
 
   useEffect(() => {
     if (id) {
@@ -121,6 +128,8 @@ export default function BlogRead() {
 
   return (
     <div className={styles.container}>
+
+<BreadCrumb  breadcrumb={breadcrumb}/>
       <h1 className={styles.title}>{blog?.title}</h1>
 
       <div className={styles.meta}>
