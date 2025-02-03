@@ -1,22 +1,14 @@
-"use client";
-
 export default function extractFirstParagraph(html: string, limit: number = 80) {
   if (!html) return "";
 
-  // Create a temporary DOM element to parse the HTML
-  const div = document.createElement("div");
-  div.innerHTML = html;
+  // Extract text from the first <p> tag using a regex
+  const match = html.match(/<p[^>]*>(.*?)<\/p>/i);
+  let content = match ? match[1] : "";
 
-  // Find the first paragraph
-  const firstParagraph = div.querySelector("p");
-
-  if (!firstParagraph) return ""; // Return empty if no paragraph found
-
-  // Get the text content and limit its length
-  let content = firstParagraph.textContent || "";
+  // Limit content length
   if (content.length > limit) {
     content = content.slice(0, limit) + "...";
   }
 
-  return content;
+  return content.replace(/<\/?[^>]+(>|$)/g, ""); // Remove any leftover HTML tags
 }
