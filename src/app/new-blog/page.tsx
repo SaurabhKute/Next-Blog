@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
@@ -9,16 +9,20 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { Category } from '@/types/types';
 
 const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), {
   ssr: false,
 });
+
+
 
 export default function WriteBlog() {
 
   const { data: session } = useSession();
   const router = useRouter();
 
+  const isMounted = useRef(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [title, setTitle] = useState<string>('');
@@ -26,6 +30,33 @@ export default function WriteBlog() {
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState<string>('');
   const [newTag, setNewTag] = useState<string>('');
+  const [categories, setCategories] = useState<Category[]>([]);
+
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    const getCategories = async () => {
+      try {
+        const res = await fetch('/api/categories');
+        if (!res.ok) throw new Error("Failed to fetch categories");
+
+        const data = await res.json();
+        if (isMounted.current) { // ✅ Only update state if mounted
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    getCategories();
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -92,7 +123,6 @@ export default function WriteBlog() {
         user_id: session?.user?.id,
       };
 
-      // console.log("Sending Blog Data:", blogData);  
 
       const response = await fetch("/api/posts", {
         method: "POST",
@@ -100,11 +130,11 @@ export default function WriteBlog() {
         body: JSON.stringify(blogData),
       });
 
-      const data = await response.json();
-
       if (response.ok) {
+        const data = await response.json();
+        toast.success(data.message);
+        // alert("Blog published successfully!");
         router.push(`/read/${data.id}`);
-        alert("Blog published successfully!");
       } else {
         alert("Failed to publish blog");
       }
@@ -159,19 +189,14 @@ export default function WriteBlog() {
           Select Category:
         </label>
         <select
-          id="category"
           className={styles.dropdown}
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value="" disabled>Select a category</option>
-          <option value="technology">Technology</option>
-          <option value="health">Health</option>
-          <option value="travel">Travel</option>
-          <option value="food">Food</option>
-          <option value="lifestyle">LifeStyle</option>
-          <option value="business">Business</option>
-          <option value="education">Education</option>
+          {categories?.map((cat: Category) => (
+            <option key={cat.id} value={cat.id}>{cat.name}</option>
+          ))}
         </select>
       </div>
 

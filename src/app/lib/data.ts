@@ -14,11 +14,12 @@ export async function fetchPosts(category?: string) {
   try {
     let query;
 
-    if (category && category !== "All") {
-      query = sql<Post>`SELECT * FROM posts WHERE category = ${category}`;
-    } else {
-      query = sql<Post>`SELECT * FROM posts`;
-    }
+    if (category && category !== "0") {
+      query = sql<Post>`SELECT * FROM posts WHERE category = ${category} ORDER BY created_at DESC`;
+  } else {
+      query = sql<Post>`SELECT * FROM posts ORDER BY created_at DESC`;
+  }
+  
 
     const data = await query;
 
@@ -60,19 +61,19 @@ export async function fetchCategories() {
   }
 }
 
-export async function fetchPostsByCategory(category: string) {
-  try {
-    const data = await sql`
-        SELECT * 
-        FROM posts
-        WHERE category = ${category}
-      `;
-    return data.rows;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch posts by category.");
-  }
-}
+// export async function fetchPostsByCategory(category: string) {
+//   try {
+//     const data = await sql`
+//         SELECT * 
+//         FROM posts
+//         WHERE category = ${category}
+//       `;
+//     return data.rows;
+//   } catch (error) {
+//     console.error("Database Error:", error);
+//     throw new Error("Failed to fetch posts by category.");
+//   }
+// }
 
 export async function fetchPostById(postId: string) {
   try {

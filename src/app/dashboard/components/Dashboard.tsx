@@ -22,7 +22,8 @@ export default function Dashboard({
   const [categories] = useState<Category[]>(initialCategories);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleFilterChange = async (category: string) => {
+
+  const handleFilterChange = async (category: number) => {
     setLoading(true); // Start loading
 
     try {
@@ -36,7 +37,7 @@ export default function Dashboard({
     } catch (error) {
       console.error("Error fetching filtered posts:", error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 

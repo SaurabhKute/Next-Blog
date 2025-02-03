@@ -7,7 +7,7 @@ import { Category } from "@/types/types";
 
 type FilterProps = {
   categories: Category[];
-  onFilterChange:(category:string)=> void;
+  onFilterChange:(category:number)=> void;
 };
 
 
@@ -80,7 +80,7 @@ export default function FilterSection({
             className={`${styles.filterText} ${
               selectedFilter === filter.name ? styles.selectedFilter : ""
             }`}
-            onClick={() => {onFilterChange(filter.name);setSelectedFilter(filter.name)}}
+            onClick={() => {onFilterChange(filter.id);setSelectedFilter(filter.name)}}
           >
             {filter.name}
           </button>
