@@ -36,21 +36,21 @@ export default function UpdateBlog() {
             try {
                 const res = await fetch(`/api/read?postId=${id}`);
                 const data = await res.json();
-    
+
                 setPostId(data.id);
                 setTitle(data.title);
                 setCategory(data.category);
-    
+
                 // ✅ Ensure tags is always an array
-                const parsedTags = Array?.isArray(data.tags) 
-                    ? data.tags 
-                    : typeof data.tags === 'string' 
-                    ? JSON.parse(data.tags) 
-                    : [];
-    
+                const parsedTags = Array?.isArray(data.tags)
+                    ? data.tags
+                    : typeof data.tags === 'string'
+                        ? JSON.parse(data.tags)
+                        : [];
+
                 setTags(parsedTags);
                 setImagePreview(data.image);
-    
+
                 // Dynamically import html-to-draftjs inside useEffect
                 const htmlToDraft = (await import("html-to-draftjs")).default;
                 const blocksFromHtml = htmlToDraft(data.content);
@@ -61,11 +61,11 @@ export default function UpdateBlog() {
                 console.error("Error fetching blog:", error);
             }
         };
-    
+
         fetchBlog();
     }, [id]);
-    
-    
+
+
 
     const handleUpdate = async () => {
         try {
@@ -79,13 +79,13 @@ export default function UpdateBlog() {
                 tags: JSON.stringify(tags), // ✅ Ensure tags are sent as a string
                 category,
             };
-    
+
             const response = await fetch(`/api/posts/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedBlog),
             });
-    
+
             if (response.ok) {
                 toast.success('Blog updated successfully!');
                 router.push(`/read/${id}`);
@@ -97,7 +97,7 @@ export default function UpdateBlog() {
             toast.error('An error occurred.');
         }
     };
-    
+
 
     return (
         <div className={styles.container}>
@@ -130,10 +130,12 @@ export default function UpdateBlog() {
                 <select className={styles.dropdown} value={category} onChange={(e) => setCategory(e.target.value)}>
                     <option value="" disabled>Select a category</option>
                     <option value="technology">Technology</option>
-                    <option value="lifestyle">Lifestyle</option>
-                    <option value="business">Business</option>
-                    <option value="travel">Travel</option>
                     <option value="health">Health</option>
+                    <option value="travel">Travel</option>
+                    <option value="food">Food</option>
+                    <option value="lifestyle">LifeStyle</option>
+                    <option value="business">Business</option>
+                    <option value="education">Education</option>
                 </select>
             </div>
 

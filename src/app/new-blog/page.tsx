@@ -1,6 +1,6 @@
 'use client';
 
-import React, {  useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
@@ -16,10 +16,8 @@ const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Edi
 
 export default function WriteBlog() {
 
-    const { data: session } = useSession();
-    const router = useRouter();
-
-    // console.log(session,"@session");
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -55,8 +53,8 @@ export default function WriteBlog() {
   const uploadImageToCloudinary = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", `${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}`); // Get this from Cloudinary settings
-  
+    formData.append("upload_preset", `${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}`);
+
     const res = await fetch(
       `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
       {
@@ -64,9 +62,9 @@ export default function WriteBlog() {
         body: formData,
       }
     );
-  
+
     const data = await res.json();
-    return data.secure_url; 
+    return data.secure_url;
   };
 
   const handlePublish = async () => {
@@ -75,15 +73,15 @@ export default function WriteBlog() {
       alert("Please upload an image!");
       return;
     }
-  
+
     try {
       // Upload image to Cloudinary and get the URL
       const imageUrl = await uploadImageToCloudinary(image);
-  
+
       // console.log("Uploaded Image URL:", imageUrl); 
-  
+
       const content = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-  
+
       const blogData = {
         title,
         content,
@@ -93,9 +91,9 @@ export default function WriteBlog() {
         category,
         user_id: session?.user?.id,
       };
-  
+
       // console.log("Sending Blog Data:", blogData);  
-  
+
       const response = await fetch("/api/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -103,7 +101,7 @@ export default function WriteBlog() {
       });
 
       const data = await response.json();
-  
+
       if (response.ok) {
         router.push(`/read/${data.id}`);
         alert("Blog published successfully!");
@@ -115,8 +113,8 @@ export default function WriteBlog() {
       alert("An error occurred. Try again.");
     }
   };
-  
-  
+
+
 
   return (
     <div className={styles.container}>
@@ -168,10 +166,12 @@ export default function WriteBlog() {
         >
           <option value="" disabled>Select a category</option>
           <option value="technology">Technology</option>
-          <option value="lifestyle">Lifestyle</option>
-          <option value="business">Business</option>
-          <option value="travel">Travel</option>
           <option value="health">Health</option>
+          <option value="travel">Travel</option>
+          <option value="food">Food</option>
+          <option value="lifestyle">LifeStyle</option>
+          <option value="business">Business</option>
+          <option value="education">Education</option>
         </select>
       </div>
 
