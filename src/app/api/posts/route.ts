@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { fetchPosts } from "@/app/lib/data";
 import { sql } from "@vercel/postgres";
-import { formatDate } from "@/utils/dateFormatter";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
