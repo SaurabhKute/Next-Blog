@@ -2,30 +2,38 @@
 
 import { useRouter } from 'next/navigation';
 import styles from './Home.module.css';
+import { useSession } from 'next-auth/react';
+import Loading from './loading';
 
 export default function Home() {
     const router = useRouter();
-    const isAuthenticated = true; // Replace with your actual authentication logic
+    const { data: session, status } = useSession();
+
+
+    if (status === 'loading') {
+        return <Loading />;
+    }
+
+    const isAuthenticated = status === 'authenticated';
 
     const handleStartReading = () => {
-        if (isAuthenticated) {
-            router.push('/dashboard');
-        } else {
-            router.push('/auth/login');
-        }
+        router.push(isAuthenticated ? '/dashboard' : '/auth/login');
     };
 
     return (
         <div className={styles.main}>
-            {/* <main> */}
-                <section className={styles.hero}>
-                    <h1>Human stories & ideas</h1>
-                    <p>A place to read, write, and deepen your understanding</p>
-                    <button className={styles.ctaButton} onClick={handleStartReading}>
-                        Start reading
-                    </button>
-                </section>
-            {/* </main> */}
+            <section className={styles.hero}>
+                <h1>Where Stories Come to Life</h1>
+                <p>Discover, create, and share powerful ideas that inspire.</p>
+
+                {isAuthenticated && session?.user && (
+                    <p className={styles.welcome}>Welcome back, {session.user.name}!</p>
+                )}
+
+                <button className={styles.ctaButton} onClick={handleStartReading}>
+                    {isAuthenticated ? "Go to Dashboard" : "Start Reading"}
+                </button>
+            </section>
         </div>
     );
 }

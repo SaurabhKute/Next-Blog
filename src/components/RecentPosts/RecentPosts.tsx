@@ -3,12 +3,20 @@ import styles from './RecentPosts.module.css';
 import Image from 'next/image';
 import { Post } from '@/types/types';
 import { formatDate } from '@/utils/dateFormatter';
+import { useRouter } from 'next/navigation';
 
 type RecentPostsProps = {
   recentPosts: Post[];
 };
 
 export default function RecentPosts({ recentPosts }: RecentPostsProps) {
+
+    const router = useRouter();
+  
+    const handleRedirectClick = (id: number) => {
+      router.push(`/read/${id}`)
+    }
+
   return (
     <div className={styles.recentPostsContainer}>
       <h3 className={styles.heading}>Recent Posts</h3>
@@ -18,7 +26,7 @@ export default function RecentPosts({ recentPosts }: RecentPostsProps) {
           <>
             {recentPosts.map((post) => (
               <li key={post.id} className={styles.postItem}>
-                <div className={styles.postDetails}>
+                <div className={styles.postDetails} onClick={() => handleRedirectClick(post?.id)}>
                   <Image
                     src={post.image}
                     alt={post.title}

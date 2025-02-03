@@ -36,7 +36,7 @@ export default function Dashboard({
     } catch (error) {
       console.error("Error fetching filtered posts:", error);
     } finally {
-      setLoading(false); // Stop loading after fetch completion
+      setLoading(false); 
     }
   };
 

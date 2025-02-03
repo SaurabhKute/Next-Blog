@@ -5,51 +5,27 @@ import styles from './PopularPosts.module.css';
 import Image from 'next/image';
 import { Post } from '@/types/types';
 import { formatDate } from '@/utils/dateFormatter';
+import { useRouter } from 'next/navigation';
 
 
 type PopularPostsProps = {
   popularPosts: Post[];
 };
 export default function PopularPosts({ popularPosts }: PopularPostsProps) {
-  // Define the type for popularPosts
-  // const popularPosts: Post[] = [
-  //   {
-  //     id: 1,
-  //     title: "The Art of Web Development ",
-  //     content:
-  //       "Explore the essential principles of creating amazing web applications.",
-  //     author: "John Doe",
-  //     image:
-  //       "https://dummyjson.com/image/400x200/008080/ffffff?text=Web+Development",
-  //     timestamp: "2 hours ago",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "React vs Angular vs Vue",
-  //     content: "A comprehensive comparison of the top frontend frameworks.",
-  //     author: "Jane Smith",
-  //     image:
-  //       "https://dummyjson.com/image/400x200/008080/ffffff?text=Frontend+Frameworks",
-  //     timestamp: "5 hours ago",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Understanding CSS Grid",
-  //     content: "Learn how to use CSS Grid for responsive layouts.",
-  //     author: "Alice Johnson",
-  //     image: "https://dummyjson.com/image/400x200/008080/ffffff?text=CSS+Grid",
-  //     timestamp: "1 day ago",
-  //   },
-  // ];
 
+  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+    const handleRedirectClick = (id: number) => {
+      router.push(`/read/${id}`)
+    }
 
   useEffect(() => {
     if (popularPosts.length > 1) {
       const interval = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % popularPosts.length);
-      }, 5000); // Slide every 5 seconds
-      return () => clearInterval(interval); // Cleanup on component unmount
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % popularPosts?.length);
+      }, 5000);
+      return () => clearInterval(interval); 
     }
   }, [popularPosts]);
 
@@ -62,7 +38,7 @@ export default function PopularPosts({ popularPosts }: PopularPostsProps) {
         style={{
           backgroundImage: popularPosts.length > 0
             ? `url(${popularPosts[currentIndex]?.image})`
-            : 'url(/images/bg.jpg)', // Fallback background image
+            : 'url(/images/bg.jpg)', 
         }}
       >
         {popularPosts.length > 0 ? (
@@ -71,6 +47,7 @@ export default function PopularPosts({ popularPosts }: PopularPostsProps) {
               <div
                 key={post.id}
                 className={`${styles.carouselItem} ${currentIndex === index ? styles.active : ''}`}
+                onClick={() => handleRedirectClick(post?.id)}
               >
                 <Image
                   src={post?.image}

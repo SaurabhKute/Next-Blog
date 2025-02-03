@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation"
 import { Post } from "@/types/types";
 import { formatDate } from "@/utils/dateFormatter";
+import extractFirstParagraph from "@/utils/extractParagraph";
 
 type PostsProps = {
   posts: Post[];
@@ -13,7 +14,7 @@ export default function Posts({ posts }: PostsProps) {
 
   const router = useRouter();
 
-  const handleRedirectClick = (id:number) => {
+  const handleRedirectClick = (id: number) => {
     router.push(`/read/${id}`)
   }
   return (
@@ -22,24 +23,23 @@ export default function Posts({ posts }: PostsProps) {
         <div className={styles.postList}>
           {posts.map((post: Post) => (
             <div key={post.id} className={styles.postCard}>
-              {/* Content Section */}
               <div className={styles.postContent}>
                 {/* <Link href={`/read/${post.id}`} passHref className={styles.link}> */}
-                  {/* <a> */}
-                    <h3 className={styles.postTitle} onClick={()=> handleRedirectClick(post.id)}>{post.title}</h3>
-                    <div className={styles.postDescription}>
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: post.content && `${post.content.slice(0, 80)}...`,
-                        }}
-                      ></span>
-                    </div>
-                    <p className={styles.postAuthor}>By {post.author}</p>
-                  {/* </a> */}
+                {/* <a> */}
+                <h3 className={styles.postTitle} onClick={() => handleRedirectClick(post?.id)}>{post?.title}</h3>
+                <div className={styles.postDescription}>
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: extractFirstParagraph(post.content, 80),
+                    }}
+                  ></span>
+                </div>
+                <p className={styles.postAuthor}>By {post.author}</p>
+                {/* </a> */}
                 {/* </Link> */}
                 <div className={styles.postActions}>
                   <span className={styles.postTimestamp}>
-                   {formatDate(post?.updated_at)}
+                    {formatDate(post?.updated_at)}
                   </span>
                   <Image
                     src="/icons/liked.svg"
@@ -65,7 +65,7 @@ export default function Posts({ posts }: PostsProps) {
                     width={25}
                     height={25}
                   />
-                  <span className={styles.count}>4</span>
+                  {/* <span className={styles.count}>4</span> */}
                 </div>
               </div>
 

@@ -3,22 +3,26 @@
 import React, { useEffect, useState } from "react";
 import styles from "../BlogRead.module.css";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Post } from "@/types/types";
 import Loading from "../loading";
 import NotFound from "../not-found";
 import { formatDate } from "@/utils/dateFormatter";
 import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
+
 
 export default function BlogRead() {
 
-      const { data: session } = useSession();
+  const router = useRouter();
+  const { data: session } = useSession();
   const pathname = usePathname();
   const id = pathname?.split("/read/").pop();
 
   const [blog, setBlog] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [menuVisible, setMenuVisible] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -50,18 +54,70 @@ export default function BlogRead() {
   }, [id]);
 
   if (loading) {
-    return <Loading />; // You can replace this with a spinner if you have one.
+    return <Loading />;
   }
 
   if (error || !blog) {
     return (
       <NotFound />
-      // <div className={styles.error}>
-      //   <h1>Blog not found!</h1>
-      //   <p>{error}</p>
-      // </div>
     );
   }
+
+  const handleMenuToggle = () => {
+    setMenuVisible(!menuVisible);
+  };
+
+  const handleEdit = (postId: number) => {
+    setMenuVisible(false);
+    toast.success("Redirecting to Edit Page...");
+    router.push(`/edit/${postId}`); // Navigate to update page
+  };
+
+  // console.log(blog,"@blogs");
+
+  const handleDelete = async (postId: number) => {
+    setMenuVisible(false);
+
+    if (!session || !session.user?.id) {
+      alert("You must be logged in to delete a post.");
+      return;
+    }
+
+    if (!confirm("Are you sure you want to delete this post?")) return;
+
+    try {
+      const response = await fetch(`/api/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId,
+          userId: session.user.id,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete post.");
+      }
+
+      toast.success("Post deleted successfully!");
+      // alert("Post deleted successfully!");
+      router.push("/dashboard");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        console.error("Error deleting post:", error.message);
+        // alert(error.message);
+      } else {
+        toast.error("An unknown error occurred.");
+        console.error("Unknown error:", error);
+        alert("An unknown error occurred.");
+      }
+    }
+  };
+
 
   return (
     <div className={styles.container}>
@@ -69,7 +125,7 @@ export default function BlogRead() {
 
       <div className={styles.meta}>
         <div className={styles.metaLeft}>
-          <Image src={session?.user?.image || ""} alt="Writer" width={50} height={50} className={styles.userAvatar} />
+          <Image src={session?.user?.image || ""} alt="Writer" width={40} height={40} className={styles.userAvatar} />
         </div>
         <div className={styles.metaRight}>
           <span className={styles.author}>{blog?.author}</span>
@@ -102,13 +158,24 @@ export default function BlogRead() {
             <path d="M17 3H7c-1.1 0-2 .9-2 2v14l7-3 7 3V5c0-1.1-.9-2-2-2z"></path>
           </svg>
           {/* Edit Icon */}
+          {session?.user?.id === blog?.user_id && (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             className={styles.icon}
+            onClick={handleMenuToggle}
           >
             <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.41l-2.34-2.34a1.003 1.003 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
           </svg>
+          )}
+
+          {menuVisible  && (
+            <div className={styles.tooltipMenu}>
+              <button onClick={() => handleEdit(blog?.id)} className={styles.menuItem}>Edit</button>
+              <button onClick={() => handleDelete(blog?.id)} className={styles.menuItem}>Delete</button>
+            </div>
+          )}
+
         </div>
       </div>
 
@@ -124,14 +191,14 @@ export default function BlogRead() {
       </div>
 
       {blog?.tags && Array.isArray(blog?.tags) && (
-  <div className={styles.tagsContainer}>
-    {blog?.tags.map((tag: string, index: number) => (
-      <span key={index} className={styles.chip}>
-        {tag}
-      </span>
-    ))}
-  </div>
-)}
+        <div className={styles.tagsContainer}>
+          {blog?.tags.map((tag: string, index: number) => (
+            <span key={index} className={styles.chip}>
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
 
 
     </div>
