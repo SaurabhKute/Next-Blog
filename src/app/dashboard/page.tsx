@@ -1,5 +1,3 @@
-// /app/dashboard/page.tsx
-
 import { fetchCategories, fetchPosts } from "@/app/lib/data";
 import Dashboard from "./components/Dashboard";
 

@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useParams, useRouter } from 'next/navigation';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-// import htmlToDraft from 'html-to-draftjs';
 import toast from 'react-hot-toast';
 import styles from '../../new-blog/WriteBlog.module.css';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -18,9 +17,12 @@ const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Edi
 export default function UpdateBlog() {
 
     const { data: session } = useSession();
+
     const params = useParams();
     const id = params.id;
     const router = useRouter();
+    const isMounted = useRef(false); // ✅ Track if the component is mounted
+
     // console.log(id,"Params");
     const [postId, setPostId] = useState();
     const [title, setTitle] = useState('');
@@ -29,8 +31,37 @@ export default function UpdateBlog() {
     const [tags, setTags] = useState<string[]>([]);
     const [newTag, setNewTag] = useState('');
     const [imagePreview, setImagePreview] = useState('');
+    const [categories, setCategories] = useState<string[]>([]);
+
+    // console.log(categories,"@categories");
 
     useEffect(() => {
+        isMounted.current = true;
+
+        const getCategories = async () => {
+            try {
+                const res = await fetch('/api/categories');
+                if (!res.ok) throw new Error("Failed to fetch categories");
+
+                const data = await res.json();
+                if (isMounted.current) { // ✅ Only update state if mounted
+                    setCategories(data);
+                }
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
+
+        getCategories();
+
+        return () => {
+            isMounted.current = false; // ✅ Set to false when component unmounts
+        };
+    }, []);
+
+    useEffect(() => {
+
+        isMounted.current = true;
         const fetchBlog = async () => {
             try {
                 const res = await fetch(`/api/read?postId=${id}`);
@@ -62,6 +93,10 @@ export default function UpdateBlog() {
         };
 
         fetchBlog();
+
+        return () => {
+            isMounted.current = false; // ✅ Set to false when component unmounts
+        };
     }, [id]);
 
 
@@ -126,16 +161,18 @@ export default function UpdateBlog() {
 
             <div className={styles.formGroup}>
                 <label className={styles.label}>Category:</label>
-                <select className={styles.dropdown} value={category} onChange={(e) => setCategory(e.target.value)}>
+               
+                <select
+                    className={styles.dropdown}
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                >
                     <option value="" disabled>Select a category</option>
-                    <option value="technology">Technology</option>
-                    <option value="health">Health</option>
-                    <option value="travel">Travel</option>
-                    <option value="food">Food</option>
-                    <option value="lifestyle">LifeStyle</option>
-                    <option value="business">Business</option>
-                    <option value="education">Education</option>
+                    {categories?.map((cat: any) => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    ))}
                 </select>
+
             </div>
 
             <div className={styles.formGroup}>

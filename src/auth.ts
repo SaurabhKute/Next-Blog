@@ -67,8 +67,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         
                     if (!existingUser) {
                         const insertResult = await sql`
-                            INSERT INTO users (name, email, image)
-                            VALUES (${user.name}, ${user.email}, ${user.image})
+                            INSERT INTO users (name, email, image, provider_id, provider)
+                            VALUES (${user.name}, ${user.email}, ${user.image}, ${account.providerAccountId}, ${account.provider})
                             RETURNING id
                         `;
                         existingUser = insertResult.rows[0];  // Retrieve the new user's ID

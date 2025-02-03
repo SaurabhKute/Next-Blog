@@ -4,7 +4,9 @@ import { sql } from "@vercel/postgres";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const category = url.searchParams.get("category") || "All";
+  // console.log(url,"@url");
+  const category = url.searchParams.get("category") || "0";
+  console.log(category,"@category");
 
   try {
     const posts = await fetchPosts(category);
@@ -40,14 +42,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const createdAt = new Date().toISOString();
-    const updatedAt = createdAt;
+    // const createdAt = new Date().toISOString();
+    // const updatedAt = createdAt;
 
     const result = await sql`
-      INSERT INTO posts (title, content, image, author, tags, category, user_id, created_at, updated_at) 
+      INSERT INTO posts (title, content, image, author, tags, category, user_id) 
       VALUES (${title}, ${content}, ${image}, ${author}, ${JSON.stringify(
         tags
-      )}, ${category}, ${user_id}, ${createdAt}, ${updatedAt})
+      )}, ${category}, ${user_id})
       RETURNING id;
     `;
 
