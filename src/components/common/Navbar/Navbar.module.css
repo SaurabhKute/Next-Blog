@@ -1,3 +1,4 @@
+/* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -20,61 +21,38 @@
   display: flex;
   align-items: center;
   gap: 2rem;
+  margin-left: 0;
+  padding-left: 0;
 }
-
 
 .navLink {
-  display: flex; 
-  align-items: center; 
-  gap: 4px; 
-  font-size: 16px; 
-  color: black; 
-  text-decoration: none; 
-  transition: color 0.3s ease; 
-}
-
-.navLink:hover {
-  color: black; /* Darker color on hover */
-}
-
-.writeIcon {
-  width: 16px; /* Icon size */
-  height: 16px;
-  stroke: currentColor; /* Matches the text color */
-}
-
-.signInIcon {
-  width: 16px; /* Icon size */
-  height: 16px;
-  stroke: currentColor; /* Matches the text color */
-}
-
-.authWrapper{
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 4px;
+  font-size: 16px;
+  color: black;
+  text-decoration: none;
+  padding: 10px 15px; /* Add padding for uniform alignment */
+  transition: color 0.3s ease;
 }
 
 .navLink:hover {
   color: rgb(22, 6, 80);
 }
 
-.startButton {
-  background-color: #000;
-  color: #fff;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.writeIcon {
+  width: 16px; /* Ensuring proper icon size */
+  height: 16px;
+  stroke: currentColor;
 }
 
-.startButton:hover {
-  background-color: #080909;
+.signInIcon {
+  width: 16px; /* Icon size */
+  height: 16px;
+  stroke: currentColor;
 }
 
-/* Hamburger icon for mobile */
+/* Hamburger icon */
 .menuToggle {
   display: none;
   font-size: 2rem;
@@ -116,8 +94,6 @@
 .dropdownItem,
 .logoutButton {
   display: block;
-  /* width: 100%; */
-  text-align: left;
   padding: 12px 16px;
   color: #333;
   text-decoration: none;
@@ -148,7 +124,7 @@
   border-bottom-right-radius: 8px;
 }
 
-/* Sidebar Styles */
+/* Sidebar */
 .sidebar {
   position: fixed;
   top: 0;
@@ -169,89 +145,42 @@
 .sidebarNav {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1rem; /* Ensure consistent spacing between items */
+  padding: 0;
 }
-.sidebarLink,
-.sidebarLogoutButton
-{
-  display: block;
-  width: 100%;
-  /* margin-left: 8px; */
-  /* text-align: left;  */
-  padding: 2px px;
+
+.sidebarNav .navLink,
+.sidebarNav .dropdownItem {
+  font-size: 1rem;
   color: #333;
   text-decoration: none;
-  font-size: 14px;
-  background-color: #fff;
-  border: none;
-  cursor: pointer;
+  padding: 10px 15px; /* Ensure consistent padding */
   transition: background-color 0.3s, color 0.3s;
 }
 
-.sidebarLink:hover,
-.sidebarLogoutButton:hover {
+.sidebarNav .navLink:hover,
+.sidebarNav .dropdownItem:hover {
   background-color: #f5f5f5;
   color: #99834d;
 }
 
-.sidebarProfile {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.sidebar .navLink {
-  color: black;
-  font-size: 1.2rem;
-}
-
-.sidebar .startButton {
-  font-size: 1.2rem;
-  color: #ffffff;
-}
-
-.sidebar h2 {
-  font-size: 1.5rem;
-  color: #000;
-  margin-bottom: 1rem;
-}
-
-
-/* Sidebar authentication section */
-.sidebarAuth {
-  display: flex;
-  flex-direction: column;
-  align-items: center;  /* Align all items vertically in the middle */
-  flex-wrap: nowrap;     /* Prevent wrapping of items */
-}
-
-/* Styling for the Links */
-.sidebarLink {
-  color: #333;
-  font-size: 14px;
-  text-decoration: none;
-  padding: 8px;
-  transition: color 0.3s;
-}
-
-.sidebarLink:hover {
-  color: #000;  /* Change color on hover */
-}
-
-/* Styling for the button */
-.sidebarStartButton {
-  padding: 6px 12px;   /* Smaller padding to make the button smaller */
-  font-size: 12px;      /* Smaller font size for the button */
+.sidebarNav .sidebarStartButton,
+.sidebarNav .sidebarLogoutButton {
+  font-size: 1rem;
+  padding: 10px 15px;
+  text-align: left;
   background-color: #000;
   color: #fff;
-  border: none;
   border-radius: 20px;
+  border: none;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-weight: lighter;
 }
 
-.sidebarStartButton:hover {
-  background-color: #444;  /* Button hover effect */
+.sidebarNav .sidebarStartButton:hover,
+.sidebarNav .sidebarLogoutButton:hover {
+  background-color: #444;
 }
 
 /* Mobile and Tablet Responsive Styles */
@@ -295,37 +224,37 @@
     padding: 1.5rem;
   }
 
-  .navLink {
+  .sidebarNav .navLink {
     font-size: 1rem;
+    padding: 10px 15px; /* Ensures "Write" aligns properly with other links */
   }
 
-  .startButton {
+  .sidebarNav .sidebarStartButton {
     font-size: 1rem;
+    padding: 10px 15px;
+  }
+
+  .sidebarNav .sidebarLogoutButton {
+    padding: 10px 15px;
   }
 }
 
 @media (max-width: 480px) {
-
-
   .siteLogo {
     font-size: 1rem;
-    /* margin-bottom: 1rem; */
   }
 
   .menuToggle {
     align-self: flex-end;
-
   }
 
   .sidebarNav .navLink {
     font-size: 1rem;
+    padding: 10px 15px; /* Consistent padding for all links */
   }
 
-  .startButton {
+  .sidebarNav .sidebarStartButton {
     font-size: 1rem;
-  }
-
-  .sidebar h2 {
-    font-size: 1.2rem;
+    padding: 10px 15px;
   }
 }

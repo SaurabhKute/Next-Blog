@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSession, signOut } from "next-auth/react"; // Import next-auth hooks
+import { useSession, signOut } from "next-auth/react";
 import styles from "./Navbar.module.css";
 
 interface NavLinkProps {
@@ -168,7 +168,7 @@ export default function Navbar() {
             )}
           </nav>
 
-          {/* Sidebar */}
+
           <div className={`${styles.sidebar} ${isMenuOpen ? styles.sidebarOpen : ""}`}>
             <nav className={styles.sidebarNav}>
               {session ? (
@@ -176,13 +176,14 @@ export default function Navbar() {
                   <DropdownItem href="/profile" label="Profile" onClick={closeSidebar} />
                   <DropdownItem href="/manage-posts" label="Manage Posts" onClick={closeSidebar} />
                   <DropdownItem href="/statistics" label="Statistics" onClick={closeSidebar} />
+                  <NavLink href="/new-blog" label="Write" onClick={closeSidebar} /> {/* Ensure Write is here */}
                   <button className={styles.sidebarLogoutButton} onClick={handleLogout}>
                     Logout {` (${session?.user?.name})`}
                   </button>
                 </>
               ) : (
                 <>
-                  <NavLink href="/auth/login" label="Write" onClick={closeSidebar} />
+                  <NavLink href="/auth/login" label="Write" onClick={closeSidebar} /> {/* Make sure Write is available for guests */}
                   <NavLink href="/auth/login" label="Sign in" onClick={closeSidebar} />
                   <button className={styles.sidebarStartButton} onClick={closeSidebar}>
                     Get started
@@ -191,6 +192,7 @@ export default function Navbar() {
               )}
             </nav>
           </div>
+
         </>
       )}
     </header>
