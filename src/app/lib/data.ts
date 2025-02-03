@@ -88,40 +88,49 @@ export async function fetchPostById(postId: string) {
   }
 }
 
-export async function updatePostById(postId:string, userId:string, updatedData:PostUpdate) {
+export async function updatePostById(
+  postId: string,
+  userId: string,
+  updatedData: PostUpdate
+) {
   try {
+    console.log("Updating post with ID:", postId, "for user:", userId);
+    
+    // Check if the post exists and belongs to the user
     const post = await sql`
-      SELECT *
-      FROM posts
-      WHERE id = ${postId} AND user_id = ${userId}
+      SELECT * FROM posts WHERE id = ${postId} AND user_id = ${userId}
     `;
 
     if (post.rows.length === 0) {
-      throw new Error('Post not found or user not authorized to update this post.');
+      throw new Error("Post not found or user not authorized to update this post.");
     }
 
-    const tagsArray = updatedData.tags && updatedData.tags.length > 0
-    ? `{${updatedData.tags.join(',')}}`
-    : null;
- 
+    // Ensure tags are formatted correctly
+    const tagsArray =
+      updatedData.tags && updatedData.tags.length > 0
+        ? JSON.stringify(updatedData.tags) // Store as JSON
+        : null;
 
+    // Perform the update
     const updatedPost = await sql`
       UPDATE posts
       SET
         title = ${updatedData.title},
         content = ${updatedData.content},
         image = ${updatedData.image},
-        tags = ${tagsArray},
+        tags = ${tagsArray}, -- Ensure tags are stored correctly
         category = ${updatedData.category},
         updated_at = NOW()
-      WHERE id = ${postId}
+      WHERE id = ${postId} AND user_id = ${userId}
       RETURNING *;
     `;
 
+    console.log("Updated post:", updatedPost.rows[0]);
+
     return updatedPost.rows[0];
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to update post.');
+    console.error("Database Error:", error);
+    throw new Error("Failed to update post.");
   }
 }
 
