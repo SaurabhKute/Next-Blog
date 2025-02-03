@@ -9,10 +9,13 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { Category } from '@/types/types';
 
 const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), {
   ssr: false,
 });
+
+
 
 export default function WriteBlog() {
 
@@ -27,7 +30,7 @@ export default function WriteBlog() {
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState<string>('');
   const [newTag, setNewTag] = useState<string>('');
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
 
   useEffect(() => {
@@ -120,7 +123,6 @@ export default function WriteBlog() {
         user_id: session?.user?.id,
       };
 
-      // console.log("Sending Blog Data:", blogData);  
 
       const response = await fetch("/api/posts", {
         method: "POST",
@@ -192,7 +194,7 @@ export default function WriteBlog() {
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value="" disabled>Select a category</option>
-          {categories?.map((cat: any) => (
+          {categories?.map((cat: Category) => (
             <option key={cat.id} value={cat.id}>{cat.name}</option>
           ))}
         </select>

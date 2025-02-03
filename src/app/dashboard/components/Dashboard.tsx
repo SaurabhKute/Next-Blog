@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Posts from "@/components/Post/Posts";
 import FilterSection from "@/components/Filter/FilterSection";
 import PopularPosts from "@/components/PopularPosts/PopularPosts";
@@ -22,8 +22,6 @@ export default function Dashboard({
   const [categories] = useState<Category[]>(initialCategories);
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(()=>{
-  },[]);
 
   const handleFilterChange = async (category: number) => {
     setLoading(true); // Start loading
@@ -39,7 +37,7 @@ export default function Dashboard({
     } catch (error) {
       console.error("Error fetching filtered posts:", error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 

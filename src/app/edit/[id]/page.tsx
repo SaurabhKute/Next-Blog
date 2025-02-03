@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import styles from '../../new-blog/WriteBlog.module.css';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useSession } from 'next-auth/react';
+import { Category } from '@/types/types';
 
 const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), {
     ssr: false,
@@ -31,7 +32,7 @@ export default function UpdateBlog() {
     const [tags, setTags] = useState<string[]>([]);
     const [newTag, setNewTag] = useState('');
     const [imagePreview, setImagePreview] = useState('');
-    const [categories, setCategories] = useState<string[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
 
     // console.log(categories,"@categories");
 
@@ -168,7 +169,7 @@ export default function UpdateBlog() {
                     onChange={(e) => setCategory(e.target.value)}
                 >
                     <option value="" disabled>Select a category</option>
-                    {categories?.map((cat: any) => (
+                    {categories?.map((cat: Category) => (
                         <option key={cat.id} value={cat.id}>{cat.name}</option>
                     ))}
                 </select>
