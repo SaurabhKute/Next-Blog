@@ -19,28 +19,38 @@ export async function GET(request: Request) {
   }
 }
 
+
 export async function POST(request: Request) {
   try {
     const { title, content, image, author, tags, category, user_id } =
       await request.json();
 
-    // console.log("Received Image:", image);
-    // console.log("User ID:", user_id);
-
     if (!image) {
       return NextResponse.json({ error: "Image is required" }, { status: 400 });
     }
 
-    const createdAt = formatDate(new Date());
+    // Check if user exists before inserting
+    const userCheck = await sql`
+      SELECT id FROM users WHERE id = ${user_id};
+    `;
+
+    if (userCheck.rowCount === 0) {
+      return NextResponse.json(
+        { error: "User does not exist" },
+        { status: 400 }
+      );
+    }
+
+    const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
     const result = await sql`
-    INSERT INTO posts (title, content, image, author, tags, category, user_id, created_at, updated_at) 
-    VALUES (${title}, ${content}, ${image}, ${author}, ${JSON.stringify(
-      tags
-    )}, ${category}, ${user_id}, ${createdAt}, ${updatedAt})
-    RETURNING id;
-  `;
+      INSERT INTO posts (title, content, image, author, tags, category, user_id, created_at, updated_at) 
+      VALUES (${title}, ${content}, ${image}, ${author}, ${JSON.stringify(
+        tags
+      )}, ${category}, ${user_id}, ${createdAt}, ${updatedAt})
+      RETURNING id;
+    `;
 
     const insertedPost = result.rows[0];
 
