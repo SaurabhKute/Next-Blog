@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Posts.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -14,116 +14,130 @@ type PostsProps = {
 export default function Posts({ posts }: PostsProps) {
   const { data: session } = useSession();
   const router = useRouter();
-  const userId = session?.user?.id || null;
 
-  // State to track liked posts dynamically
-  const [likedStates, setLikedStates] = useState<Record<number, boolean>>({});
-  const [likesCounts, setLikesCounts] = useState<Record<number, number>>({});
+  // State for user ID
+  const [userId, setUserId] = useState<string | null>(null);
+  const [postList, setPostList] = useState<Post[]>(posts);
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      setUserId(session.user.id);
+    }
+
+    // Load liked status from localStorage and update posts
+    const updatedPosts = posts.map((post) => ({
+      ...post,
+      is_liked: localStorage.getItem(`liked_${post.id}`) === "true" ? true : post.is_liked,
+    }));
+
+    setPostList(updatedPosts);
+  }, [posts, session]);
 
   const handleRedirectClick = (id: number) => {
     router.push(`/read/${id}`);
   };
 
   // Handle Like/Dislike functionality
-  async function handleLike(postId: number, isLiked: boolean) {
+  async function handleLike(post: Post) {
     if (!userId) {
       console.error("User is not logged in");
       return;
     }
 
-    const action = isLiked ? "dislike" : "like";
+    const action = post.is_liked ? "dislike" : "like";
+    const updatedPost = { ...post, is_liked: !post.is_liked, total_likes: post.is_liked ? post.total_likes - 1 : post.total_likes + 1 };
+
+    // Optimistically update UI
+    setPostList((prevPosts) =>
+      prevPosts.map((p) => (p.id === post.id ? updatedPost : p))
+    );
 
     try {
       const res = await fetch("/api/likes", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ postId, userId, action }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ postId: post.id, userId, action }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 
-      // Update state dynamically
-      setLikedStates((prev) => ({
-        ...prev,
-        [postId]: !isLiked,
-      }));
+      // Persist like state in localStorage
+      localStorage.setItem(`liked_${post.id}`, updatedPost.is_liked.toString());
 
-      setLikesCounts((prev) => ({
-        ...prev,
-        [postId]: data.totalLikes,
-      }));
+      // Update post list with new like count
+      setPostList((prevPosts) =>
+        prevPosts.map((p) => (p.id === post.id ? { ...p, total_likes: data.totalLikes } : p))
+      );
     } catch (error) {
       console.error("Error updating likes:", error);
+      
+      // Rollback UI update in case of failure
+      setPostList((prevPosts) =>
+        prevPosts.map((p) => (p.id === post.id ? post : p))
+      );
     }
   }
 
   return (
     <div className={styles.postsContainer}>
-      {posts && posts.length > 0 ? (
+      {postList.length > 0 ? (
         <div className={styles.postList}>
-          {posts.map((post: Post) => {
-            const isLiked = likedStates[post.id] ?? post.is_liked;
-            const likeCount = likesCounts[post.id] ?? post.total_likes;
-
-            return (
-              <div key={post.id} className={styles.postCard}>
-                <div className={styles.postContent}>
-                  <h3
-                    className={styles.postTitle}
-                    onClick={() => handleRedirectClick(post.id)}
-                  >
-                    {post.title}
-                  </h3>
-                  <div className={styles.postDescription}>
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: extractFirstParagraph(post.content, 80),
-                      }}
-                    />
-                  </div>
-                  <p className={styles.postAuthor}>By {post.author}</p>
-
-                  <div className={styles.postActions}>
-                    <span className={styles.postTimestamp}>
-                      {formatDate(post.updated_at)}
-                    </span>
-
-                    {/* Like/Dislike Button */}
-                    <Image
-                      src={isLiked ? "/icons/liked.svg" : "/icons/not-liked.svg"}
-                      alt={isLiked ? "Liked" : "Not Liked"}
-                      className={styles.liked}
-                      width={25}
-                      height={25}
-                      onClick={() => handleLike(post.id, isLiked)}
-                      style={{ cursor: "pointer" }}
-                    />
-                    <span className={styles.count}>{likeCount}</span>
-
-                    <Image
-                      src="/icons/comment.svg"
-                      alt="Comment Icon"
-                      className={styles.comment}
-                      width={25}
-                      height={25}
-                    />
-                  </div>
+          {postList.map((post) => (
+            <div key={post.id} className={styles.postCard}>
+              <div className={styles.postContent}>
+                <h3
+                  className={styles.postTitle}
+                  onClick={() => handleRedirectClick(post.id)}
+                >
+                  {post.title}
+                </h3>
+                <div className={styles.postDescription}>
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: extractFirstParagraph(post.content, 80),
+                    }}
+                  />
                 </div>
+                <p className={styles.postAuthor}>By {post.author}</p>
 
-                {/* Image Section */}
-                <Image
-                  src={post.image}
-                  alt={post.title}
-                  className={styles.postImage}
-                  width={300}
-                  height={200}
-                />
+                <div className={styles.postActions}>
+                  <span className={styles.postTimestamp}>
+                    {formatDate(post.updated_at)}
+                  </span>
+
+                  {/* Like/Dislike Button */}
+                  <Image
+                    src={post.is_liked ? "/icons/liked.svg" : "/icons/not-liked.svg"}
+                    alt={post.is_liked ? "Liked" : "Not Liked"}
+                    className={styles.liked}
+                    width={25}
+                    height={25}
+                    onClick={() => handleLike(post)}
+                    style={{ cursor: "pointer" }}
+                  />
+                  <span className={styles.count}>{post.total_likes || 0}</span>
+
+                  <Image
+                    src="/icons/comment.svg"
+                    alt="Comment Icon"
+                    className={styles.comment}
+                    width={25}
+                    height={25}
+                  />
+                </div>
               </div>
-            );
-          })}
+
+              {/* Image Section */}
+              <Image
+                src={post.image}
+                alt={post.title}
+                className={styles.postImage}
+                width={300}
+                height={200}
+              />
+            </div>
+          ))}
         </div>
       ) : (
         <p className={styles.noPost}>No Posts Available</p>
