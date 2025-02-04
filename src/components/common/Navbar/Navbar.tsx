@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import styles from "./Navbar.module.css";
 import SearchBar from "@/components/SearchBar/SearchBar";
+import { usePathname } from "next/navigation";
 
 interface NavLinkProps {
   href: string;
@@ -25,7 +26,8 @@ export default function Navbar() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { data: session, status } = useSession(); // Get session data and loading status
+  const { data: session, status } = useSession();
+  const pathname = usePathname();
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
@@ -74,8 +76,7 @@ export default function Navbar() {
         The Daily Scribble
       </Link>
 
-      {session && <SearchBar/>
-    }
+      {pathname === "/dashboard" &&  session && <SearchBar />}
 
       {status === "loading" ? (
         <div className={styles.loading}></div>
