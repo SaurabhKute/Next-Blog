@@ -10,18 +10,34 @@ export interface PostUpdate {
 }
 
 
-export async function fetchPosts(category?: string) {
+
+export async function fetchPosts(category?: string, search?: string, limit: number = 10, offset: number = 0) {
   try {
-    let query;
+    let queryText = "SELECT * FROM posts";
+    const queryParams: (string | number)[] = []; 
+    const whereConditions: string[] = [];
 
     if (category && category !== "0") {
-      query = sql<Post>`SELECT * FROM posts WHERE category = ${category} ORDER BY created_at DESC`;
-  } else {
-      query = sql<Post>`SELECT * FROM posts ORDER BY created_at DESC`;
-  }
-  
+      whereConditions.push(`category = $${queryParams.length + 1}`);
+      queryParams.push(category);
+    }
 
-    const data = await query;
+    if (search) {
+      whereConditions.push(`title ILIKE $${queryParams.length + 1}`);
+      queryParams.push(`%${search}%`); 
+    }
+
+    if (whereConditions.length > 0) {
+      queryText += ` WHERE ${whereConditions.join(" AND ")}`;
+    }
+
+    queryText += " ORDER BY created_at DESC";
+
+    // Add LIMIT and OFFSET for pagination
+    queryText += ` LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
+    queryParams.push(limit, offset);
+
+    const data = await sql.query(queryText, queryParams);
 
     return data.rows;
   } catch (error) {
@@ -29,6 +45,9 @@ export async function fetchPosts(category?: string) {
     throw new Error("Failed to fetch posts.");
   }
 }
+
+
+
 
 export async function fetchPostsByUserId(userId: string) {
   try {

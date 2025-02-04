@@ -4,12 +4,14 @@ import { sql } from "@vercel/postgres";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  // console.log(url,"@url");
   const category = url.searchParams.get("category") || "0";
-  console.log(category,"@category");
+  const search = url.searchParams.get("search") || ""; 
+
+  console.log(category, "@category");
+  console.log(search, "@search");
 
   try {
-    const posts = await fetchPosts(category);
+    const posts = await fetchPosts(category, search);
     return NextResponse.json(posts);
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -19,6 +21,7 @@ export async function GET(request: Request) {
     );
   }
 }
+
 
 
 export async function POST(request: Request) {

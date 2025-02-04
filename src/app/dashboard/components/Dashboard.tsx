@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Posts from "@/components/Post/Posts";
 import FilterSection from "@/components/Filter/FilterSection";
 import PopularPosts from "@/components/PopularPosts/PopularPosts";
@@ -8,6 +8,7 @@ import RecentPosts from "@/components/RecentPosts/RecentPosts";
 
 import styles from "../Dashboard.module.css";
 import { Category, Post } from "@/types/types";
+import { useSearch } from "@/context/SearchContext";
 
 type DashboardProps = {
   initialPosts: Post[];
@@ -21,34 +22,47 @@ export default function Dashboard({
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [categories] = useState<Category[]>(initialCategories);
   const [loading, setLoading] = useState<boolean>(false);
+  const { searchQuery } = useSearch();
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
-
-  const handleFilterChange = async (category: number) => {
-    setLoading(true); // Start loading
+  const fetchPosts = async (category?: number) => {
+    setLoading(true);
 
     try {
-      const response = await fetch(`/api/posts?category=${category}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch filtered posts");
+      let url = `/api/posts?search=${searchQuery}`;
+      if (category) {
+        url += `&category=${category}`;
       }
 
-      const filteredPosts: Post[] = await response.json();
-      setPosts(filteredPosts);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch posts");
+      }
+
+      const fetchedPosts: Post[] = await response.json();
+      setPosts(fetchedPosts);
     } catch (error) {
-      console.error("Error fetching filtered posts:", error);
+      console.error("Error fetching posts:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleFilterChange = (category: number) => {
+    setSelectedCategory(category);
+    fetchPosts(category);
+  };
+
+  // Fetch posts whenever the search query changes
+  useEffect(() => {
+    fetchPosts(selectedCategory || undefined);
+  }, [searchQuery]);
+
   return (
     <div className={styles.appContainer}>
       <div className={styles.mainContent}>
         <div className={styles.postsContainer}>
-          <FilterSection
-            categories={categories}
-            onFilterChange={handleFilterChange}
-          />
+          <FilterSection categories={categories} onFilterChange={handleFilterChange} />
 
           {loading ? (
             <div className={styles.postLoader}>
