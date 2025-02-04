@@ -22,7 +22,7 @@ const router = useRouter()
         throw new Error("Failed to fetch posts");
       }
       const postsData = await response.json();
-      // console.log(postsData,"@@@@@@@@@@@@@@@");
+      console.log(postsData,"@@@@@@@@@@@@@@@");
       setPosts(postsData); // Update state with fetched posts
       setLoading(false); // Stop loading
     } catch (err) {

@@ -11,35 +11,48 @@ export interface PostUpdate {
 
 
 
-export async function fetchPosts(category?: string, search?: string, limit: number = 10, offset: number = 0) {
+export async function fetchPosts(userId?: string, category?: string, search?: string) {
+  // console.log(category,"@category")
   try {
-    let queryText = "SELECT * FROM posts";
-    const queryParams: (string | number)[] = []; 
-    const whereConditions: string[] = [];
+    let queryText = `
+      SELECT 
+        posts.*, 
+        COALESCE(COUNT(likes.post_id), 0) AS total_likes,
+        CASE 
+          WHEN $1::UUID IS NOT NULL AND EXISTS (
+            SELECT 1 FROM likes WHERE likes.post_id = posts.id AND likes.user_id = $1::UUID
+          ) THEN TRUE
+          ELSE FALSE
+        END AS is_liked
+      FROM posts
+      LEFT JOIN likes ON posts.id = likes.post_id
+      WHERE 1=1
+    `;
 
+    const queryParams: (string | number | null)[] = [userId ?? null];
+    let paramIndex = 1; // Start at $1
+
+    // Add category filter
     if (category && category !== "0") {
-      whereConditions.push(`category = $${queryParams.length + 1}`);
+      queryText += ` AND posts.category = $${++paramIndex}`;
       queryParams.push(category);
     }
 
+    // Add search filter (case-insensitive title search)
     if (search) {
-      whereConditions.push(`title ILIKE $${queryParams.length + 1}`);
-      queryParams.push(`%${search}%`); 
+      queryText += ` AND posts.title ILIKE $${++paramIndex}`;
+      queryParams.push(`%${search}%`);
     }
 
-    if (whereConditions.length > 0) {
-      queryText += ` WHERE ${whereConditions.join(" AND ")}`;
-    }
-
-    queryText += " ORDER BY created_at DESC";
-
-    // Add LIMIT and OFFSET for pagination
-    queryText += ` LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
-    queryParams.push(limit, offset);
+    // Ensure correct grouping for COUNT
+    queryText += " GROUP BY posts.id";
+    queryText += " ORDER BY posts.created_at DESC";
 
     const data = await sql.query(queryText, queryParams);
 
+    // console.log(data.rows, "Data.rows")
     return data.rows;
+
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch posts.");
@@ -52,16 +65,29 @@ export async function fetchPosts(category?: string, search?: string, limit: numb
 export async function fetchPostsByUserId(userId: string) {
   try {
     const data = await sql<Post[]>`
-      SELECT * 
+      SELECT 
+        posts.*, 
+        COALESCE(COUNT(likes.post_id), 0) AS total_likes,
+        CASE 
+          WHEN ${userId}::UUID IS NOT NULL AND EXISTS (
+            SELECT 1 FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ${userId}::UUID
+          ) THEN TRUE
+          ELSE FALSE
+        END AS is_liked
       FROM posts
-      WHERE  user_id = ${userId}
+      LEFT JOIN likes ON posts.id = likes.post_id
+      WHERE posts.user_id = ${userId}::UUID
+      GROUP BY posts.id
+      ORDER BY posts.created_at DESC
     `;
-    return data.rows; 
+    return data.rows;
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch posts by user ID.');
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch posts by user ID.");
   }
 }
+
+
 
 
 export async function fetchCategories() {
@@ -80,33 +106,31 @@ export async function fetchCategories() {
   }
 }
 
-// export async function fetchPostsByCategory(category: string) {
-//   try {
-//     const data = await sql`
-//         SELECT * 
-//         FROM posts
-//         WHERE category = ${category}
-//       `;
-//     return data.rows;
-//   } catch (error) {
-//     console.error("Database Error:", error);
-//     throw new Error("Failed to fetch posts by category.");
-//   }
-// }
 
-export async function fetchPostById(postId: string) {
+export async function fetchPostById(postId: string, userId: string) {
   try {
-    const data = await sql<Post>`
-        SELECT * 
-        FROM posts
-        WHERE id = ${postId}
-      `;
-    return data.rows[0];
+    const data = await sql<Post[]>`
+      SELECT 
+        posts.*, 
+        COALESCE(COUNT(likes.post_id), 0) AS total_likes,
+        CASE 
+          WHEN ${userId}::UUID IS NOT NULL AND EXISTS (
+            SELECT 1 FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ${userId}::UUID
+          ) THEN TRUE
+          ELSE FALSE
+        END AS is_liked
+      FROM posts
+      LEFT JOIN likes ON posts.id = likes.post_id
+      WHERE posts.id = ${postId}::UUID
+      GROUP BY posts.id
+    `;
+    return data.rows[0]; // Return the first (and only) post
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch post by ID.");
   }
 }
+
 
 export async function updatePostById(
   postId: string,
