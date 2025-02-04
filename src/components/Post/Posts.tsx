@@ -16,21 +16,23 @@ export default function Posts({ posts }: PostsProps) {
   const router = useRouter();
 
   // State to track liked posts and like counts
-  const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
-  const [likesCount, setLikesCount] = useState<{ [key: string]: number }>({});
+  const [likedPosts, setLikedPosts] = useState<Record<number, boolean>>({});
+  const [likesCount, setLikesCount] = useState<Record<number, number>>({});
   const [userId, setUserId] = useState<string | null>(null);
 
-  // Initialize liked state and like count from API response
+  // Initialize liked state and like count from API response or localStorage
   useEffect(() => {
     if (session?.user?.id) {
       setUserId(session.user.id);
     }
 
-    const initialLikedPosts: { [key: string]: boolean } = {};
-    const initialLikesCount: { [key: string]: number } = {};
+    const initialLikedPosts: Record<number, boolean> = {};
+    const initialLikesCount: Record<number, number> = {};
 
     posts.forEach((post) => {
-      initialLikedPosts[post.id] = post?.is_liked;
+      // Check if there is a persisted like status in localStorage
+      const storedLikeStatus = localStorage.getItem(`liked_${post.id}`);
+      initialLikedPosts[post.id] = storedLikeStatus === "true" ? true : post?.is_liked;
       initialLikesCount[post.id] = post?.total_likes;
     });
 
@@ -65,10 +67,12 @@ export default function Posts({ posts }: PostsProps) {
       if (!res.ok) throw new Error(data.error);
 
       // Toggle liked state and update likes count
-      setLikedPosts((prev) => ({
-        ...prev,
-        [postId]: !isLiked,
-      }));
+      setLikedPosts((prev) => {
+        const updated: Record<number, boolean> = { ...prev, [postId]: !isLiked };
+        // Persist liked state to localStorage
+        localStorage.setItem(`liked_${postId}`, updated[postId].toString());
+        return updated;
+      });
 
       setLikesCount((prev) => ({
         ...prev,
