@@ -32,7 +32,7 @@ export default function BlogRead() {
     if (id && session?.user?.id) {
       const fetchBlog = async () => {
         try {
-          const response = await fetch(`/api/read?postId=${id}&userId=${session?.user?.id}`); // Pass userId here
+          const response = await fetch(`/api/read?postId=${id}&userId=${session?.user?.id}`); 
           if (!response.ok) {
             throw new Error("Blog not found");
           }
@@ -111,9 +111,12 @@ export default function BlogRead() {
       toast.error("You must be logged in to like a post.");
       return;
     }
-
-    const action = isLiked ? "dislike" : "like"; 
-
+  
+    const newIsLiked = !isLiked;
+    setIsLiked(newIsLiked);
+  
+    const action = newIsLiked ? "like" : "dislike"; 
+  
     try {
       const response = await fetch("/api/likes", {
         method: "POST",
@@ -126,18 +129,20 @@ export default function BlogRead() {
           action,
         }),
       });
-
+  
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
-
-      // Toggle like status and update like count
-      setIsLiked((prev) => !prev);
-      toast.success(isLiked ? "Post disliked" : "Post liked");
+  
+      // If successful, update like status
+      toast.success(newIsLiked ? "Post liked" : "Post disliked");
     } catch (error) {
+      // If there's an error, revert the UI change
+      setIsLiked(isLiked);
       toast.error("Error updating like status");
       console.error("Error updating like:", error);
     }
   };
+  
 
   if (loading) {
     return <Loading />;
