@@ -17,20 +17,21 @@ export default function Posts({ posts }: PostsProps) {
 
   // State for user ID
   const [userId, setUserId] = useState<string | null>(null);
-  const [postList, setPostList] = useState<Post[]>(posts);
+  const [postList, setPostList] = useState<Post[]>([]);
 
   useEffect(() => {
     if (session?.user?.id) {
       setUserId(session.user.id);
     }
 
-    // Load liked status from localStorage and update posts
-    const updatedPosts = posts.map((post) => ({
-      ...post,
-      is_liked: localStorage.getItem(`liked_${post.id}`) === "true" ? true : post.is_liked,
-    }));
-
-    setPostList(updatedPosts);
+    // Ensure localStorage is accessed only on the client side
+    if (typeof window !== "undefined") {
+      const updatedPosts = posts.map((post) => ({
+        ...post,
+        is_liked: localStorage.getItem(`liked_${post.id}`) === "true" ? true : post.is_liked,
+      }));
+      setPostList(updatedPosts);
+    }
   }, [posts, session]);
 
   const handleRedirectClick = (id: number) => {
@@ -45,7 +46,11 @@ export default function Posts({ posts }: PostsProps) {
     }
 
     const action = post.is_liked ? "dislike" : "like";
-    const updatedPost = { ...post, is_liked: !post.is_liked, total_likes: post.is_liked ? post.total_likes - 1 : post.total_likes + 1 };
+    const updatedPost = { 
+      ...post, 
+      is_liked: !post.is_liked, 
+      total_likes: post.is_liked ? post.total_likes - 1 : post.total_likes + 1 
+    };
 
     // Optimistically update UI
     setPostList((prevPosts) =>
@@ -71,7 +76,7 @@ export default function Posts({ posts }: PostsProps) {
       );
     } catch (error) {
       console.error("Error updating likes:", error);
-      
+
       // Rollback UI update in case of failure
       setPostList((prevPosts) =>
         prevPosts.map((p) => (p.id === post.id ? post : p))
@@ -117,14 +122,6 @@ export default function Posts({ posts }: PostsProps) {
                     style={{ cursor: "pointer" }}
                   />
                   <span className={styles.count}>{post.total_likes || 0}</span>
-
-                  <Image
-                    src="/icons/comment.svg"
-                    alt="Comment Icon"
-                    className={styles.comment}
-                    width={25}
-                    height={25}
-                  />
                 </div>
               </div>
 
