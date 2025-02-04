@@ -5,14 +5,14 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
 
   const postId = new URLSearchParams(url.search).get('postId') || '';
+  const userId = new URLSearchParams(url.search).get('userId') || null || ""; 
 
   try {
+    const post = await fetchPostById(postId, userId);
 
-    const posts = await fetchPostById(postId);
-    // console.log(posts, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    return NextResponse.json(posts);
+    return NextResponse.json(post);
   } catch (error) {
     console.error("Error fetching posts:", error);
-    return NextResponse.json({ error: "Failed to fetch posts" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to fetch post" }, { status: 500 });
   }
 }

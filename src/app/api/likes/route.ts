@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     // Ensure the userId is a valid UUID string (use the UUID casting)
     const userIdUUID = userId.toString(); // Ensure it's a string (UUID format)
 
-    console.log("userId:", userIdUUID);
+    // console.log("userId:", userIdUUID);
 
     // Perform like or dislike action
     if (action === "like") {

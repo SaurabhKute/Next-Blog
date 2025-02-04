@@ -2,16 +2,16 @@ import { NextResponse } from "next/server";
 import { fetchPosts } from "@/app/lib/data";
 import { sql } from "@vercel/postgres";
 
+
+
 export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const category = url.searchParams.get("category") || "0";
-  const search = url.searchParams.get("search") || ""; 
-
-  console.log(category, "@category");
-  console.log(search, "@search");
-
   try {
-    const posts = await fetchPosts(category, search);
+    const url = new URL(request.url);
+    const category = url.searchParams.get("category") || "0";
+    const search = url.searchParams.get("search") || "";
+    const userId = url.searchParams.get("userId") || null || undefined;
+
+    const posts = await fetchPosts(userId, category, search);
     return NextResponse.json(posts);
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -21,6 +21,7 @@ export async function GET(request: Request) {
     );
   }
 }
+
 
 
 

@@ -12,18 +12,31 @@ type PostsProps = {
 };
 
 export default function Posts({ posts }: PostsProps) {
-  const {data:session} = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
-  const [likedPosts, setLikedPosts] = useState<{ [key: number]: boolean }>({});
-  const [likesCount, setLikesCount] = useState<{ [key: number]: number }>({});
-  const [userId, setUserId] = useState<string | null>(null); 
 
+  // State to track liked posts and like counts
+  const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
+  const [likesCount, setLikesCount] = useState<{ [key: string]: number }>({});
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Initialize liked state and like count from API response
   useEffect(() => {
-    const storedUserId = session?.user?.id;
-    if (storedUserId) {
-      setUserId(storedUserId); // Set the userId here
+    if (session?.user?.id) {
+      setUserId(session.user.id);
     }
-  }, []);
+
+    const initialLikedPosts: { [key: string]: boolean } = {};
+    const initialLikesCount: { [key: string]: number } = {};
+
+    posts.forEach((post) => {
+      initialLikedPosts[post.id] = post?.is_liked;
+      initialLikesCount[post.id] = post?.total_likes;
+    });
+
+    setLikedPosts(initialLikedPosts);
+    setLikesCount(initialLikesCount);
+  }, [posts, session]);
 
   const handleRedirectClick = (id: number) => {
     router.push(`/read/${id}`);
@@ -96,7 +109,9 @@ export default function Posts({ posts }: PostsProps) {
                   {/* Like/Dislike Button */}
                   <Image
                     src={
-                      likedPosts[post.id] ? "/icons/liked.svg" : "/icons/not-liked.svg"
+                      likedPosts[post.id]
+                        ? "/icons/liked.svg"
+                        : "/icons/not-liked.svg"
                     }
                     alt={likedPosts[post.id] ? "Liked" : "Not Liked"}
                     className={styles.liked}

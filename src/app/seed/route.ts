@@ -2,9 +2,6 @@
 // import { db } from '@vercel/postgres';
 // import { Users, Posts, Categories } from '../lib/dummy';
 
-import {  sql } from "@vercel/postgres";
-
-
 // const client = await db.connect();
 
 // async function dropTables() {
@@ -114,78 +111,21 @@ import {  sql } from "@vercel/postgres";
 
 
 
-export async function seedLikes() {
-  try {
-    // Ensure the UUID extension is enabled if needed for UUID generation
-    await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+// export async function GET() {
+//   try {
+//     await client.sql`BEGIN`;
+//     // await dropTables();
+//     // await seedUsers();
+//     // await seedPosts();
+//     // await seedCategories();
+//     await client.sql`COMMIT`;
 
-    // Drop the existing likes table if it exists
-    await sql`
-      DROP TABLE IF EXISTS likes;
-    `;
+//     return Response.json({ message: 'Database seeded successfully' });
+//   } catch (error) {
+//     console.error(error);  // Log the error details for easier debugging
+//     await client.sql`ROLLBACK`;
+//     return Response.json({ error: error }, { status: 500 });
+//   }  
+// }
 
-    // Create the new likes table with correct schema
-    await sql`
-      CREATE TABLE IF NOT EXISTS likes (
-        id SERIAL PRIMARY KEY,  -- Auto-incrementing primary key for the like record
-        post_id INT NOT NULL,  -- Post ID that the like corresponds to
-        user_id UUID NOT NULL,  -- User ID who liked the post, using UUID type
-        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,  -- Timestamp for when the like was created
-        updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,  -- Timestamp for when the like was last updated
-        CONSTRAINT unique_like UNIQUE (post_id, user_id)  -- Ensures a user can only like a post once
-      );
-    `;
-
-    // Optionally, insert some initial data into the likes table
-    const insertedLikes = await Promise.all(
-      // Sample data for demonstration (You can replace this with actual user and post data)
-      [
-        { postId: 1, userId: "9c40618a-0ea6-489a-912f-5729eff91742" },  // Example UUID user
-        { postId: 2, userId: "2b680f8c-c68e-4a59-835e-473cf8d3c6e9" },  // Example UUID user
-      ].map(({ postId, userId }) =>
-        sql`
-          INSERT INTO likes (post_id, user_id)
-          VALUES (${postId}, ${userId}::UUID)  -- Insert with user_id as UUID
-          ON CONFLICT (post_id, user_id) DO NOTHING  -- Prevent duplicate likes
-          RETURNING *;  -- Return the inserted rows for confirmation
-        `
-      )
-    );
-
-    return insertedLikes;  // Return the result of inserted likes
-  } catch (error) {
-    console.error("Error seeding likes:", error);
-    throw new Error("Failed to seed likes.");
-  }
-}
-
-  
-
-
-
-  export async function GET() {
-    const client = sql; // Ensure you have the correct database client
-  
-    try {
-      await client.sql`BEGIN`;  // Start a transaction
-  
-      // Seed likes data
-      await seedLikes();
-  
-      await client.sql`COMMIT`;  // Commit the transaction if all operations succeed
-  
-      return new Response(
-        JSON.stringify({ message: "Database seeded successfully" }),
-        { status: 200 }
-      );
-    } catch (error:any) {
-      console.error("Error during seeding:", error);
-      await client.sql`ROLLBACK`;  // Rollback the transaction in case of error
-      return new Response(
-        JSON.stringify({ error: error.message }),
-        { status: 500 }
-      );
-    }
-  }
-  
 export {};
