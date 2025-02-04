@@ -24,7 +24,6 @@ export default function WriteBlog() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const isMounted = useRef(true);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [title, setTitle] = useState<string>('');
@@ -46,8 +45,8 @@ export default function WriteBlog() {
 
         const data = await res.json();
 
-        if (isMounted.current) {
-          setCategories(data); // Ensure this happens only when the component is mounted
+        if (data) {
+          setCategories(data); 
         }
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -56,9 +55,7 @@ export default function WriteBlog() {
 
     getCategories();
 
-    return () => {
-      isMounted.current = false; // Mark the component as unmounted during cleanup
-    };
+    
   }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

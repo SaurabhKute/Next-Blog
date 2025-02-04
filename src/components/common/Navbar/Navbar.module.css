@@ -32,7 +32,7 @@
   font-size: 16px;
   color: black;
   text-decoration: none;
-  padding: 10px 15px; /* Add padding for uniform alignment */
+  padding: 10px 15px;
   transition: color 0.3s ease;
 }
 
@@ -40,14 +40,9 @@
   color: rgb(22, 6, 80);
 }
 
-.writeIcon {
-  width: 16px; /* Ensuring proper icon size */
-  height: 16px;
-  stroke: currentColor;
-}
-
+.writeIcon,
 .signInIcon {
-  width: 16px; /* Icon size */
+  width: 16px;
   height: 16px;
   stroke: currentColor;
 }
@@ -145,7 +140,7 @@
 .sidebarNav {
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* Ensure consistent spacing between items */
+  gap: 1rem;
   padding: 0;
 }
 
@@ -154,7 +149,7 @@
   font-size: 1rem;
   color: #333;
   text-decoration: none;
-  padding: 10px 15px; /* Ensure consistent padding */
+  padding: 10px 15px;
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -183,7 +178,57 @@
   background-color: #444;
 }
 
-/* Mobile and Tablet Responsive Styles */
+
+.authWrapper {
+  display: flex; 
+  gap: 1px; 
+  align-items: center; 
+  flex-wrap: wrap; 
+}
+
+.authWrapper .navLink,
+.authWrapper .startButton {
+  background-color: transparent;
+  color: #444;
+  border-radius: 8px;
+  font-weight: lighter;
+  text-transform: none;
+  margin-left: 10px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.authWrapper .navLink:hover,
+.authWrapper .startButton:hover {
+  background-color: transparent;
+  color: #222;
+}
+
+.authWrapper .startButton {
+  padding: 10px 18px;
+  background-color: #000000;
+  color: white;
+  font-weight: normal;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.authWrapper .startButton:hover {
+  background-color: #000000;
+  color: #fff;
+}
+
+/* Sidebar authentication buttons for responsive design */
+.sidebar .authWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+
 @media (max-width: 1024px) {
   .navbar {
     padding: 1rem 1.5rem;
@@ -204,6 +249,15 @@
   .startButton {
     padding: 0.5rem 0.8rem;
     font-size: 0.9rem;
+  }
+
+  /* Align the .authWrapper on tablets */
+  .authWrapper {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
   }
 }
 
@@ -226,7 +280,7 @@
 
   .sidebarNav .navLink {
     font-size: 1rem;
-    padding: 10px 15px; /* Ensures "Write" aligns properly with other links */
+    padding: 10px 15px;
   }
 
   .sidebarNav .sidebarStartButton {
@@ -236,6 +290,13 @@
 
   .sidebarNav .sidebarLogoutButton {
     padding: 10px 15px;
+  }
+
+  /* Align the .authWrapper on small devices */
+  .authWrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
 }
 
@@ -250,11 +311,18 @@
 
   .sidebarNav .navLink {
     font-size: 1rem;
-    padding: 10px 15px; /* Consistent padding for all links */
+    padding: 10px 15px;
   }
 
   .sidebarNav .sidebarStartButton {
     font-size: 1rem;
     padding: 10px 15px;
+  }
+
+  /* Make authWrapper align vertically in the smallest screens */
+  .authWrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
 }
