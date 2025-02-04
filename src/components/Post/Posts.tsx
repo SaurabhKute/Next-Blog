@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./Posts.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -14,45 +14,23 @@ type PostsProps = {
 export default function Posts({ posts }: PostsProps) {
   const { data: session } = useSession();
   const router = useRouter();
+  const userId = session?.user?.id || null;
 
-  // State to track liked posts and like counts
-  const [likedPosts, setLikedPosts] = useState<Record<number, boolean>>({});
-  const [likesCount, setLikesCount] = useState<Record<number, number>>({});
-  const [userId, setUserId] = useState<string | null>(null);
-
-  // Initialize liked state and like count from API response or localStorage
-  useEffect(() => {
-    if (session?.user?.id) {
-      setUserId(session.user.id);
-    }
-
-    // Initialize the liked status from localStorage
-    const initialLikedPosts: Record<number, boolean> = {};
-    const initialLikesCount: Record<number, number> = {};
-
-    posts.forEach((post) => {
-      // Check if there is a persisted like status in localStorage for each post
-      const storedLikeStatus = localStorage.getItem(`liked_${post.id}`);
-      initialLikedPosts[post.id] = storedLikeStatus === "true" ? true : post?.is_liked;
-      initialLikesCount[post.id] = post?.total_likes || 0;
-    });
-
-    setLikedPosts(initialLikedPosts);
-    setLikesCount(initialLikesCount);
-  }, [posts, session]);
+  // State to track liked posts dynamically
+  const [likedStates, setLikedStates] = useState<Record<number, boolean>>({});
+  const [likesCounts, setLikesCounts] = useState<Record<number, number>>({});
 
   const handleRedirectClick = (id: number) => {
     router.push(`/read/${id}`);
   };
 
   // Handle Like/Dislike functionality
-  async function handleLike(postId: number) {
+  async function handleLike(postId: number, isLiked: boolean) {
     if (!userId) {
       console.error("User is not logged in");
       return;
     }
 
-    const isLiked = likedPosts[postId] || false;
     const action = isLiked ? "dislike" : "like";
 
     try {
@@ -67,15 +45,13 @@ export default function Posts({ posts }: PostsProps) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 
-      // Toggle liked state and update likes count
-      setLikedPosts((prev) => {
-        const updated: Record<number, boolean> = { ...prev, [postId]: !isLiked };
-        // Persist liked state to localStorage for all posts
-        localStorage.setItem(`liked_${postId}`, updated[postId].toString());
-        return updated;
-      });
+      // Update state dynamically
+      setLikedStates((prev) => ({
+        ...prev,
+        [postId]: !isLiked,
+      }));
 
-      setLikesCount((prev) => ({
+      setLikesCounts((prev) => ({
         ...prev,
         [postId]: data.totalLikes,
       }));
@@ -88,65 +64,66 @@ export default function Posts({ posts }: PostsProps) {
     <div className={styles.postsContainer}>
       {posts && posts.length > 0 ? (
         <div className={styles.postList}>
-          {posts.map((post: Post) => (
-            <div key={post.id} className={styles.postCard}>
-              <div className={styles.postContent}>
-                <h3
-                  className={styles.postTitle}
-                  onClick={() => handleRedirectClick(post.id)}
-                >
-                  {post.title}
-                </h3>
-                <div className={styles.postDescription}>
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: extractFirstParagraph(post.content, 80),
-                    }}
-                  />
+          {posts.map((post: Post) => {
+            const isLiked = likedStates[post.id] ?? post.is_liked;
+            const likeCount = likesCounts[post.id] ?? post.total_likes;
+
+            return (
+              <div key={post.id} className={styles.postCard}>
+                <div className={styles.postContent}>
+                  <h3
+                    className={styles.postTitle}
+                    onClick={() => handleRedirectClick(post.id)}
+                  >
+                    {post.title}
+                  </h3>
+                  <div className={styles.postDescription}>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: extractFirstParagraph(post.content, 80),
+                      }}
+                    />
+                  </div>
+                  <p className={styles.postAuthor}>By {post.author}</p>
+
+                  <div className={styles.postActions}>
+                    <span className={styles.postTimestamp}>
+                      {formatDate(post.updated_at)}
+                    </span>
+
+                    {/* Like/Dislike Button */}
+                    <Image
+                      src={isLiked ? "/icons/liked.svg" : "/icons/not-liked.svg"}
+                      alt={isLiked ? "Liked" : "Not Liked"}
+                      className={styles.liked}
+                      width={25}
+                      height={25}
+                      onClick={() => handleLike(post.id, isLiked)}
+                      style={{ cursor: "pointer" }}
+                    />
+                    <span className={styles.count}>{likeCount}</span>
+
+                    <Image
+                      src="/icons/comment.svg"
+                      alt="Comment Icon"
+                      className={styles.comment}
+                      width={25}
+                      height={25}
+                    />
+                  </div>
                 </div>
-                <p className={styles.postAuthor}>By {post.author}</p>
 
-                <div className={styles.postActions}>
-                  <span className={styles.postTimestamp}>
-                    {formatDate(post.updated_at)}
-                  </span>
-
-                  {/* Like/Dislike Button */}
-                  <Image
-                    src={
-                      likedPosts[post.id]
-                        ? "/icons/liked.svg"
-                        : "/icons/not-liked.svg"
-                    }
-                    alt={likedPosts[post.id] ? "Liked" : "Not Liked"}
-                    className={styles.liked}
-                    width={25}
-                    height={25}
-                    onClick={() => handleLike(post.id)}
-                    style={{ cursor: "pointer" }}
-                  />
-                  <span className={styles.count}>{likesCount[post.id] || 0}</span>
-
-                  <Image
-                    src="/icons/comment.svg"
-                    alt="Comment Icon"
-                    className={styles.comment}
-                    width={25}
-                    height={25}
-                  />
-                </div>
+                {/* Image Section */}
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  className={styles.postImage}
+                  width={300}
+                  height={200}
+                />
               </div>
-
-              {/* Image Section */}
-              <Image
-                src={post.image}
-                alt={post.title}
-                className={styles.postImage}
-                width={300}
-                height={200}
-              />
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <p className={styles.noPost}>No Posts Available</p>
