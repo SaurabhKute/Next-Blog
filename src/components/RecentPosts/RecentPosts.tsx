@@ -24,7 +24,7 @@ export default function RecentPosts({ recentPosts }: RecentPostsProps) {
       <ul className={styles.postsList}>
         {recentPosts && recentPosts.length > 0 ? (
           <>
-            {recentPosts.map((post) => (
+            {recentPosts?.slice(0,5)?.map((post) => (
               <li key={post.id} className={styles.postItem}>
                 <div className={styles.postDetails} onClick={() => handleRedirectClick(post?.id)}>
                   <Image
