@@ -1,0 +1,112 @@
+/* Search Bar Container - Visible on Larger Screens */
+.searchContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  width: 50%;
+}
+
+/* Wrapper for input field */
+.searchInputWrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  background-color: white;
+  color: #bcbcbc;
+  /* border-radius: 10px; */
+}
+
+/* Search Input */
+.searchInput {
+  width: 100%;
+  height: 25px;
+  padding: 0.5rem 2.5rem; /* Extra padding for icon */
+  font-size: 1rem;
+  border: 1px solid #b3b3b3 !important;
+  border-radius: 50px;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: #f1f1f1;
+}
+
+/* Search Icon inside input */
+.searchIconInside {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #bcbcbc;
+}
+
+/* Hide Mobile Search Elements on Larger Screens */
+@media (min-width: 769px) {
+  .mobileSearchIcon {
+    display: none;
+  }
+
+  .mobileSearchContainer {
+    display: none !important; /* Hide mobile search container on larger screens */
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .searchContainer {
+    display: none;
+  }
+
+  /* Mobile Search Icon - Positioned near the hamburger */
+  .mobileSearchIcon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    position: absolute;
+    right: 60px;
+    top: 56%;
+    transform: translateY(-50%);
+  }
+
+  /* Mobile Search Bar (when toggled) */
+  .mobileSearchContainer {
+    display: none; /* Initially hidden */
+    position: absolute;
+    top: 80px; /* Adjusted to appear below the navbar */
+    left: 2%;
+    right: 2%;
+    background-color: white;
+    padding: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border-radius: 10px;
+  }
+
+  /* Adjust width based on screen sizes */
+  @media (max-width: 600px) {
+    .mobileSearchContainer {
+      left: 3%;
+      right: 3%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .mobileSearchContainer {
+      left: 2%;
+      right: 2%;
+    }
+  }
+
+  /* Mobile Search Bar Input */
+  .mobileSearchContainer.open {
+    display: block; /* Show when open */
+  }
+
+  .mobileSearchContainer .searchInput {
+    width: 90%;
+    padding: 0.5rem 1rem;
+  }
+}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import styles from "./Navbar.module.css";
+import SearchBar from "@/components/SearchBar/SearchBar";
 
 interface NavLinkProps {
   href: string;
@@ -21,6 +22,7 @@ interface DropdownItemProps {
 
 
 export default function Navbar() {
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { data: session, status } = useSession(); // Get session data and loading status
@@ -53,6 +55,7 @@ export default function Navbar() {
   );
 
 
+
   const UserAvatar: React.FC = () => (
     <Image
       src={session?.user?.image || "/icons/user.svg"}
@@ -70,6 +73,9 @@ export default function Navbar() {
       <Link className={styles.siteLogo} href="/">
         The Daily Scribble
       </Link>
+
+      {session && <SearchBar/>
+    }
 
       {status === "loading" ? (
         <div className={styles.loading}></div>

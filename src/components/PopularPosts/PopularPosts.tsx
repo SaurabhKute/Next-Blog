@@ -7,25 +7,27 @@ import { Post } from '@/types/types';
 import { formatDate } from '@/utils/dateFormatter';
 import { useRouter } from 'next/navigation';
 
-
 type PopularPostsProps = {
   popularPosts: Post[];
 };
-export default function PopularPosts({ popularPosts }: PopularPostsProps) {
 
+export default function PopularPosts({ popularPosts }: PopularPostsProps) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-    const handleRedirectClick = (id: number) => {
-      router.push(`/read/${id}`)
-    }
+  const handleRedirectClick = (id: number) => {
+    router.push(`/read/${id}`);
+  };
 
+  // Effect to handle carousel behavior
   useEffect(() => {
     if (popularPosts.length > 1) {
       const interval = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % popularPosts?.length);
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % popularPosts.length);
       }, 5000);
       return () => clearInterval(interval); 
+    } else if (popularPosts.length === 1) {
+      setCurrentIndex(0); 
     }
   }, [popularPosts]);
 
@@ -47,10 +49,10 @@ export default function PopularPosts({ popularPosts }: PopularPostsProps) {
               <div
                 key={post.id}
                 className={`${styles.carouselItem} ${currentIndex === index ? styles.active : ''}`}
-                onClick={() => handleRedirectClick(post?.id)}
+                onClick={() => handleRedirectClick(post.id)}
               >
                 <Image
-                  src={post?.image}
+                  src={post.image}
                   alt={post.title}
                   className={styles.carouselImage}
                   height={100}
@@ -71,4 +73,3 @@ export default function PopularPosts({ popularPosts }: PopularPostsProps) {
     </>
   );
 };
-

@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from "./Profile.module.css";
 import { useSession } from "next-auth/react";
 import Modal from "../common/Modal/Modal";
 import toast from "react-hot-toast";
 import MyPosts from "../MyPosts/MyPosts";
-import Image from "next/image"; // Import Image component
+import Image from "next/image"; 
+import styles from './ProfileForm.module.css';
 
 interface FormData {
   [key: string]: string;
