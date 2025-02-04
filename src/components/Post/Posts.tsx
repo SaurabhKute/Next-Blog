@@ -26,14 +26,15 @@ export default function Posts({ posts }: PostsProps) {
       setUserId(session.user.id);
     }
 
+    // Initialize the liked status from localStorage
     const initialLikedPosts: Record<number, boolean> = {};
     const initialLikesCount: Record<number, number> = {};
 
     posts.forEach((post) => {
-      // Check if there is a persisted like status in localStorage
+      // Check if there is a persisted like status in localStorage for each post
       const storedLikeStatus = localStorage.getItem(`liked_${post.id}`);
       initialLikedPosts[post.id] = storedLikeStatus === "true" ? true : post?.is_liked;
-      initialLikesCount[post.id] = post?.total_likes;
+      initialLikesCount[post.id] = post?.total_likes || 0;
     });
 
     setLikedPosts(initialLikedPosts);
@@ -69,7 +70,7 @@ export default function Posts({ posts }: PostsProps) {
       // Toggle liked state and update likes count
       setLikedPosts((prev) => {
         const updated: Record<number, boolean> = { ...prev, [postId]: !isLiked };
-        // Persist liked state to localStorage
+        // Persist liked state to localStorage for all posts
         localStorage.setItem(`liked_${postId}`, updated[postId].toString());
         return updated;
       });
