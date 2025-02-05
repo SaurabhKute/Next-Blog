@@ -1,16 +1,11 @@
 import { fetchUserProfile, updateUserProfile } from "@/app/lib/data";
 import { NextRequest, NextResponse } from "next/server";
 
-// Define the context type explicitly
-interface Context {
-  params: { id: string };
-}
-
 // Fetch user profile (GET)
-export async function GET(req: NextRequest, { params }: Context) {
+export async function GET(req: NextRequest, { params }: { params: Record<string, string> }) {
   console.log("Received Params:", params);
 
-  if (!params?.id) {
+  if (!params.id) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
 
@@ -28,10 +23,10 @@ export async function GET(req: NextRequest, { params }: Context) {
 }
 
 // Update user profile (PATCH)
-export async function PATCH(req: NextRequest, { params }: Context) {
-  console.log("PATCH request received for user ID:", params?.id);
+export async function PATCH(req: NextRequest, { params }: { params: Record<string, string> }) {
+  console.log("PATCH request received for user ID:", params.id);
 
-  if (!params?.id) {
+  if (!params.id) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
 
