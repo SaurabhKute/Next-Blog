@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import { fetchPosts } from "@/app/lib/data";
 import { sql } from "@vercel/postgres";
 
-
-
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
@@ -22,9 +20,6 @@ export async function GET(request: Request) {
   }
 }
 
-
-
-
 export async function POST(request: Request) {
   try {
     const { title, content, image, author, tags, category, user_id } =
@@ -34,7 +29,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Image is required" }, { status: 400 });
     }
 
-    // Check if user exists before inserting
     const userCheck = await sql`
       SELECT id FROM users WHERE id = ${user_id};
     `;
@@ -52,8 +46,8 @@ export async function POST(request: Request) {
     const result = await sql`
       INSERT INTO posts (title, content, image, author, tags, category, user_id) 
       VALUES (${title}, ${content}, ${image}, ${author}, ${JSON.stringify(
-        tags
-      )}, ${category}, ${user_id})
+      tags
+    )}, ${category}, ${user_id})
       RETURNING id;
     `;
 

@@ -1,4 +1,3 @@
-/* Search Bar Container - Visible on Larger Screens */
 .searchContainer {
   display: flex;
   align-items: center;
@@ -7,7 +6,6 @@
   width: 50%;
 }
 
-/* Wrapper for input field */
 .searchInputWrapper {
   display: flex;
   align-items: center;
@@ -18,11 +16,10 @@
   /* border-radius: 10px; */
 }
 
-/* Search Input */
 .searchInput {
   width: 100%;
   height: 25px;
-  padding: 0.5rem 2.5rem; /* Extra padding for icon */
+  padding: 0.5rem 2.5rem;
   font-size: 1rem;
   border: 1px solid #b3b3b3 !important;
   border-radius: 50px;
@@ -33,7 +30,6 @@
   border-color: #f1f1f1;
 }
 
-/* Search Icon inside input */
 .searchIconInside {
   position: absolute;
   right: 30px;
@@ -42,24 +38,21 @@
   color: #bcbcbc;
 }
 
-/* Hide Mobile Search Elements on Larger Screens */
 @media (min-width: 769px) {
   .mobileSearchIcon {
     display: none;
   }
 
   .mobileSearchContainer {
-    display: none !important; /* Hide mobile search container on larger screens */
+    display: none !important;
   }
 }
 
-/* Mobile Styles */
 @media (max-width: 768px) {
   .searchContainer {
     display: none;
   }
 
-  /* Mobile Search Icon - Positioned near the hamburger */
   .mobileSearchIcon {
     background: none;
     border: none;
@@ -71,11 +64,10 @@
     transform: translateY(-50%);
   }
 
-  /* Mobile Search Bar (when toggled) */
   .mobileSearchContainer {
-    display: none; /* Initially hidden */
+    display: none;
     position: absolute;
-    top: 80px; /* Adjusted to appear below the navbar */
+    top: 80px;
     left: 2%;
     right: 2%;
     background-color: white;
@@ -85,7 +77,6 @@
     border-radius: 10px;
   }
 
-  /* Adjust width based on screen sizes */
   @media (max-width: 600px) {
     .mobileSearchContainer {
       left: 3%;
@@ -100,9 +91,8 @@
     }
   }
 
-  /* Mobile Search Bar Input */
   .mobileSearchContainer.open {
-    display: block; /* Show when open */
+    display: block;
   }
 
   .mobileSearchContainer .searchInput {

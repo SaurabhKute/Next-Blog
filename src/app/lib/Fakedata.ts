@@ -1,27 +1,27 @@
 const Users = [
   {
-    id: '410544b2-4001-4271-9855-fec4b6a6442a',
-    name: 'Saurabh Kute',
-    email: 'user@testmail.com',
-    password: 'Test@123',
+    id: "410544b2-4001-4271-9855-fec4b6a6442a",
+    name: "Saurabh Kute",
+    email: "user@testmail.com",
+    password: "Test@123",
   },
   {
-    id: '530544c3-4002-4272-9856-fec4b6a6442b',
-    name: 'Jane Smith',
-    email: 'jane.smith@mail.com',
-    password: 'SecurePass@2023',
+    id: "530544c3-4002-4272-9856-fec4b6a6442b",
+    name: "Jane Smith",
+    email: "jane.smith@mail.com",
+    password: "SecurePass@2023",
   },
   {
-    id: '630544d4-4003-4273-9857-fec4b6a6442c',
-    name: 'David Johnson',
-    email: 'david.johnson@mail.com',
-    password: 'David@789',
+    id: "630544d4-4003-4273-9857-fec4b6a6442c",
+    name: "David Johnson",
+    email: "david.johnson@mail.com",
+    password: "David@789",
   },
   {
-    id: '730544e5-4004-4274-9858-fec4b6a6442d',
-    name: 'Alice Cooper',
-    email: 'alice.cooper@mail.com',
-    password: 'Alice#567',
+    id: "730544e5-4004-4274-9858-fec4b6a6442d",
+    name: "Alice Cooper",
+    email: "alice.cooper@mail.com",
+    password: "Alice#567",
   },
 ];
 
@@ -41,13 +41,14 @@ const Posts = [
       <img src="https://dummyjson.com/image/400x200/008080/ffffff?text=Web+Development" alt="React Example" />
       <p>In conclusion, React is a versatile and efficient library for modern web development.</p>
     `,
-    image: "https://dummyjson.com/image/400x200/008080/ffffff?text=Web+Development",
+    image:
+      "https://dummyjson.com/image/400x200/008080/ffffff?text=Web+Development",
     author: "John Doe",
     tags: ["React", "JavaScript", "Web Development", "UI/UX"],
     category: "Technology",
-    user_id: '410544b2-4001-4271-9855-fec4b6a6442a',
+    user_id: "410544b2-4001-4271-9855-fec4b6a6442a",
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(), 
+    updated_at: new Date().toISOString(),
   },
   {
     title: "Exploring Node.js for Backend Development",
@@ -63,11 +64,12 @@ const Posts = [
       <img src="https://dummyjson.com/image/400x200/FF5733/ffffff?text=Backend+Development" alt="Node.js Example" />
       <p>In short, Node.js is a powerful tool for building high-performance backend systems.</p>
     `,
-    image: "https://dummyjson.com/image/400x200/FF5733/ffffff?text=Backend+Development",
+    image:
+      "https://dummyjson.com/image/400x200/FF5733/ffffff?text=Backend+Development",
     author: "Jane Smith",
     tags: ["Node.js", "Backend", "JavaScript", "Programming"],
     category: "Education",
-    user_id: '530544c3-4002-4272-9856-fec4b6a6442b',
+    user_id: "530544c3-4002-4272-9856-fec4b6a6442b",
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -84,11 +86,12 @@ const Posts = [
       <img src="https://dummyjson.com/image/400x200/6A0DAD/ffffff?text=Artificial+Intelligence" alt="AI Example" />
       <p>The potential of AI is vast, making it a critical area of focus for businesses and researchers alike.</p>
     `,
-    image: "https://dummyjson.com/image/400x200/6A0DAD/ffffff?text=Artificial+Intelligence",
+    image:
+      "https://dummyjson.com/image/400x200/6A0DAD/ffffff?text=Artificial+Intelligence",
     author: "David Johnson",
     tags: ["AI", "Machine Learning", "Technology"],
     category: "Education",
-    user_id: '630544d4-4003-4273-9857-fec4b6a6442c',
+    user_id: "630544d4-4003-4273-9857-fec4b6a6442c",
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -105,60 +108,24 @@ const Posts = [
       <img src="https://dummyjson.com/image/400x200/2980B9/ffffff?text=UI+UX+Design" alt="UI/UX Example" />
       <p>By following these principles, designers can create experiences that delight users.</p>
     `,
-    image: "https://dummyjson.com/image/400x200/2980B9/ffffff?text=UI+UX+Design",
+    image:
+      "https://dummyjson.com/image/400x200/2980B9/ffffff?text=UI+UX+Design",
     author: "Alice Cooper",
     tags: ["UI/UX", "Design", "User Experience"],
     category: "Technology",
-    user_id: '730544e5-4004-4274-9858-fec4b6a6442d',
+    user_id: "730544e5-4004-4274-9858-fec4b6a6442d",
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
 ];
 
+const Categories = [
+  "Technology",
+  "Health",
+  "Travel",
+  "Food",
+  "Lifestyle",
+  "Business",
+];
 
-  // const Categories = [
-  //   'Technology',
-  //   'Health',
-  //   'Travel',
-  //   'Education',
-  //   'Food',
-  //   'Lifestyle',
-  //   'Business',
-  //   'Finance',
-  //   'Entertainment',
-  //   'Sports',
-  //   'Science',
-  //   'Fashion',
-  //   'Environment',
-  //   'Politics',
-  //   'Gaming',
-  //   'Parenting',
-  //   'Photography',
-  //   'Art & Design',
-  //   'Automobile',
-  //   'Real Estate',
-  //   'Personal Development',
-  //   'DIY & Crafts',
-  //   'Fitness',
-  //   'Music',
-  //   'Movies & TV',
-  //   'Books & Literature',
-  //   'Relationships',
-  //   'History',
-  //   'Culture',
-  //   'Nature',
-  //   'Startups',
-  // ];
-  
-
-  const Categories = [
-    "Technology",
-    "Health",
-    "Travel",
-    "Food",
-    "Lifestyle",
-    "Business"
-  ];
-  
-
-  export { Users, Posts, Categories};
+export { Users, Posts, Categories };

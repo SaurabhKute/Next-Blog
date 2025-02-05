@@ -5,13 +5,12 @@ import { useSession } from "next-auth/react";
 import Modal from "../common/Modal/Modal";
 import toast from "react-hot-toast";
 import MyPosts from "../MyPosts/MyPosts";
-import Image from "next/image"; // Ensure Image from Next.js is imported
+import Image from "next/image";
 import styles from './ProfileForm.module.css';
 import { formatDate } from "@/utils/dateFormatter";
+import { FormData } from "@/types/types";
 
-interface FormData {
-  [key: string]: string;
-}
+
 
 export default function ProfileForm() {
   const { data: session } = useSession();
@@ -22,14 +21,14 @@ export default function ProfileForm() {
   const [formData, setFormData] = useState<FormData>({
     name: session?.user?.name || "",
     email: session?.user?.email || "",
-    bio: "", // Ensure bio is initialized correctly
+    bio: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value, // Dynamically updating formData based on the name
+      [name]: value,
     }));
   };
 
@@ -51,17 +50,17 @@ export default function ProfileForm() {
     const fetchProfile = async () => {
       try {
         const userId = session?.user?.id;
-        console.log(`Fetching profile from /api/profile?userId=${userId}`);
-        
+        // console.log(`Fetching profile from /api/profile?userId=${userId}`);
+
         const response = await fetch(`/api/profile?userId=${userId}`);
-        
+
         if (!response.ok) {
           throw new Error(`Failed to fetch profile. Status: ${response.status}`);
         }
-  
+
         const data = await response.json();
-        console.log("Fetched profile data:", data);
-  
+        // console.log("Fetched profile data:", data);
+
         setFormData({
           name: data.name,
           email: data.email,
@@ -73,18 +72,18 @@ export default function ProfileForm() {
         toast.error("Failed to load profile");
       }
     };
-  
+
     if (session?.user?.id) {
       fetchProfile();
     }
   }, [session]);
-  
+
 
   const handleSaveProfile = async () => {
     try {
       const userId = session?.user?.id;
-      console.log("Saving profile with data:", formData);
-  
+      // console.log("Saving profile with data:", formData);
+
       const response = await fetch(`/api/profile?userId=${userId}`, {
         method: "PATCH",
         headers: {
@@ -92,15 +91,15 @@ export default function ProfileForm() {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to update profile");
       }
-  
+
       const updatedProfile = await response.json();
-      console.log("Updated Profile:", updatedProfile);
-  
+      // console.log("Updated Profile:", updatedProfile);
+
       toast.success("Profile updated successfully!");
       setFormData(updatedProfile);
       handleCloseModal();
@@ -109,7 +108,7 @@ export default function ProfileForm() {
       toast.error("Failed to update profile");
     }
   };
-  
+
 
   return (
     <>
@@ -118,19 +117,19 @@ export default function ProfileForm() {
           <div className={styles.background}></div>
           <div className={styles.profileDetails}>
             <Image
-              src={session?.user?.image || "/default-avatar.png"} // Default image fallback
+              src={session?.user?.image || "/default-avatar.png"}
               alt="Profile Picture"
               className={styles.profilePic}
-              height={100} // Set appropriate height
-              width={100}  // Set appropriate width
+              height={100}
+              width={100}
             />
             <div className={styles.infoSection}>
               <h1 className={styles.name}>{session?.user?.name}</h1>
               <p className={styles.bio}>{formData.bio}</p>
               <p className={styles.meta}>
-              {formData.email} • Joined {createdAt ? formatDate(createdAt) : "N/A"} 
+                {formData.email} • Joined {createdAt ? formatDate(createdAt) : "N/A"}
               </p>
-            </div>    
+            </div>
             <div className={styles.actionButtons}>
               <div className={styles.buttons}>
                 <button className={styles.edit} onClick={handleOpenModal}>
@@ -161,9 +160,8 @@ export default function ProfileForm() {
           {["My Posts", "Saved"].map((step) => (
             <div
               key={step}
-              className={`${styles.stepperItem} ${
-                activeStep === step ? styles.activeStep : ""
-              }`}
+              className={`${styles.stepperItem} ${activeStep === step ? styles.activeStep : ""
+                }`}
               onClick={() => setActiveStep(step)}
             >
               {step}
@@ -192,8 +190,8 @@ export default function ProfileForm() {
                     src="/icons/three-dots.svg"
                     alt="Menu Icon"
                     className={styles.dots}
-                    height={24} // Adjust as needed
-                    width={24}  // Adjust as needed
+                    height={24}
+                    width={24}
                   />
                 </div>
               </div>
@@ -212,8 +210,8 @@ export default function ProfileForm() {
                 src={session?.user?.image || "/default-avatar.png"}
                 alt="Profile Pic"
                 className={styles.profileImg}
-                height={100} // Set appropriate height
-                width={100}  // Set appropriate width
+                height={100}
+                width={100}
               />
               <div className={styles.imageButtons}>
                 <button className={`${styles.imageButton} ${styles.updateBtn}`}>

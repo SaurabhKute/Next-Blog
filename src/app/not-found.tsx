@@ -7,7 +7,7 @@ import styles from './Home.module.css';
 export default function NotFound() {
 
   const router = useRouter();
-  const handleGoToDashboard = () =>{
+  const handleGoToDashboard = () => {
     router.push('/dashboard');
   }
   return (

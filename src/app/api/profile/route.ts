@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { sql } from "@vercel/postgres";
 
-// Fetch user profile (GET)
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const userId = url.searchParams.get("userId");
@@ -27,11 +26,13 @@ export async function GET(request: Request) {
     return NextResponse.json(user.rows[0]);
   } catch (error) {
     console.error("Error fetching user profile:", error);
-    return NextResponse.json({ error: "Failed to fetch user profile" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch user profile" },
+      { status: 500 }
+    );
   }
 }
 
-// Update user profile (PATCH)
 export async function PATCH(request: Request) {
   const url = new URL(request.url);
   const userId = url.searchParams.get("userId");
@@ -47,7 +48,10 @@ export async function PATCH(request: Request) {
     const { name, bio, email } = await request.json();
 
     if (!name && !bio && !email) {
-      return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
+      return NextResponse.json(
+        { error: "No valid fields to update" },
+        { status: 400 }
+      );
     }
 
     await sql`
@@ -66,6 +70,9 @@ export async function PATCH(request: Request) {
     return NextResponse.json(updatedUser.rows[0]);
   } catch (error) {
     console.error("Error updating user profile:", error);
-    return NextResponse.json({ error: "Failed to update user profile" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update user profile" },
+      { status: 500 }
+    );
   }
 }

@@ -9,7 +9,6 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 
 
-// Validation schema using Yup
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email address').required('Email is required'),
   password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
@@ -30,20 +29,18 @@ export default function LoginForm() {
         const result = await signIn('credentials', {
           email: values.email,
           password: values.password,
-          redirect: false, // Prevent auto-navigation for error handling
+          redirect: false,
         });
 
         if (result?.error) {
-          // Handle authentication errors
-          const errorMessage = result.error === "CredentialsSignin" ? 
-          "Invalid email or password. Please try again." : 
-          result.error;
-  
-        toast.error(errorMessage); 
+          const errorMessage = result.error === "CredentialsSignin" ?
+            "Invalid email or password. Please try again." :
+            result.error;
+
+          toast.error(errorMessage);
         } else {
-          // Redirect to dashboard or another page on success
           toast.success('Login successful!');
-         router.replace('/dashboard');
+          router.replace('/dashboard');
         }
       } catch (error) {
         console.error('Error during sign-in:', error);
@@ -112,8 +109,7 @@ export default function LoginForm() {
           </div>
 
           <p className={styles.forgotPassword}>
-            {/* Forgot password? */}
-            </p>
+          </p>
           <button type="submit" className={styles.button} disabled={formik.isSubmitting}>
             Sign In
           </button>

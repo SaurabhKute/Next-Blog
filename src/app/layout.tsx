@@ -15,15 +15,15 @@ export default function RootLayout({
         <html lang="en">
             <body>
                 <SessionProvider>
-                <SearchProvider>
-                <Navbar />
-                <Toaster  position="top-center" reverseOrder={false}/>
-                <ProtectedRoute>
-                  {children}
-                </ProtectedRoute>
-                </SearchProvider>
-                  </SessionProvider>
-                  <Footer />
+                    <SearchProvider>
+                        <Navbar />
+                        <Toaster position="top-center" reverseOrder={false} />
+                        <ProtectedRoute>
+                            {children}
+                        </ProtectedRoute>
+                    </SearchProvider>
+                </SessionProvider>
+                <Footer />
             </body>
         </html>
     );

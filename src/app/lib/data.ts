@@ -1,25 +1,12 @@
-import { Category, Post } from "@/types/types";
+import { Category, Post, PostUpdate, UserProfileUpdate } from "@/types/types";
 import { sql } from "@vercel/postgres";
 
-export interface PostUpdate {
-  title: string;
-  content: string;
-  image?: string;
-  tags?: string[];
-  category?: string;
-}
 
-
-export interface UserProfileUpdate {
-  name?: string;
-  bio?: string;
-  avatar?: string;
-}
-
-
-
-
-export async function fetchPosts(userId?: string, category?: string, search?: string) {
+export async function fetchPosts(
+  userId?: string,
+  category?: string,
+  search?: string
+) {
   // console.log(category,"@category")
   try {
     let queryText = `
@@ -38,21 +25,18 @@ export async function fetchPosts(userId?: string, category?: string, search?: st
     `;
 
     const queryParams: (string | number | null)[] = [userId ?? null];
-    let paramIndex = 1; // Start at $1
+    let paramIndex = 1;
 
-    // Add category filter
     if (category && category !== "0") {
       queryText += ` AND posts.category = $${++paramIndex}`;
       queryParams.push(category);
     }
 
-    // Add search filter (case-insensitive title search)
     if (search) {
       queryText += ` AND posts.title ILIKE $${++paramIndex}`;
       queryParams.push(`%${search}%`);
     }
 
-    // Ensure correct grouping for COUNT
     queryText += " GROUP BY posts.id";
     queryText += " ORDER BY posts.created_at DESC";
 
@@ -60,15 +44,11 @@ export async function fetchPosts(userId?: string, category?: string, search?: st
 
     // console.log(data.rows, "Data.rows")
     return data.rows;
-
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch posts.");
   }
 }
-
-
-
 
 export async function fetchPostsByUserId(userId: string) {
   try {
@@ -95,16 +75,10 @@ export async function fetchPostsByUserId(userId: string) {
   }
 }
 
-
-
-
 export async function fetchCategories() {
   try {
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
-
     const data = await sql<Category>`SELECT * FROM categories`;
 
-    // console.log('Data fetch completed after 3 seconds.');
     // console.log(data, "@data");
 
     return data.rows;
@@ -113,7 +87,6 @@ export async function fetchCategories() {
     throw new Error("Failed to fetch posts.");
   }
 }
-
 
 export async function fetchPostById(postId: string, userId: string) {
   try {
@@ -132,13 +105,12 @@ export async function fetchPostById(postId: string, userId: string) {
       WHERE posts.id = ${postId}::UUID
       GROUP BY posts.id
     `;
-    return data.rows[0]; // Return the first (and only) post
+    return data.rows[0];
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch post by ID.");
   }
 }
-
 
 export async function updatePostById(
   postId: string,
@@ -146,24 +118,23 @@ export async function updatePostById(
   updatedData: PostUpdate
 ) {
   try {
-    console.log("Updating post with ID:", postId, "for user:", userId);
-    
-    // Check if the post exists and belongs to the user
+    // console.log("Updating post with ID:", postId, "for user:", userId);
+
     const post = await sql`
       SELECT * FROM posts WHERE id = ${postId} AND user_id = ${userId}
     `;
 
     if (post.rows.length === 0) {
-      throw new Error("Post not found or user not authorized to update this post.");
+      throw new Error(
+        "Post not found or user not authorized to update this post."
+      );
     }
 
-    // Ensure tags are formatted correctly
     const tagsArray =
       updatedData.tags && updatedData.tags.length > 0
         ? JSON.stringify(updatedData.tags) // Store as JSON
         : null;
 
-    // Perform the update
     const updatedPost = await sql`
       UPDATE posts
       SET
@@ -177,7 +148,7 @@ export async function updatePostById(
       RETURNING *;
     `;
 
-    console.log("Updated post:", updatedPost.rows[0]);
+    // console.log("Updated post:", updatedPost.rows[0]);
 
     return updatedPost.rows[0];
   } catch (error) {
@@ -186,9 +157,8 @@ export async function updatePostById(
   }
 }
 
-export async function deletePostById(postId:string, userId:number) {
+export async function deletePostById(postId: string, userId: number) {
   try {
-    // Checking if the post exists and belongs to the user
     const post = await sql`
       SELECT *
       FROM posts
@@ -196,41 +166,41 @@ export async function deletePostById(postId:string, userId:number) {
     `;
 
     if (post.rows.length === 0) {
-      throw new Error('Post not found or user not authorized to delete this post.');
+      throw new Error(
+        "Post not found or user not authorized to delete this post."
+      );
     }
-
 
     await sql`
       DELETE FROM posts
       WHERE id = ${postId};
     `;
 
-    return { message: 'Post deleted successfully.' };
+    return { message: "Post deleted successfully." };
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to delete post.');
+    console.error("Database Error:", error);
+    throw new Error("Failed to delete post.");
   }
 }
 
-
-
-// Fetch user profile
 export async function fetchUserProfile(userId: string) {
   try {
     const data = await sql`
       SELECT id, name, email, bio, created_at FROM users WHERE id = ${userId}
     `;
-    
-    console.log(data.rows[0],"!!!");
-    return data.rows[0]; 
 
+    // console.log(data.rows[0], "!!!");
+    return data.rows[0];
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch user profile.");
   }
 }
 
-export async function updateUserProfile(userId: string, updatedData: UserProfileUpdate) {
+export async function updateUserProfile(
+  userId: string,
+  updatedData: UserProfileUpdate
+) {
   try {
     const { name, bio } = updatedData;
 

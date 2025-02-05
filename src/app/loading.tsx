@@ -1,7 +1,7 @@
 import styles from "./Home.module.css";
 
 export default function Loading() {
-    return(
+    return (
         <div className={styles.loaderContainer}>
             <div className={styles.loadingLine}></div>
         </div>

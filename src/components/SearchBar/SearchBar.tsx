@@ -14,33 +14,31 @@ const SearchBar: React.FC = () => {
     setIsMobileSearchOpen((prev) => !prev);
   };
 
-  // Debounced function using lodash.debounce
   const debouncedSetSearchQuery = useCallback(
     debounce((query: string) => {
       setSearchQuery(query);
-    }, 500), // 500ms delay
+    }, 500),
     [setSearchQuery]
   );
 
   useEffect(() => {
     debouncedSetSearchQuery(inputValue);
-    return () => debouncedSetSearchQuery.cancel(); // Cleanup function
+    return () => debouncedSetSearchQuery.cancel();
   }, [inputValue, debouncedSetSearchQuery]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value); // Update local state immediately
+    setInputValue(e.target.value);
   };
 
   return (
     <>
-      {/* Desktop Search Bar */}
       <div className={styles.searchContainer}>
         <div className={styles.searchInputWrapper}>
           <input
             type="text"
             className={styles.searchInput}
             placeholder="Search..."
-            value={inputValue} // Bind to local state for smooth UX
+            value={inputValue}
             onChange={handleInputChange}
           />
           <svg
@@ -60,7 +58,6 @@ const SearchBar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Search Icon */}
       <button className={styles.mobileSearchIcon} onClick={toggleMobileSearch}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +74,6 @@ const SearchBar: React.FC = () => {
         </svg>
       </button>
 
-      {/* Mobile Search Container */}
       <div
         className={`${styles.mobileSearchContainer} ${isMobileSearchOpen ? styles.open : ""}`}
       >
@@ -85,7 +81,7 @@ const SearchBar: React.FC = () => {
           type="text"
           className={styles.searchInput}
           placeholder="Search..."
-          value={inputValue} // Bind to local state
+          value={inputValue}
           onChange={handleInputChange}
         />
       </div>

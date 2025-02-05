@@ -15,13 +15,11 @@ export default function Posts({ posts }: PostsProps) {
   const { data: session } = useSession();
   const router = useRouter();
 
-  // State to track liked posts and like counts
   const [likedPosts, setLikedPosts] = useState<Record<number, boolean>>({});
   const [likesCount, setLikesCount] = useState<Record<number, number>>({});
   const [userId, setUserId] = useState<string | null>(null);
-  const [isHydrated, setIsHydrated] = useState(false); // ✅ Fix: Hydration state
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Initialize liked state and like count from API response or localStorage
   useEffect(() => {
     if (session?.user?.id) {
       setUserId(session.user.id);
@@ -39,7 +37,7 @@ export default function Posts({ posts }: PostsProps) {
 
       setLikedPosts(initialLikedPosts);
       setLikesCount(initialLikesCount);
-      setIsHydrated(true); // ✅ Set hydrated flag
+      setIsHydrated(true);
     }
   }, [posts, session]);
 
@@ -47,7 +45,6 @@ export default function Posts({ posts }: PostsProps) {
     router.push(`/read/${id}`);
   };
 
-  // Handle Like/Dislike functionality
   async function handleLike(postId: number) {
     if (!userId) {
       console.error("User is not logged in");

@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "../../components/Post/Posts.module.css";
 
-// Skeleton shimmer effect (Tailwind utility can also be replaced with CSS)
 const shimmer = "shimmer-effect-class";
 
 export function PostSkeleton() {

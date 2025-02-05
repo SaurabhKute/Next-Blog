@@ -133,7 +133,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px; /* Space between lines and text */
+  gap: 10px; 
 }
 
 .socialLogin p::before,
@@ -147,7 +147,7 @@
 .iconContainer {
   display: flex;
   justify-content: center;
-  gap: 15px; /* Space between the icons */
+  gap: 15px;
 }
 
 .icon {
@@ -158,9 +158,9 @@
 }
 
 .icon:hover {
-  transform: scale(1.1); /* Slight zoom-in effect */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
-  border-radius: 50%; /* Makes the image appear circular on hover */
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  border-radius: 50%; 
 }
 
 .error {
@@ -169,7 +169,6 @@
 }
 
 
-/* Responsive Styles */
 @media (max-width: 768px) {
   .container {
       flex-direction: column;

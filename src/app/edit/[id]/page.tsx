@@ -37,7 +37,7 @@ export default function UpdateBlog() {
     // console.log(categories,"@categories");
 
     useEffect(() => {
-       
+
 
         const getCategories = async () => {
             try {
@@ -45,7 +45,7 @@ export default function UpdateBlog() {
                 if (!res.ok) throw new Error("Failed to fetch categories");
 
                 const data = await res.json();
-                if (data) { 
+                if (data) {
                     setCategories(data);
                 }
             } catch (error) {
@@ -59,20 +59,20 @@ export default function UpdateBlog() {
 
     useEffect(() => {
 
-       
+
         const fetchBlog = async () => {
             try {
-                const response = await fetch(`/api/read?postId=${id}&userId=${session?.user?.id}`); 
+                const response = await fetch(`/api/read?postId=${id}&userId=${session?.user?.id}`);
                 if (!response.ok) {
                     throw new Error("Blog not found");
-                  }
-                  const data = await response.json();
+                }
+                const data = await response.json();
 
                 setPostId(data.id);
                 setTitle(data.title);
                 setCategory(data.category);
 
-                // ✅ Ensure tags is always an array
+
                 const parsedTags = Array?.isArray(data.tags)
                     ? data.tags
                     : typeof data.tags === 'string'
@@ -82,7 +82,7 @@ export default function UpdateBlog() {
                 setTags(parsedTags);
                 setImagePreview(data.image);
 
-                // Dynamically import html-to-draftjs inside useEffect
+
                 const htmlToDraft = (await import("html-to-draftjs")).default;
                 const blocksFromHtml = htmlToDraft(data.content);
                 const { contentBlocks, entityMap } = blocksFromHtml;
@@ -108,7 +108,7 @@ export default function UpdateBlog() {
                 title,
                 content,
                 image: imagePreview,
-                tags: JSON.stringify(tags), 
+                tags: JSON.stringify(tags),
                 category,
             };
 
@@ -136,7 +136,7 @@ export default function UpdateBlog() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1 className={styles.heading}>Edit Blog</h1>
-                <button onClick={handleUpdate} className={styles.publishButton}  disabled={loading}> {loading ? "Updating" : "Update"}</button>
+                <button onClick={handleUpdate} className={styles.publishButton} disabled={loading}> {loading ? "Updating" : "Update"}</button>
             </div>
 
             <div className={styles.formGroup}>

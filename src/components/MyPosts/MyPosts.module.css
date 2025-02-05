@@ -3,14 +3,14 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 
 .post {
   display: flex;
   justify-content: space-between;
   /* margin:  0 40px; */
-  align-items: center; 
+  align-items: center;
   padding: 16px;
   width: 100%;
   max-width: 900px;
@@ -21,13 +21,12 @@
   cursor: pointer;
 }
 
-
 .textContent {
   flex: 1;
   margin-right: 16px;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centers the text content */
+  justify-content: center;
 }
 
 .postTitle {

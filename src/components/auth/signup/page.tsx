@@ -7,7 +7,6 @@ import styles from './Signup.module.css';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
-// Validation schema with Yup
 const validationSchema = Yup.object({
   name: Yup.string().min(2, 'Name must be at least 2 characters').required('Name is required'),
   email: Yup.string().email('Invalid email address').required('Email is required'),
@@ -71,7 +70,6 @@ export default function SignupPage() {
           </Link>
         </p>
         <form className={styles.form} onSubmit={formik.handleSubmit}>
-          {/* Full Name Input */}
           <div>
             <input
               type="text"
@@ -87,7 +85,6 @@ export default function SignupPage() {
             )}
           </div>
 
-          {/* Email Input */}
           <div>
             <input
               type="email"
@@ -103,7 +100,6 @@ export default function SignupPage() {
             )}
           </div>
 
-          {/* Password Input */}
           <div>
             <input
               type="password"
@@ -119,7 +115,6 @@ export default function SignupPage() {
             )}
           </div>
 
-          {/* Submit Button */}
           <button type="submit" className={styles.button} disabled={formik.isSubmitting}>
             Sign Up
           </button>
