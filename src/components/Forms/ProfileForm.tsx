@@ -1,26 +1,28 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Modal from "../common/Modal/Modal";
 import toast from "react-hot-toast";
 import MyPosts from "../MyPosts/MyPosts";
-import Image from "next/image"; 
+import Image from "next/image"; // Ensure Image from Next.js is imported
 import styles from './ProfileForm.module.css';
+import { formatDate } from "@/utils/dateFormatter";
 
 interface FormData {
   [key: string]: string;
 }
 
-export default function ProfilePage() {
-  const { data: session } = useSession(); // Get session data
-
-  const [activeStep, setActiveStep] = useState("Posts");
+export default function ProfileForm() {
+  const { data: session } = useSession();
+  const [activeStep, setActiveStep] = useState("My Posts");
   const [isModalOpen, setModalOpen] = useState(false);
+  const [createdAt, setCreatedAt] = useState<string | null>(null);
+
   const [formData, setFormData] = useState<FormData>({
     name: session?.user?.name || "",
     email: session?.user?.email || "",
-    bio: "",
+    bio: "", // Ensure bio is initialized correctly
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -36,7 +38,7 @@ export default function ProfilePage() {
 
   const renderContent = () => {
     switch (activeStep) {
-      case "Posts":
+      case "My Posts":
         return <MyPosts />;
       case "Saved":
         return <div>Saved content goes here...</div>;
@@ -45,11 +47,70 @@ export default function ProfilePage() {
     }
   };
 
-  const handleSaveProfile = () => {
-    toast.success("Form Data Submitted");
-    // console.log("Form Data Submitted:", formData);
-    handleCloseModal();
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const userId = session?.user?.id;
+        console.log(`Fetching profile from /api/profile?userId=${userId}`);
+        
+        const response = await fetch(`/api/profile?userId=${userId}`);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch profile. Status: ${response.status}`);
+        }
+  
+        const data = await response.json();
+        console.log("Fetched profile data:", data);
+  
+        setFormData({
+          name: data.name,
+          email: data.email,
+          bio: data.bio || "",
+        });
+        setCreatedAt(data.created_at || null);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        toast.error("Failed to load profile");
+      }
+    };
+  
+    if (session?.user?.id) {
+      fetchProfile();
+    }
+  }, [session]);
+  
+
+  const handleSaveProfile = async () => {
+    try {
+      const userId = session?.user?.id;
+      console.log("Saving profile with data:", formData);
+  
+      const response = await fetch(`/api/profile?userId=${userId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to update profile");
+      }
+  
+      const updatedProfile = await response.json();
+      console.log("Updated Profile:", updatedProfile);
+  
+      toast.success("Profile updated successfully!");
+      setFormData(updatedProfile);
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Failed to update profile");
+    }
   };
+  
+
   return (
     <>
       <div className={styles.profileHeaderContainer}>
@@ -57,7 +118,7 @@ export default function ProfilePage() {
           <div className={styles.background}></div>
           <div className={styles.profileDetails}>
             <Image
-              src={session?.user?.image || ""}
+              src={session?.user?.image || "/default-avatar.png"} // Default image fallback
               alt="Profile Picture"
               className={styles.profilePic}
               height={100} // Set appropriate height
@@ -65,31 +126,17 @@ export default function ProfilePage() {
             />
             <div className={styles.infoSection}>
               <h1 className={styles.name}>{session?.user?.name}</h1>
-              <p className={styles.bio}>
-                Follow for daily design tips, memes, and freebies 🍋 designer /
-                co-founder
-                <a href="#"> @lemonsqueezy</a>, <a href="#">@dunked</a>,{" "}
-                <a href="#">@premiumpixels</a>, <a href="#">@iconic</a>
-              </p>
+              <p className={styles.bio}>{formData.bio}</p>
               <p className={styles.meta}>
-                {session?.user?.email} {"  "} • Joined Jun 2020 • India
+              {formData.email} • Joined {createdAt ? formatDate(createdAt) : "N/A"} 
               </p>
-            </div>
+            </div>    
             <div className={styles.actionButtons}>
-              <div className={styles.stats}>
-                <span className={styles.statItem}>
-                  <strong>3492</strong> Followers
-                </span>
-                <span className={styles.statDivider}>|</span>
-                <span className={styles.statItem}>
-                  <strong>3492</strong> Following
-                </span>
-              </div>
               <div className={styles.buttons}>
                 <button className={styles.edit} onClick={handleOpenModal}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="16" /* Icon size */
+                    width="16"
                     height="16"
                     viewBox="0 0 24 24"
                     fill="none"
@@ -111,7 +158,7 @@ export default function ProfilePage() {
       </div>
       <div className={styles.pageContainer}>
         <div className={styles.stepperNav}>
-          {["Posts", "Saved"].map((step) => (
+          {["My Posts", "Saved"].map((step) => (
             <div
               key={step}
               className={`${styles.stepperItem} ${
@@ -129,17 +176,6 @@ export default function ProfilePage() {
           </div>
           <div className={styles.rightPanel}>
             <div className={styles.fixedPanel}>
-              <div className={styles.frontPageSection}>
-                <h4>Website URL</h4>
-                <span className={styles.linkUrl}>
-                  <a
-                    href="https://medium.com/@saurabhkute321"
-                    className={styles.hyperlink}
-                  >
-                    https://@saurabhkute321
-                  </a>
-                </span>
-              </div>
               <div className={styles.frontPageSection}>
                 <h4>Following</h4>
                 <div className={styles.following}>
@@ -160,24 +196,6 @@ export default function ProfilePage() {
                     width={24}  // Adjust as needed
                   />
                 </div>
-                <div className={styles.following}>
-                  <div className={styles.left}>
-                    <Image
-                      src="/icons/user.svg"
-                      alt="User Icon"
-                      height={24}
-                      width={24}
-                    />
-                    <p>Alex Paul</p>
-                  </div>
-                  <Image
-                    src="/icons/three-dots.svg"
-                    alt="Menu Icon"
-                    className={styles.dots}
-                    height={24}
-                    width={24}
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -185,16 +203,13 @@ export default function ProfilePage() {
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <div className={styles.modalBody}>
-          {/* Modal Header */}
           <div className={styles.modalHeader}>
             <h3>Profile Information</h3>
           </div>
-
-          {/* Profile Section */}
           <div className={styles.profileSection}>
             <div className={styles.profileImageSection}>
               <Image
-                src={session?.user?.image || ""}
+                src={session?.user?.image || "/default-avatar.png"}
                 alt="Profile Pic"
                 className={styles.profileImg}
                 height={100} // Set appropriate height
@@ -211,7 +226,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Input Fields */}
           <div className={styles.inputFields}>
             <label>
               Name
@@ -240,14 +254,14 @@ export default function ProfilePage() {
               <textarea
                 placeholder="Write a short bio"
                 className={styles.textarea}
+                name="bio"
                 value={formData.bio}
                 onChange={handleChange}
               ></textarea>
-              <span className={styles.charCount}>68/160</span>
+              <span className={styles.charCount}>{formData.bio.length}/160</span>
             </label>
           </div>
 
-          {/* Button Group */}
           <div className={styles.btnGroup}>
             <button className={styles.cancelBtn} onClick={handleCloseModal}>
               Cancel

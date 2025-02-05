@@ -51,9 +51,16 @@
 }
 
 .bio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  max-width: 90%;
+  width: 100%;
   font-size: 1rem;
   color: #555;
-  margin: 0.5rem 0;
+  margin: 0.5rem auto;
+  word-break: break-word;
 }
 
 .meta {
@@ -412,13 +419,13 @@
 }
 
 .aboutSection::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Background of the scrollbar track */
+  background: transparent; /* Background of the scrollbar track */
 }
 
 .aboutSection::-webkit-scrollbar-thumb {
   background-color: #888; /* Color of the scrollbar thumb */
   border-radius: 10px; /* Rounded edges for the thumb */
-  border: 2px solid #f1f1f1; /* Adds a border to match the track */
+  border: 2px solid transparent; /* Adds a border to match the track */
 }
 
 .aboutSection::-webkit-scrollbar-thumb:hover {
@@ -449,7 +456,11 @@
     font-size: 1.25rem;
   }
 
-  .bio,
+  .bio {
+    max-width: 400px;
+    font-size: 1.1rem;
+  }
+
   .meta {
     font-size: 0.875rem;
   }

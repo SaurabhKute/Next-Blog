@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useParams, useRouter } from 'next/navigation';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
@@ -22,7 +22,6 @@ export default function UpdateBlog() {
     const params = useParams();
     const id = params.id;
     const router = useRouter();
-    const isMounted = useRef(false); // ✅ Track if the component is mounted
 
     // console.log(id,"Params");
     const [postId, setPostId] = useState();
@@ -38,7 +37,7 @@ export default function UpdateBlog() {
     // console.log(categories,"@categories");
 
     useEffect(() => {
-        isMounted.current = true;
+       
 
         const getCategories = async () => {
             try {
@@ -46,7 +45,7 @@ export default function UpdateBlog() {
                 if (!res.ok) throw new Error("Failed to fetch categories");
 
                 const data = await res.json();
-                if (isMounted.current) { // ✅ Only update state if mounted
+                if (data) { 
                     setCategories(data);
                 }
             } catch (error) {
@@ -56,18 +55,18 @@ export default function UpdateBlog() {
 
         getCategories();
 
-        return () => {
-            isMounted.current = false; // ✅ Set to false when component unmounts
-        };
     }, []);
 
     useEffect(() => {
 
-        isMounted.current = true;
+       
         const fetchBlog = async () => {
             try {
-                const res = await fetch(`/api/read?postId=${id}`);
-                const data = await res.json();
+                const response = await fetch(`/api/read?postId=${id}&userId=${session?.user?.id}`); 
+                if (!response.ok) {
+                    throw new Error("Blog not found");
+                  }
+                  const data = await response.json();
 
                 setPostId(data.id);
                 setTitle(data.title);
@@ -95,10 +94,6 @@ export default function UpdateBlog() {
         };
 
         fetchBlog();
-
-        return () => {
-            isMounted.current = false; // ✅ Set to false when component unmounts
-        };
     }, [id]);
 
 
@@ -113,7 +108,7 @@ export default function UpdateBlog() {
                 title,
                 content,
                 image: imagePreview,
-                tags: JSON.stringify(tags), // ✅ Ensure tags are sent as a string
+                tags: JSON.stringify(tags), 
                 category,
             };
 

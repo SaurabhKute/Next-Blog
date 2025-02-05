@@ -10,6 +10,14 @@ export interface PostUpdate {
 }
 
 
+export interface UserProfileUpdate {
+  name?: string;
+  bio?: string;
+  avatar?: string;
+}
+
+
+
 
 export async function fetchPosts(userId?: string, category?: string, search?: string) {
   // console.log(category,"@category")
@@ -201,5 +209,43 @@ export async function deletePostById(postId:string, userId:number) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to delete post.');
+  }
+}
+
+
+
+// Fetch user profile
+export async function fetchUserProfile(userId: string) {
+  try {
+    const data = await sql`
+      SELECT id, name, email, bio, created_at FROM users WHERE id = ${userId}
+    `;
+    
+    console.log(data.rows[0],"!!!");
+    return data.rows[0]; 
+
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch user profile.");
+  }
+}
+
+export async function updateUserProfile(userId: string, updatedData: UserProfileUpdate) {
+  try {
+    const { name, bio } = updatedData;
+
+    const updatedUser = await sql`
+      UPDATE users
+      SET 
+        name = COALESCE(${name}, name),
+        bio = COALESCE(${bio}, bio)
+      WHERE id = ${userId}
+      RETURNING id, name, email, bio;
+    `;
+
+    return updatedUser.rows[0];
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to update user profile.");
   }
 }
