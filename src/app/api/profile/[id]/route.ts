@@ -1,56 +1,62 @@
-import { fetchUserProfile, updateUserProfile } from "@/app/lib/data";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { sql } from "@vercel/postgres";
 
 // Fetch user profile (GET)
-export async function GET(req: NextRequest, { params }: { params: Record<string, string> }) {
-  console.log("Received Params:", params);
-
-  if (!params.id) {
-    return NextResponse.json({ error: "User ID is required" }, { status: 400 });
-  }
-
+export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
-    const user = await fetchUserProfile(params.id);
-    if (!user) {
+    const userId = params.id;
+
+    if (!userId) {
+      return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+    }
+
+    const user = await sql`
+      SELECT id, name, bio, avatar FROM users WHERE id = ${userId};
+    `;
+
+    if (user.rows.length === 0) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json(user, { status: 200 });
+    return NextResponse.json(user.rows[0]);
   } catch (error) {
-    console.error("Error fetching user profile:", error);
+    console.error("Database Error:", error);
     return NextResponse.json({ error: "Failed to fetch user profile" }, { status: 500 });
   }
 }
 
 // Update user profile (PATCH)
-export async function PATCH(req: NextRequest, { params }: { params: Record<string, string> }) {
-  console.log("PATCH request received for user ID:", params.id);
-
-  if (!params.id) {
-    return NextResponse.json({ error: "User ID is required" }, { status: 400 });
-  }
-
+export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   try {
-    const updatedData = await req.json(); // Parse request body
-    console.log("Received Data for Update:", updatedData);
+    const userId = params.id;
+    const { name, bio, avatar } = await req.json();
 
-    // Ensure updatedData contains at least one valid field
-    if (!updatedData.name && !updatedData.bio && !updatedData.avatar) {
+    if (!userId) {
+      return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+    }
+
+    // Ensure at least one field is provided for update
+    if (!name && !bio && !avatar) {
       return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
     }
 
-    // Call function to update user profile
-    const updatedUser = await updateUserProfile(params.id, updatedData);
+    await sql`
+      UPDATE users
+      SET 
+        name = COALESCE(${name}, name), 
+        bio = COALESCE(${bio}, bio), 
+        avatar = COALESCE(${avatar}, avatar)
+      WHERE id = ${userId};
+    `;
 
-    if (!updatedUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
+    // Fetch updated user profile
+    const updatedUser = await sql`
+      SELECT id, name, bio, avatar FROM users WHERE id = ${userId};
+    `;
 
-    console.log("Updated User:", updatedUser);
-
-    return NextResponse.json(updatedUser, { status: 200 });
+    return NextResponse.json(updatedUser.rows[0]);
   } catch (error) {
-    console.error("Error updating user profile:", error);
+    console.error("Database Error:", error);
     return NextResponse.json({ error: "Failed to update user profile" }, { status: 500 });
   }
 }
