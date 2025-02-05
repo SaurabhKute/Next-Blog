@@ -1,31 +1,46 @@
 "use client";
 
-import React, { useState } from "react";
-import styles from "./SearchBar.module.css"; // Import CSS
-import { useSearch } from "@/context/SearchContext"; // Import Context
+import React, { useState, useEffect, useCallback } from "react";
+import { debounce } from "lodash"; // Import lodash debounce
+import styles from "./SearchBar.module.css";
+import { useSearch } from "@/context/SearchContext";
 
 const SearchBar: React.FC = () => {
-  const { searchQuery, setSearchQuery } = useSearch(); // Use global search state
+  const { searchQuery, setSearchQuery } = useSearch();
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [inputValue, setInputValue] = useState(searchQuery);
 
   const toggleMobileSearch = () => {
     setIsMobileSearchOpen((prev) => !prev);
   };
 
+  // Debounced function using lodash.debounce
+  const debouncedSetSearchQuery = useCallback(
+    debounce((query: string) => {
+      setSearchQuery(query);
+    }, 500), // 500ms delay
+    [setSearchQuery]
+  );
+
+  useEffect(() => {
+    debouncedSetSearchQuery(inputValue);
+    return () => debouncedSetSearchQuery.cancel(); // Cleanup function
+  }, [inputValue, debouncedSetSearchQuery]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value); // Update global search context
+    setInputValue(e.target.value); // Update local state immediately
   };
 
   return (
     <>
-      {/* Desktop Search Bar (Visible on Large Screens) */}
+      {/* Desktop Search Bar */}
       <div className={styles.searchContainer}>
         <div className={styles.searchInputWrapper}>
           <input
             type="text"
             className={styles.searchInput}
             placeholder="Search..."
-            value={searchQuery} // Bind to global state
+            value={inputValue} // Bind to local state for smooth UX
             onChange={handleInputChange}
           />
           <svg
@@ -45,7 +60,7 @@ const SearchBar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Search Icon - Click to Toggle Search Bar */}
+      {/* Mobile Search Icon */}
       <button className={styles.mobileSearchIcon} onClick={toggleMobileSearch}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +77,7 @@ const SearchBar: React.FC = () => {
         </svg>
       </button>
 
-      {/* Mobile Search Container - Toggled when Icon is Clicked */}
+      {/* Mobile Search Container */}
       <div
         className={`${styles.mobileSearchContainer} ${isMobileSearchOpen ? styles.open : ""}`}
       >
@@ -70,7 +85,7 @@ const SearchBar: React.FC = () => {
           type="text"
           className={styles.searchInput}
           placeholder="Search..."
-          value={searchQuery} // Bind to global state
+          value={inputValue} // Bind to local state
           onChange={handleInputChange}
         />
       </div>

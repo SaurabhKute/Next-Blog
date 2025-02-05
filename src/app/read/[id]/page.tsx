@@ -159,7 +159,7 @@ export default function BlogRead() {
 
       <div className={styles.meta}>
         <div className={styles.metaLeft}>
-          <Image src={session?.user?.image || ""} alt="Writer" width={40} height={40} className={styles.userAvatar} />
+          <Image src={session?.user?.image || "/icons/writer.svg"} alt="Writer" width={40} height={40} className={styles.userAvatar} />
         </div>
         <div className={styles.metaRight}>
           <span className={styles.author}>{blog?.author}</span>

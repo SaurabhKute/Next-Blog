@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Loading from '@/app/read/loading';
 import { useRouter } from 'next/navigation';
 import { Post } from '@/types/types';
+import { formatDate } from '@/utils/dateFormatter';
 
 
 export default function MyPosts() {
@@ -22,7 +23,7 @@ const router = useRouter()
         throw new Error("Failed to fetch posts");
       }
       const postsData = await response.json();
-      console.log(postsData,"@@@@@@@@@@@@@@@");
+      // console.log(postsData,"@@@@@@@@@@@@@@@");
       setPosts(postsData); // Update state with fetched posts
       setLoading(false); // Stop loading
     } catch (err) {
@@ -63,8 +64,8 @@ const router = useRouter()
             <div className={styles.post} onClick={()=> handleRedirectClick(post.id)}>
               <div className={styles.textContent}>
                 <h2 className={styles.postTitle}>{post.title}</h2>
-                <p className={styles.postSubtitle}>{post.category}</p>
-                <span className={styles.postDate}>{post.updated_at}</span>
+                {/* <p className={styles.postSubtitle}>{post}</p> */}
+                <span className={styles.postDate}>{formatDate(post.updated_at)}</span>
                
               </div>
               <div className={styles.imageWrapper}>

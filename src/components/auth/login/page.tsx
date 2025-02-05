@@ -111,7 +111,9 @@ export default function LoginForm() {
             )}
           </div>
 
-          <p className={styles.forgotPassword}>Forgot password?</p>
+          <p className={styles.forgotPassword}>
+            {/* Forgot password? */}
+            </p>
           <button type="submit" className={styles.button} disabled={formik.isSubmitting}>
             Sign In
           </button>
