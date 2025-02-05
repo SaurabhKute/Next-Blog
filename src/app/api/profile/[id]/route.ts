@@ -1,16 +1,21 @@
 import { fetchUserProfile, updateUserProfile } from "@/app/lib/data";
 import { NextRequest, NextResponse } from "next/server";
 
-// Fetch user profile (GET)
-export async function GET(req: NextRequest, context: { params: { id?: string } }) {
-  console.log("Received Params:", context.params);
+// Define the context type explicitly
+interface Context {
+  params: { id: string };
+}
 
-  if (!context.params?.id) {
+// Fetch user profile (GET)
+export async function GET(req: NextRequest, { params }: Context) {
+  console.log("Received Params:", params);
+
+  if (!params?.id) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
 
   try {
-    const user = await fetchUserProfile(context.params.id);
+    const user = await fetchUserProfile(params.id);
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -23,10 +28,10 @@ export async function GET(req: NextRequest, context: { params: { id?: string } }
 }
 
 // Update user profile (PATCH)
-export async function PATCH(req: NextRequest, context: { params: { id?: string } }) {
-  console.log("PATCH request received for user ID:", context.params?.id);
+export async function PATCH(req: NextRequest, { params }: Context) {
+  console.log("PATCH request received for user ID:", params?.id);
 
-  if (!context.params?.id) {
+  if (!params?.id) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
 
@@ -40,7 +45,7 @@ export async function PATCH(req: NextRequest, context: { params: { id?: string }
     }
 
     // Call function to update user profile
-    const updatedUser = await updateUserProfile(context.params.id, updatedData);
+    const updatedUser = await updateUserProfile(params.id, updatedData);
 
     if (!updatedUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
