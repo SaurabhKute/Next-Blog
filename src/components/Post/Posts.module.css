@@ -91,16 +91,15 @@
   text-align: center;
 }
 
-/* Media Queries */
 @media (max-width: 768px) {
   .postCard {
-    flex-direction: row; /* Align image and content side by side */
-    gap: 15px; 
+    flex-direction: row;
+    gap: 15px;
     align-items: normal;
   }
 
   .postImage {
-    width: 150px; /* Resize image for small screens */
+    width: 150px;
     height: 100px;
     border-left: none;
     border-top: 1px solid #ddd;
@@ -127,7 +126,7 @@
 
 @media (max-width: 480px) {
   .postCard {
-    flex-direction: row; 
+    flex-direction: row;
     align-items: normal;
     margin-top: 10px;
   }
@@ -156,21 +155,20 @@
   }
 }
 
-/* scrollbar css */
 .postsContainer::-webkit-scrollbar {
-  width: 4px; 
+  width: 4px;
 }
 
 .postsContainer::-webkit-scrollbar-thumb {
-  background-color: transparent; 
-  border-radius: 4px; 
+  background-color: transparent;
+  border-radius: 4px;
 }
 
 .postsContainer::-webkit-scrollbar-track {
-  background-color: transparent; 
-  border-radius: 4px; 
+  background-color: transparent;
+  border-radius: 4px;
 }
 
 .postsContainer::-webkit-scrollbar-thumb:hover {
-  background-color: #555; 
+  background-color: #555;
 }

@@ -1,6 +1,6 @@
-  import { db } from "@vercel/postgres";
+  // import { db } from "@vercel/postgres";
 
-const client = await db.connect();
+// const client = await db.connect();
 
 // async function listPosts() {
 //   const data = await client.sql`
@@ -37,15 +37,15 @@ const client = await db.connect();
 // }
 
 
-async function fetchPostsByCategory(category:"67163f16-fce6-4c05-955e-12b4ad353b02") {
-  const data = await client.sql`
-    SELECT 
-    * FROM posts
-    WHERE category = ${category}
-  `;
+// async function fetchPostsByCategory(category:"67163f16-fce6-4c05-955e-12b4ad353b02") {
+//   const data = await client.sql`
+//     SELECT 
+//     * FROM posts
+//     WHERE category = ${category}
+//   `;
 
-  return data.rows;
-}
+//   return data.rows;
+// }
 
 // async function fetchPostsById(postId:string) {
 //   const data = await client.sql`
@@ -69,16 +69,19 @@ async function fetchPostsByCategory(category:"67163f16-fce6-4c05-955e-12b4ad353b
 
 
 
-export async function GET() {
-  try {
-    // const posts = await listPosts();
-    const posts = await fetchPostsByCategory("67163f16-fce6-4c05-955e-12b4ad353b02");
-    // const posts = await fetchPostsById('58d8ba48-fbca-4556-b823-ead54d9c13c4');
-    // const posts = await fetchPostsByUserId('8601d642-1850-41d3-a002-07cc1f51fa48');
-    return new Response(JSON.stringify(posts), {
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    return Response.json({ error }, { status: 500 });
-  }
-}
+// export async function GET() {
+//   try {
+//     // const posts = await listPosts();
+//     const posts = await fetchPostsByCategory("67163f16-fce6-4c05-955e-12b4ad353b02");
+//     // const posts = await fetchPostsById('58d8ba48-fbca-4556-b823-ead54d9c13c4');
+//     // const posts = await fetchPostsByUserId('8601d642-1850-41d3-a002-07cc1f51fa48');
+//     return new Response(JSON.stringify(posts), {
+//       headers: { "Content-Type": "application/json" },
+//     });
+//   } catch (error) {
+//     return Response.json({ error }, { status: 500 });
+//   }
+// }
+
+
+export {};

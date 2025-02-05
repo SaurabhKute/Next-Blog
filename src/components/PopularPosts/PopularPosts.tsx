@@ -19,15 +19,14 @@ export default function PopularPosts({ popularPosts }: PopularPostsProps) {
     router.push(`/read/${id}`);
   };
 
-  // Effect to handle carousel behavior
   useEffect(() => {
     if (popularPosts.length > 1) {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % popularPosts.length);
       }, 5000);
-      return () => clearInterval(interval); 
+      return () => clearInterval(interval);
     } else if (popularPosts.length === 1) {
-      setCurrentIndex(0); 
+      setCurrentIndex(0);
     }
   }, [popularPosts]);
 
@@ -40,7 +39,7 @@ export default function PopularPosts({ popularPosts }: PopularPostsProps) {
         style={{
           backgroundImage: popularPosts.length > 0
             ? `url(${popularPosts[currentIndex]?.image})`
-            : 'url(/images/bg.jpg)', 
+            : 'url(/images/bg.jpg)',
         }}
       >
         {popularPosts.length > 0 ? (

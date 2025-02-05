@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation"; // for redirecting
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -12,7 +12,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (status == "unauthenticated") {
-      // Redirect the user to the login page if they are not authenticated
+
       router.push("/auth/login");
     }
   }, [status, router]);

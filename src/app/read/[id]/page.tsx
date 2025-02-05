@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import BreadCrumb from "@/components/common/BreadCrumb/BreadCrumb";
 
 const breadcrumb = {
-  label: 'Read', 
+  label: 'Read',
 };
 
 export default function BlogRead() {
@@ -26,19 +26,19 @@ export default function BlogRead() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [isLiked, setIsLiked] = useState(false); // Track the like state
+  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     if (id && session?.user?.id) {
       const fetchBlog = async () => {
         try {
-          const response = await fetch(`/api/read?postId=${id}&userId=${session?.user?.id}`); 
+          const response = await fetch(`/api/read?postId=${id}&userId=${session?.user?.id}`);
           if (!response.ok) {
             throw new Error("Blog not found");
           }
           const data = await response.json();
           setBlog(data);
-          setIsLiked(data.is_liked || false); // Set the initial like state
+          setIsLiked(data.is_liked || false);
         } catch (error: unknown) {
           if (error instanceof Error) {
             console.error("Error fetching blog:", error);
@@ -51,11 +51,11 @@ export default function BlogRead() {
           setLoading(false);
         }
       };
-  
+
       fetchBlog();
     }
   }, [id, session?.user?.id]);
-  
+
   const handleMenuToggle = () => {
     setMenuVisible(!menuVisible);
   };
@@ -63,7 +63,7 @@ export default function BlogRead() {
   const handleEdit = (postId: number) => {
     setMenuVisible(false);
     toast.success("Redirecting to Edit Page...");
-    router.push(`/edit/${postId}`); // Navigate to update page
+    router.push(`/edit/${postId}`);
   };
 
   const handleDelete = async (postId: number) => {
@@ -111,12 +111,12 @@ export default function BlogRead() {
       toast.error("You must be logged in to like a post.");
       return;
     }
-  
+
     const newIsLiked = !isLiked;
     setIsLiked(newIsLiked);
-  
-    const action = newIsLiked ? "like" : "dislike"; 
-  
+
+    const action = newIsLiked ? "like" : "dislike";
+
     try {
       const response = await fetch("/api/likes", {
         method: "POST",
@@ -129,20 +129,18 @@ export default function BlogRead() {
           action,
         }),
       });
-  
+
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
-  
-      // If successful, update like status
+
       toast.success(newIsLiked ? "Post liked" : "Post disliked");
     } catch (error) {
-      // If there's an error, revert the UI change
       setIsLiked(isLiked);
       toast.error("Error updating like status");
       console.error("Error updating like:", error);
     }
   };
-  
+
 
   if (loading) {
     return <Loading />;
@@ -177,10 +175,10 @@ export default function BlogRead() {
             viewBox="0 0 24 24"
             className={styles.icon}
             onClick={handleLikeToggle}
-            style={{ cursor: "pointer", fill: isLiked ? "red" : "" , stroke:isLiked ? "none" : 'gray'}}
+            style={{ cursor: "pointer", fill: isLiked ? "red" : "", stroke: isLiked ? "none" : 'gray' }}
           >
- <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
- </svg>
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+          </svg>
         </div>
         <div className={styles.rightIcons}>
           {/* Save Icon */}

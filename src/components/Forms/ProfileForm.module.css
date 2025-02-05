@@ -85,7 +85,7 @@
   color: #555;
 }
 
-.buttons{
+.buttons {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -97,34 +97,33 @@
   border: 1px solid gray;
   border-radius: 50px;
   cursor: pointer;
-  display: flex; 
-  align-items: center; 
-  gap: 8px; 
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 14px;
-  color: gray; 
-  transition: background-color 0.3s ease, color 0.3s ease; 
+  color: gray;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .edit:hover {
-  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);}
-
-.editIcon {
-  width: 16px; 
-  height: 16px;
-  stroke: currentColor; 
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
 }
 
+.editIcon {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
 
 .statDivider {
   margin: 0 1rem;
   color: #ccc;
 }
 
-.aboutSection{
-  height: 470px; /* Set a fixed height (adjust as needed) */
-  overflow-y: auto;
-  scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: #fdfbfb #f1f1f1; /* For Firefox */
+.aboutSection {
+  height: 470px;
+  scrollbar-width: thin;
+  scrollbar-color: #fdfbfb #f1f1f1;
 }
 
 .pageContainer {
@@ -232,50 +231,49 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 10px; /* Add padding for better spacing */
-  height: 32px; /* Adjust height for better visibility */
-  gap: 10px; /* Space between left and right sections */
-  /* Optional styling */
+  padding: 6px 10px;
+  height: 32px;
+  gap: 10px;
   margin-top: 10px;
-  background-color: #f9f9f9; /* Add background color */
-  border-radius: 8px; /* Add rounded corners */
+  background-color: #f9f9f9;
+  border-radius: 8px;
 }
 
 .left {
   display: flex;
-  align-items: center; /* Vertically center icon and text */
-  gap: 8px; /* Space between user icon and name */
+  align-items: center;
+  gap: 8px;
 }
 
 .following img {
-  width: 24px; /* Adjust icon size */
+  width: 24px;
   height: 24px;
 }
 
 .following p {
   margin: 0;
-  font-size: 14px; /* Adjust font size */
-  line-height: 1.5; /* Ensure proper vertical alignment */
-  color: #4a4a4a; /* Slightly darker text color for contrast */
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4a4a4a;
 }
 
 .dots {
   cursor: pointer;
-  transition: transform 0.2s ease; /* Smooth hover effect */
+  transition: transform 0.2s ease;
 }
 
 .dots:hover {
-  transform: scale(1.2); /* Enlarge slightly on hover */
+  transform: scale(1.2);
 }
 
 .modalBody {
-  max-width: 90%; 
+  max-width: 90%;
   font-family: Arial, sans-serif;
-  font-size: 14px; /* Smaller text */
+  font-size: 14px;
   color: #333;
-  overflow-y: auto; /* Allows scrolling if content overflows */
-  max-height: 90vh; /* Ensures modal fits within the viewport */
-  margin: 0 auto; /* Centers modal horizontally */
+  overflow-y: auto;
+  max-height: 90vh;
+  margin: 0 auto;
 }
 
 .modalHeader {
@@ -299,7 +297,7 @@
 }
 
 .profileImg {
-  width: 70px; /* Smaller image */
+  width: 70px;
   height: 70px;
   border-radius: 50%;
   object-fit: cover;
@@ -309,7 +307,7 @@
 
 .imageButtons {
   display: flex;
-  gap: 8px; /* Spacing between buttons */
+  gap: 8px;
   /* margin-bottom: 8px; */
 }
 
@@ -323,7 +321,7 @@
 }
 
 .imageButton.updateBtn {
-  background:transparent;
+  background: transparent;
   color: #45a049;
 }
 
@@ -332,14 +330,13 @@
 }
 
 .imageButton.removeBtn {
-  background:transparent;
+  background: transparent;
   color: #d32f2f;
 }
 
 .imageButton.removeBtn:hover {
   transition: background-color 0.2s ease;
 }
-
 
 .inputFields label {
   display: flex;
@@ -366,7 +363,7 @@
 
 .textarea {
   resize: none;
-  height: 80px; /* Adjust height as needed */
+  height: 80px;
 }
 
 .charCount {
@@ -412,30 +409,24 @@
   background-color: #45a049;
 }
 
-/* Scrollbar Styling for Webkit Browsers */
-
 .aboutSection::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
+  width: 8px;
 }
 
 .aboutSection::-webkit-scrollbar-track {
-  background: transparent; /* Background of the scrollbar track */
+  background: transparent;
 }
 
 .aboutSection::-webkit-scrollbar-thumb {
-  background-color: #888; /* Color of the scrollbar thumb */
-  border-radius: 10px; /* Rounded edges for the thumb */
-  border: 2px solid transparent; /* Adds a border to match the track */
+  background-color: #888;
+  border-radius: 10px;
+  border: 2px solid transparent;
 }
 
 .aboutSection::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Darker color when hovered */
+  background: #555;
 }
 
-
-
-
-/* Media Queries */
 @media (max-width: 1024px) {
   .content {
     flex-direction: column;
@@ -467,7 +458,6 @@
 }
 
 @media (max-width: 480px) {
-
   .content {
     gap: 10px;
   }

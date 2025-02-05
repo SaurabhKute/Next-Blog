@@ -7,19 +7,9 @@ import { useSession, signOut } from "next-auth/react";
 import styles from "./Navbar.module.css";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import { usePathname } from "next/navigation";
+import { DropdownItemProps, NavLinkProps } from "@/types/types";
 
-interface NavLinkProps {
-  href: string;
-  label: string;
-  onClick?: () => void;
-  icon?: React.ReactNode;
-}
 
-interface DropdownItemProps {
-  href: string;
-  label: string;
-  onClick?: () => void;
-}
 
 
 export default function Navbar() {
@@ -76,7 +66,7 @@ export default function Navbar() {
         The Daily Scribble
       </Link>
 
-      {pathname === "/dashboard" &&  session && <SearchBar />}
+      {pathname === "/dashboard" && session && <SearchBar />}
 
       {status === "loading" ? (
         <div className={styles.loading}></div>
@@ -86,7 +76,6 @@ export default function Navbar() {
             &#9776;
           </button>
 
-          {/* Navigation Links */}
           <nav className={`${styles.navLinks} ${isMenuOpen ? styles.navOpen : ""}`}>
             {session ? (
               <>
@@ -183,14 +172,14 @@ export default function Navbar() {
                   <DropdownItem href="/profile" label="Profile" onClick={closeSidebar} />
                   <DropdownItem href="/manage-posts" label="Manage Posts" onClick={closeSidebar} />
                   <DropdownItem href="/statistics" label="Statistics" onClick={closeSidebar} />
-                  <NavLink href="/new-blog" label="Write" onClick={closeSidebar} /> {/* Ensure Write is here */}
+                  <NavLink href="/new-blog" label="Write" onClick={closeSidebar} />
                   <button className={styles.sidebarLogoutButton} onClick={handleLogout}>
                     Logout {` (${session?.user?.name})`}
                   </button>
                 </>
               ) : (
                 <>
-                  <NavLink href="/auth/login" label="Write" onClick={closeSidebar} /> {/* Make sure Write is available for guests */}
+                  <NavLink href="/auth/login" label="Write" onClick={closeSidebar} />
                   <NavLink href="/auth/login" label="Sign in" onClick={closeSidebar} />
                   <button className={styles.sidebarStartButton} onClick={closeSidebar}>
                     Get started

@@ -11,11 +11,11 @@ type RecentPostsProps = {
 
 export default function RecentPosts({ recentPosts }: RecentPostsProps) {
 
-    const router = useRouter();
-  
-    const handleRedirectClick = (id: number) => {
-      router.push(`/read/${id}`)
-    }
+  const router = useRouter();
+
+  const handleRedirectClick = (id: number) => {
+    router.push(`/read/${id}`)
+  }
 
   return (
     <div className={styles.recentPostsContainer}>
@@ -24,7 +24,7 @@ export default function RecentPosts({ recentPosts }: RecentPostsProps) {
       <ul className={styles.postsList}>
         {recentPosts && recentPosts.length > 0 ? (
           <>
-            {recentPosts?.slice(0,5)?.map((post) => (
+            {recentPosts?.slice(0, 5)?.map((post) => (
               <li key={post.id} className={styles.postItem}>
                 <div className={styles.postDetails} onClick={() => handleRedirectClick(post?.id)}>
                   <Image

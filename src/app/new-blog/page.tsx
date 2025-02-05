@@ -46,7 +46,7 @@ export default function WriteBlog() {
         const data = await res.json();
 
         if (data) {
-          setCategories(data); 
+          setCategories(data);
         }
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -55,7 +55,7 @@ export default function WriteBlog() {
 
     getCategories();
 
-    
+
   }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
