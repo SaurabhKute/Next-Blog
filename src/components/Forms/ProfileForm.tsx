@@ -47,22 +47,21 @@ export default function ProfileForm() {
     }
   };
 
-  // Fetch user profile when the component mounts
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        console.log(`Fetching profile from /api/profile/${session?.user?.id}`);
-    
-        const response = await fetch(`/api/profile/${session?.user?.id}`);
-        console.log("Raw response:", response);
-    
+        const userId = session?.user?.id;
+        console.log(`Fetching profile from /api/profile?userId=${userId}`);
+        
+        const response = await fetch(`/api/profile?userId=${userId}`);
+        
         if (!response.ok) {
           throw new Error(`Failed to fetch profile. Status: ${response.status}`);
         }
-    
+  
         const data = await response.json();
         console.log("Fetched profile data:", data);
-    
+  
         setFormData({
           name: data.name,
           email: data.email,
@@ -74,42 +73,43 @@ export default function ProfileForm() {
         toast.error("Failed to load profile");
       }
     };
-    
+  
     if (session?.user?.id) {
       fetchProfile();
     }
   }, [session]);
+  
 
   const handleSaveProfile = async () => {
     try {
-      console.log("Saving profile with data:", formData); // Debugging
-
-      const response = await fetch(`/api/profile/${session?.user?.id}`, {
+      const userId = session?.user?.id;
+      console.log("Saving profile with data:", formData);
+  
+      const response = await fetch(`/api/profile?userId=${userId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-
-      console.log("Response:", response); // Debugging
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to update profile");
       }
-
+  
       const updatedProfile = await response.json();
-      console.log("Updated Profile:", updatedProfile); // Debugging
-
+      console.log("Updated Profile:", updatedProfile);
+  
       toast.success("Profile updated successfully!");
-      setFormData(updatedProfile); // Update state with new data
+      setFormData(updatedProfile);
       handleCloseModal();
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile");
     }
   };
+  
 
   return (
     <>
