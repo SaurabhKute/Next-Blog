@@ -6,6 +6,8 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const userId = url.searchParams.get("userId");
 
+  console.log("Inside the function");
+
   if (!userId) {
     return NextResponse.json(
       { error: "Missing userId parameter" },
