@@ -5,6 +5,16 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { SearchProvider } from "@/context/SearchContext";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from 'react-hot-toast';
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+    title: "The Daily Scribble",
+    description: "A blog platform built with Next.js",
+    keywords: ["blog"]
+  };
+  
+
 
 export default function RootLayout({
     children,
